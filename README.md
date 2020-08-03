@@ -6,12 +6,55 @@
 
 - 다른 사람의 질문에 답하고 채택을 받으면 점수를 획득할 수 있고, 점수 랭킹을 올릴 수 있습니다.
 
-## How to run
 
-#### Vue.js
+## Setting up the Backend Server(Spring-boot)
+
++ **Setting up the docker**
+    ```bash
+    > docker run --name maria-db -p 3306:3306 -e MYSQL_ROOT_PASSWORD=<YOUR_DB_PASSWORD> -d mariadb
+    > docker exec -it maria-db mysql -u root -p
+    ```
+
++ **Create Maria-DB database**
+    ```bash
+    maria-db> create database ssafydb
+    ```
+
++ **Configure database**
+    ```yml
+    # backend/src/main/resources/application.yml
+    spring:
+        datasource:
+            url: jdbc:mysql://localhost:3306/spring_social?useSSL=false
+            username: <YOUR_DB_USERNAME>
+            password: <YOUR_DB_PASSWORD>
+    ```
+
++ **Specify OAuth2 Provider ClientId and ClientSecrets**
+	```yml
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              clientId: <GOOGLE_CLIENT_ID>
+              clientSecret: <GOOGLE_CLIENT_SECRET>
+              redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
+              scope:
+                - email
+                - profile
+	```
+
++ **Run backend server**
+	```bash
+	> mvn spring-boot:run
+	```
+
+## Setting up the Frontend Server(Vue.js)
 
 ```bash
-$ npm run serve
+cd frontend
+npm run serve
 ```
 
 
