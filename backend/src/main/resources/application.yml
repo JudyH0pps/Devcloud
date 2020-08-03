@@ -1,0 +1,43 @@
+spring:
+    # database config
+    datasource:
+        url: jdbc:mysql://localhost:3306/ssafydb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&characterEncoding=UTF-8
+        username: root
+        password: mariadb
+    # jpa config
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MariaDB53Dialect
+
+    # security config
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              clientId: 254408637676-ac3nrddq11885tddk17v7ok5i1htjan7.apps.googleusercontent.com
+              clientSecret: 8NA0nsQy9pEDgeNqUdmzmIIr
+              # google 에서 authentication을 성공 후 authorization_code 를 전달할 domain의 endpoint
+              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+              scope:
+                - email
+                - profile
+
+app:
+  auth:
+    # JWT token을 hash 할 때 사용하는 secret key
+    # tokenSecret: 323972124FFD98EE1B55995D7CC66
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    # JWT token 의 유효기간 (1일)
+    tokenExpirationMsec: 864000000
+  oauth2:
+  # 생성된 JWT token을 response할 uri
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      # - myandroidapp://oauth2/redirect
+      # - myiosapp://oauth2/redirect 
