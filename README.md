@@ -76,7 +76,7 @@ Released under the MIT License. Copyright (c) BootstrapVue.
 
 ##### MariaDB
 
-GNU GPL 2 license
+GNU GPL 2 license.
 
 ##### Docker5
 
