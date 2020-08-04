@@ -52,14 +52,14 @@ export default {
         }
     },
     methods:{
-        ...mapActions('question',['getUserQuestions']),
+        ...mapActions('question',['fetchUserQuestions']),
         
         getImages(name) {
             return require('../assets/' + name);
         }
     },
     created(){
-        this.getUserQuestions(this.$cookie.get('user_id'));
+        this.fetchUserQuestions(this.$cookie.get('user_id'));
     // 화면이 그려지기전에 로그인된 id로 질문목록을 받아온다 
     // axios.get('http://i3c202.p.ssafy.io:8080/question',{
     //     params:{

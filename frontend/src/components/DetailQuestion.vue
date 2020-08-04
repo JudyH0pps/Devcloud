@@ -52,10 +52,10 @@ export default {
 		onClickWriteAnswer() {
 			this.$router.push({ name: 'WriteAnswer', params: { question_id: this.qid }})
 		},
-		...mapActions('question', ['getQuestion', 'goEditQuestion','deleteQuestion'])
+		...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion'])
 	},
 	created() {
-		this.getQuestion(this.qid)
+		this.fetchQuestion(this.qid)
 	},
 	props: {
 		isDetailPage: Boolean,

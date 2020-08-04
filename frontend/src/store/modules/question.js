@@ -17,7 +17,7 @@ export default {
         },
     },
 	actions: {
-        getUserQuestions(context,payload){
+        fetchUserQuestions(context,payload){
             http
                 .get('/api/questions',{
                     params:{
@@ -34,15 +34,15 @@ export default {
                     alert('유저질문 조회중 오류 발생');
                 });
         },
-        getQuestion(context, qid) {
+        fetchQuestion(context, qid) {
             http
                 .get('/api/questions', {
                     params: {
                         "id": qid
                     }
                 })
-                .then(res => {
-                    context.commit('setQuestion', res.data[0])
+                .then(({data}) => {
+                    context.commit('setQuestion', data[0])
                 })
                 .catch(err => console.log(err.response))
         },
@@ -52,7 +52,7 @@ export default {
             }   else {
                 http
                     .post('/api/questions', questionData)
-                    .then(() => router.push({name: 'board'}))
+                    .then(() => router.push({name: 'Board'}))
                     .catch(err => console.log(err.response))
             }
         },
@@ -109,7 +109,7 @@ export default {
                 })
                 .then(() => {
                     context.commit('setQuestion', {})
-                    router.push({name: 'board'})
+                    router.push({name: 'Board'})
                 })
                 .catch(err => console.log(err.response))
         } 

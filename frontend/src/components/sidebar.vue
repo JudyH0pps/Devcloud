@@ -30,7 +30,7 @@
                shadow>
         <b-list-group>
             <b-list-group-item><router-link to="/">Home</router-link></b-list-group-item>
-            <b-list-group-item><router-link :to="{ name : 'board' }">Board</router-link></b-list-group-item>
+            <b-list-group-item><router-link :to="{ name : 'Board' }">Board</router-link></b-list-group-item>
             <!-- <b-list-group-item><router-link :to="{ name : 'Detail' }">Detail</router-link></b-list-group-item> -->
             <b-list-group-item><router-link :to="{ name : 'WriteQuestion' }">Write</router-link></b-list-group-item>
             <b-list-group-item><router-link :to="{ name : 'Ranking' }">Ranking</router-link></b-list-group-item>

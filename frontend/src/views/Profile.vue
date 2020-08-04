@@ -71,9 +71,9 @@ export default {
     })
   },
   methods: {
-    ...mapActions('user',['getUserProfile']),
+    ...mapActions('user',['fetchUserProfile']),
     ...mapActions('answer',['fetchAnswersById']),
-    ...mapActions('question',['getUserQuestions']),
+    ...mapActions('question',['fetchUserQuestions']),
 
     getProfile() {
       // this.user.id = 'JudyHopps'
@@ -101,11 +101,11 @@ export default {
   created() {
     //this.getProfile();
     //프로필페이지 들어가기전에 id = payload로 ? 유정정보를 받아오기
-    this.getUserProfile(this.$cookie.get('logintoken'));
+    this.fetchUserProfile(this.$cookie.get('logintoken'));
     //작성한 답변 조회 
     this.fetchAnswersById(this.$cookie.get('user_id'));
     //작성한 질문 조회
-    this.getUserQuestions(this.$cookie.get('user_id'));
+    this.fetchUserQuestions(this.$cookie.get('user_id'));
     //console.log(this.user);
   },
 

@@ -94,7 +94,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('user',['getUserProfile']),
+        ...mapActions('user',['fetchUserProfile']),
         ...mapMutations(['setKeyword']),
         signInBtn() {
             this.showModal = true;
@@ -140,7 +140,7 @@ export default {
             // this.setKeyword(this.word)
             //alert(this.keyword)
             this.$router.push({
-                name:'board'
+                name:'Board'
             })
         }
     },
@@ -153,7 +153,7 @@ export default {
             // localStorage.setItem('localToken', token);
             this.$cookie.set('logintoken',token, '1h');
             //this.loginTokened = true;
-            this.getUserProfile(this.$cookie.get('logintoken'));
+            this.fetchUserProfile(this.$cookie.get('logintoken'));
             // this.$cookie.set('user_id',this.user.id,'1h');
         }
         // if(localStorage.getItem('localToken') != null){
