@@ -41,7 +41,7 @@ export default {
         searchItem() {
             this.setKeyword(this.word);
             this.$router.push({
-                name:'board'
+                name:'Board'
             })
             // localStorage.setItem(this.inputValue, this.searchItem);
         }

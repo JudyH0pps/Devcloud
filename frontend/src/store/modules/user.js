@@ -24,7 +24,7 @@ export default {
         }
     },
 	actions: {
-        getUserProfile(context,payload){
+        fetchUserProfile(context,payload){
             http
                 .get('/user/me',{
                     headers:{

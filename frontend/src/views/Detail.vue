@@ -45,12 +45,12 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('answer',['fetchAnswerList']),
+		...mapActions('answer',['fetchAnswers']),
 	},
 	created() {
 		// alert("조회한 글번호 :" +this.$route.params.qid)
-		// this.fetchAnswerList(this.$route.params.qid);
-		this.fetchAnswerList(this.questionId)
+		// this.fetchAnswers(this.$route.params.qid);
+		this.fetchAnswers(this.questionId)
 	}
 };
 </script>

@@ -33,7 +33,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('question',['getQuestion','postQuestion', 'editQuestion']),
+    ...mapActions('question',['fetchQuestion','postQuestion', 'editQuestion']),
     writeQuestion(questionData) {
       if (this.isEditPage) {
         questionData.id = this.questionId
@@ -52,7 +52,7 @@ export default {
   created() {
     if (window.location.href===`http://localhost:3000/question/${this.questionId}/edit`) {
       // 수정 페이지로 활용한다면, 기존 질문의 내용을 가져와야 합니다.
-      this.getQuestion(this.questionId)
+      this.fetchQuestion(this.questionId)
       // 받아온 질문 정보 중 필요한 정보를 현재 컴포넌트의 data에 할당합니다.
       const originQuestion = this.$store.state.question.question
       this.questionData.title = originQuestion.title

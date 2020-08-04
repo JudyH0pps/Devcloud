@@ -31,7 +31,7 @@ Vue.use(VueRouter)
   },
   {
     path: '/board',
-    name: 'board',
+    name: 'Board',
     component: BoardPage
   },
   {

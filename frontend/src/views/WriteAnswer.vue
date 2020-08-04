@@ -41,7 +41,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('answer',['fetchAnswerList','postAnswer', 'editAnswer']),
+    ...mapActions('answer',['fetchAnswers','postAnswer', 'editAnswer']),
     writeAnswer(answerData) {
       if (this.isEditPage) {
         answerData.id = this.answerId
@@ -54,7 +54,7 @@ export default {
   },
   created() {
     if (window.location.href===`http://localhost:3000/question/${this.questionId}/${this.answerId}/edit`) {
-      this.fetchAnswerList(this.questionId)
+      this.fetchAnswers(this.questionId)
       const answer = this.answers.find(answerData => {
         return answerData.id === this.answerId
       })

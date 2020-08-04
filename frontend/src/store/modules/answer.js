@@ -13,16 +13,16 @@ export default {
         }
     },
 	actions: {
-        fetchAnswerList({ commit }, question_id) {
+        fetchAnswers({ commit }, question_id) {
 					http
 						.get('/api/answers', {
 							params: {
-								"question_id": question_id
+								question_id: question_id
 							}
 						})
-						.then(res => {
+						.then(({data}) => {
 							// 응답 데이터 확인 => 상태 변경
-							commit('setAnswers', res.data)
+							commit('setAnswers', data)
 						})
 						.catch(err => console.log(err))
 		},
@@ -61,7 +61,7 @@ export default {
 		deleteAnswer(context, answerData) {
 			http
 				.delete('/api/answers', {params: {id: answerData.answer_id}})
-				.then(() => context.dispatch('fetchAnswerList', answerData.question_id))
+				.then(() => context.dispatch('fetchAnswers', answerData.question_id))
 				.catch(err => console.log(err))
 		}
     },
