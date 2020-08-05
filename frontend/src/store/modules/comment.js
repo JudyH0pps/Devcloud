@@ -32,7 +32,7 @@ export default {
                 })
                 .catch(err => console.log(err))
         },
-        editComments(context, commentData) {
+        editComment(context, commentData) {
             http
                 .put('/api/comments', commentData)
                 .then(({data}) => {
