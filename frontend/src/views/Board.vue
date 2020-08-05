@@ -48,11 +48,34 @@ export default {
     components: {
         BoardResultlist,
     },
+    data: function(){
+        return {
+            word: "",
+
+        }
+    },
     methods:{
-        ...mapActions('question',['fetchQuestionsByKeyword'])
+        ...mapActions('question',['fetchQuestionsByKeyword']),
+
+        highlight(){
+            if(this.word){
+                return this.word.replace(new RegExp(this.keyword, 'gi'), match => {
+                    return '<span class="hilighted">' + match + '</span>';
+                });
+            
+            }
+            
+        }
     },
     created(){
         this.fetchQuestionsByKeyword(this.keyword)
     }
 }
 </script>
+
+<style>
+.highlighted {
+    color: white;
+    background-color: orangered;
+}
+</style>
