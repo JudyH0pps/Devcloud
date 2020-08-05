@@ -11,7 +11,7 @@
 		</ul>
 		<p>{{ answer.content }}</p>
 		<div class="d-flex justify-content-between">
-			<a>add comment</a>
+			<a @click="changeCommentInput" style="cursor: pointer;">add comment</a>
 			<span>
 				answered by
 				<a href class="text-decoration-none text-reset">
@@ -20,7 +20,7 @@
 			</span>
 		</div>
 		<!-- 댓글작성란 -->
-		<div class="text-left">
+		<div v-show="commentInput" class="text-left">
 			<label for="comment">댓글 작성</label>
 			<div class="input-group">
 				<input @keyup.enter="postComment({user_id, answer_id: answer.id,content: postContent})" v-model="post_content" type="text" class="form-control" id="comment" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
@@ -48,7 +48,7 @@
 			</li>
 		</ul> -->
 
-		<div class="d-flex w-100">
+		<!-- <div class="d-flex w-100">
 			<div class="d-flex flex-column w-100">
 				<header class="d-flex justify-content-between">
 					<h5>홍길동</h5>
@@ -56,17 +56,17 @@
 				</header>
 				<div class="d-flex justify-content-between">
 					<p v-show="!isEdit">{{originalContent}}</p>
-					<input @keyup.enter="editComment({comment_id: comment.id, content: originalContent})" v-show="isEdit" type="text" v-model="value">
+					<input @keyup.enter="editComment({content: originalContent})" v-show="isEdit" type="text" v-model="value">
 					<div v-show="!isEdit">
 						<button @click="changeIsEdit" class="btn btn-secondary">수정</button>
-						<button @click="deleteComment({answer_id: answer.id, comment_id: comment.id})" class="btn btn-secondary">삭제</button>
+						<button @click="deleteComment({answer_id: answer.id})" class="btn btn-secondary">삭제</button>
 					</div>
 					<div v-show="isEdit">
-						<button @click="editComment({comment_id: comment.id, content: originalContent})" class="btn btn-primary">수정</button>
+						<button @click="editComment({content: originalContent})" class="btn btn-primary">수정</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
   </div>
@@ -93,6 +93,9 @@ export default {
 		...mapActions('comment',['postComment', 'fetchComments', 'editComment', 'deleteComment']),
 		changeIsEdit() {
 			this.isEdit = !this.isEdit
+		},
+		changeCommentInput() {
+			this.commentInput = !this.commentInput
 		}
 	},
 	computed: {
@@ -107,7 +110,8 @@ export default {
 		return {
 			postContent: "",
 			originalContent: "댓글 내용입니다.",
-			isEdit: false
+			isEdit: false,
+			commentInput: false
 		}
 	}
 }
