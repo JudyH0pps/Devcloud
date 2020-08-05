@@ -90,17 +90,12 @@ export default {
             else
                 return false;
         },
-        userImage(){
-            if(this.$cookie.get('user_image'))
-                return this.$cookie.get('user_image')
-            else
-                return console.log("profile_Image road error");
-        }
     },
     data() {
         return {
             localTokend: false,
             showModal: false,
+            userImage : this.$cookie.get('user_image')
         }
     },
     methods: {
