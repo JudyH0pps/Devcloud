@@ -18,16 +18,7 @@
 
 	<DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" />
 
-	<!-- 댓글작성란 -->
-	<div class="text-left">
-		<label for="comment">댓글 작성</label>
-		<div class="input-group">
-			<input @keyup.enter="postComment" type="text" class="form-control" id="comment" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-			<button @click="postComment" class="btn btn-secondary">작성</button>
-		</div>
-	</div>
-
-	<!-- 댓글 목록 -->
+	
   </div>
 </template>
 
@@ -53,11 +44,10 @@ export default {
 		}),
 		questionId() {
 			return parseInt(this.$route.params.question_id)
-		}
+		},
 	},
 	methods: {
 		...mapActions('answer',['fetchAnswers']),
-		...mapActions('comment',['postComment'])
 	},
 	created() {
 		// alert("조회한 글번호 :" +this.$route.params.qid)
