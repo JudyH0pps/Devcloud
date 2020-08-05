@@ -35,6 +35,7 @@ export default {
                     //console.log(data)
                     context.commit('setUser',data);
                     cookie.set('user_id',data.id,'1h')
+                    cookie.set('user_image',data.imageUrl,'1h')
                     // console.log(data['data']);
                 })
                 .catch(() =>{
