@@ -29,6 +29,7 @@
                 </div>
             </div>
             <hr>
+            <div v-html="highlight()"></div>
             <BoardResultlist/>
         </div>
     </div>
@@ -48,10 +49,9 @@ export default {
     components: {
         BoardResultlist,
     },
-    data: function(){
+    data(){
         return {
-            word: "",
-
+            word: this.keyword,
         }
     },
     methods:{
@@ -59,8 +59,8 @@ export default {
 
         highlight(){
             if(this.word){
-                return this.word.replace(new RegExp(this.keyword, 'gi'), match => {
-                    return '<span class="hilighted">' + match + '</span>';
+                return this.word.replace(new RegExp(this.word, 'gi'), match => {
+                    return '<span class="highlighted">' + match + '</span>';
                 });
             
             }

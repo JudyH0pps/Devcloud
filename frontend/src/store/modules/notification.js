@@ -5,7 +5,10 @@ export default{
     namespaced: true,
     // 데이터 관리
     state: {
+        // 알림 리스트
         notifications: [],
+        // 알림 수를 나타내는 state
+        noticeCnt: 0
     },
     mutaions: {
         PUSH_NOTIFICATION(state, notifications) {
