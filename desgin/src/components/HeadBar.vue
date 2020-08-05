@@ -10,6 +10,9 @@
           <!-- <router-link :to="{ 'name':'Home' }">
             <li class="underline">Home</li>
           </router-link> -->
+          <router-link :to="{ 'name':'Search' }">
+            <li class="underline">Search</li>
+          </router-link>
           <router-link :to="{ 'name':'Board' }">
             <li class="underline">Board</li>
           </router-link>
@@ -82,7 +85,8 @@ header {
   justify-content: space-between;
   align-items: center;
   transition: 0.6s;
-  padding: 30px 80px;
+  /* padding: 30px 80px; */
+  padding: 15px 80px;
   z-index: 100;
   min-width: 1024px;
 }

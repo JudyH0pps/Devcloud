@@ -39,7 +39,7 @@ img {
     width: 100%;
 }
 .blog-post {
-    width: 93;
+    width: 93%;
     height: 200px;
     padding: 50px;
     margin: 15px 10px;

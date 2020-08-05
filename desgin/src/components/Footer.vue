@@ -1,6 +1,7 @@
 <template>
     <footer class="fixed-footer">
         <h2>Footer</h2>
+        
         <!-- <h2>김시영</h2>
         <h2>김기영</h2>
         <h2>박준영</h2>
@@ -12,15 +13,10 @@
 export default{
     name: 'Footer',
     methods: {
-        font() {
-            var h1 = document.querySelector("h1");
-            h1.addEventListener("input", function() {
-            this.setAttribute("data-heading", this.innerText);
-            });
-        }
+
     },
     mounted() {
-        this.font();
+        
     }
 }
 </script>

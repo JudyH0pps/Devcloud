@@ -3,10 +3,10 @@
     <div class="container">
       <div class="profile-header">
         <div class="profile-img">
-          <img src="../assets/logo.png" width="200" alt="profile">
+          <img src="../assets/damgom.png" width="200" alt="profile">
         </div>
         <div class="profile-nav-info">
-          <h3 class="user-name">Kong</h3>
+          <h3 class="user-name">Nongdamgom</h3>
           <div class="address">
             <p class="state">
               Gwanju,
@@ -81,11 +81,11 @@ export default {
   box-sizing: border-box;
 }
 .profile {
-  background: #e9e9e9;
-  overflow: hidden;
+  /* background: #e9e9e9; */
+  /* overflow: hidden; */
   /* padding-top: 20vh; */
   font-family: "Poppins", sans-serif;
-  margin: 115px 50px 0;
+  margin: 80px 50px 0;
   padding: 10px;
 }
 .profile-header {
