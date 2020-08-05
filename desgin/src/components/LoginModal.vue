@@ -1,7 +1,7 @@
 <template>
     <div class="modal-bg" v-if="loginModalOn">
         <div id="login-box" class="modal" >
-            <img class="social google g-logo" src="../assets/btn_google_signin_dark_normal_web@2x.png" alt="g-logo">
+            <img @click="googleLogin" class="social google g-logo" src="../assets/btn_google_signin_dark_normal_web@2x.png" alt="g-logo">
             <button class="social close" @click="closeModal">Close</button>
         </div>
     </div>
@@ -20,7 +20,10 @@ export default{
     },
     methods: {
         closeModal() {
-            this.$emit('toggleModal')
+            this.$emit('toggleModal');
+        },
+        googleLogin() {
+            this.$emit('googleLogin');
         }
     },
 }

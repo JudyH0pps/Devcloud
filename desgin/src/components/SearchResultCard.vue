@@ -3,15 +3,15 @@
         <div class="image-data">
             <div class="background-image"></div>
             <div class="publication-details">
-                <p class="author">{{ user }}</p>
+                <p class="author">{{ question.user.name }}</p>
                 <p class="date">{{ date }}</p>
             </div>
         </div>
         <div class="post-data">
-            <h1 class="title">{{ title }}</h1>
+            <h1 class="title">{{ question.title }}</h1>
             <h2 class="subtitle">it's subtitle</h2>
             <p class="description">
-                {{ content }}
+                {{ question.content }}
             </p>
         </div>
         <!-- <h2 class="card_title">Q. {{ title }}</h2>
@@ -35,18 +35,26 @@
 </template>
 
 <script>
+
 export default{
     name: 'SearchResultCard',
     data() {
         return {
-            title: '이거 어떻게해요?',
-            content: '이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요',
-            tags: ['Java','Python','Django'],
-            date: '2020년 07월 20일',
-            like: 104,
-            user: 'Nongdamgom',
+            // title: '이거 어떻게해요?',
+            // content: '이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요',
+            // tags: ['Java','Python','Django'],
+            // date: '2020년 07월 20일',
+            // like: 104,
+            // user: 'Nongdamgom',
         }
-    }
+    },
+    props: {
+        question: Array,
+    },
+    computed:{
+
+    },    
+
 }
 </script>
 
