@@ -26,7 +26,7 @@
                                         <img 
                                             alt="profile picture"
                                             class="border rounded-circle profile-picture"
-                                            :src="user.avatar"
+                                            :src="userImage"
                                             style="width: 48px; height: 48px;">
                                     </template>
                                     <b-dropdown-item router-link :to="{ name : 'Profile' }"> My Profile</b-dropdown-item>
@@ -89,12 +89,13 @@ export default {
                 return true;
             else
                 return false;
-        }
+        },
     },
     data() {
         return {
             localTokend: false,
             showModal: false,
+            userImage : this.$cookie.get('user_image')
         }
     },
     methods: {
