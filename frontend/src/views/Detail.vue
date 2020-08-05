@@ -3,20 +3,22 @@
 	<!-- 헤더 -->
 
 	<!-- 질문 -->
-		<DetailQuestion :isDetailPage="isDetailPage" :qid="questionId" />
+	<DetailQuestion :isDetailPage="isDetailPage" :qid="questionId" />
 
-		<!-- 답변 -->
-		<header class="d-flex my-5">
-			<h1 class="mb-0 px-2">
-				A. 여기부터 답변 영역입니다.
-			</h1>
-		</header>
+	<!-- 답변 -->
+	<header class="d-flex my-5">
+		<h1 class="mb-0 px-2">
+			A. 여기부터 답변 영역입니다.
+		</h1>
+	</header>
 
-		<!-- <div v-for="(answerData, index) in detailAnswerData" :key="index">
-			<DetailAnswer :answerData="answerData" />
-		</div> -->
+	<!-- <div v-for="(answerData, index) in detailAnswerData" :key="index">
+		<DetailAnswer :answerData="answerData" />
+	</div> -->
 
-		<DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" />
+	<DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" />
+
+	
   </div>
 </template>
 
@@ -38,11 +40,11 @@ export default {
 	},
 	computed: {
 		...mapState({
-			answers: state => state.answer.answers
+			answers: state => state.answer.answers,
 		}),
 		questionId() {
 			return parseInt(this.$route.params.question_id)
-		}
+		},
 	},
 	methods: {
 		...mapActions('answer',['fetchAnswers']),
