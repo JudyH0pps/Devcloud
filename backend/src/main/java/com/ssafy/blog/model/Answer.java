@@ -15,9 +15,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "answers", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "id")
-})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
