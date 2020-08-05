@@ -23,7 +23,11 @@
                                 <b-nav-item-dropdown right>
                                     <!-- Using 'button-content' slot -->
                                     <template v-slot:button-content>
-                                        <b-avatar variant="info" size="3rem"></b-avatar>
+                                        <img 
+                                            alt="profile picture"
+                                            class="border rounded-circle profile-picture"
+                                            :src="user.avatar"
+                                            style="width: 48px; height: 48px;">
                                     </template>
                                     <b-dropdown-item router-link :to="{ name : 'Profile' }"> My Profile</b-dropdown-item>
                                     <b-dropdown-item href="#" @click="signOutBtn">Sign Out</b-dropdown-item>
