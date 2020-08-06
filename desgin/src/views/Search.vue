@@ -22,16 +22,38 @@ export default{
     },
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
+        highlight(){
+            if(this.word){
+                return this.word.replace(new RegExp(this.word, 'gi'), match => {
+                    return '<span class="highlighted">' + match + '</span>';
+                });
+            
+            }
+        },
+        move(qid){
+            this.$router.push({
+                name:'Detail',
+                params:{ "question_id" : qid},
+            })
+        },
     },
     computed:{
         ...mapState({
             questions : state => state.question.questions
-        })
-    },  
-
+        }),
+        searchKeyword(){
+			return this.$route.params.search_keyword
+        }
+    },
     created() {
         // alert(this.keyword)
-        this.fetchQuestionsByKeyword(this.keyword);
+        this.fetchQuestionsByKeyword(this.searchKeyword)
+    },
+    watch:{
+        searchKeyword : function(){
+            this.fetchQuestionsByKeyword(this.searchKeyword)
+            this.setKeyword(this.searchKeyword)
+        }
     }
 }
 

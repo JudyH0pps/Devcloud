@@ -1,10 +1,10 @@
 <template>
     <div class="card">
-        <div class="image-data">
+        <div class="image-data" style="background: url('../assets/cloud.png') center no-repeat;">
             <div class="background-image"></div>
             <div class="publication-details">
                 <p class="author">{{ question.user.name }}</p>
-                <p class="date">{{ date }}</p>
+                <p class="date">{{ question.date }}</p>
             </div>
         </div>
         <div class="post-data">
@@ -35,7 +35,6 @@
 </template>
 
 <script>
-
 export default{
     name: 'SearchResultCard',
     data() {
@@ -49,12 +48,13 @@ export default{
         }
     },
     props: {
-        question: Array,
+        question: Object,
     },
-    computed:{
-
-    },    
-
+    methods: {
+        getImages(name) {
+            return require('../assets/' + name);
+        },
+    }
 }
 </script>
 
@@ -95,7 +95,7 @@ export default{
     position: absolute;
     top: 0;
     left: 0;
-    background: url('../assets/cloud.png') center no-repeat;
+    /* background: url('../assets/cloud.png') center no-repeat; */
     background-size: cover;
     z-index: -1;
     transition: transform 5s;
