@@ -27,7 +27,12 @@ Vue.use(VueRouter)
     path: '/profile',
     name: 'Profile',
     component: () => import('../views/Profile.vue')
-  }
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('../views/Search.vue')
+  },
 ]
 
 const router = new VueRouter({

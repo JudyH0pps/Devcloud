@@ -9,17 +9,8 @@ import answer from "@/store/modules/answer.js";
 import notification from "@/store/modules/notification.js";
 
 export default new Vuex.Store({
-  state: {
-    keyword : "",
-  },
-  mutations: {
-    setKeyword(state, payload){
-      state.keyword = payload
-    },
-    resetKeyword(state){
-      state.keyword=""
-    }
-  },
+  state: {},
+  mutations: {},
   actions: {
   },
   modules: {

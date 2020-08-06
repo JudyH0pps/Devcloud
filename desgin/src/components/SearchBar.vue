@@ -1,11 +1,42 @@
 <template>
     <div class="wrapper">
     <div class="search_box">
-        <input type="text" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
+        <input type="text" v-model="word"  v-on:keyup.enter="searchItem" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
         <i class="fas fa-search"></i>
     </div>
     </div>
 </template>
+
+<script>
+import {mapState, mapMutations} from 'vuex'
+
+export default {
+  name: 'SearchBar',
+  data() {
+    return {
+      word : this.keyword
+    }
+  },
+  computed:{
+      ...mapState({
+          keyword : state => state.keyword
+      })
+  },  
+  methods: {
+    ...mapMutations([
+        'setKeyword'
+    ]),
+    searchItem() {
+        this.setKeyword(this.word);
+        this.$router.push({
+            name:'Search'
+        })
+        // localStorage.setItem(this.inputValue, this.searchItem);
+    }
+  }
+}
+
+</script>
 
 <style scoped>
 *{
