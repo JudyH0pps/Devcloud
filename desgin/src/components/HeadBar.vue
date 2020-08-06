@@ -16,7 +16,7 @@
           <router-link :to="{ 'name':'Board' }">
             <li class="underline">Board</li>
           </router-link>
-          <router-link :to="{ 'name':'Home' }">
+          <router-link :to="{ 'name':'Ranking' }">
             <li class="underline">Ranking</li>
           </router-link>
           <router-link :to="{ 'name':'Profile' }">

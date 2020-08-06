@@ -33,6 +33,11 @@ Vue.use(VueRouter)
     name: 'Search',
     component: () => import('../views/Search.vue')
   },
+  {
+    path: '/ranking',
+    name: 'Ranking',
+    component: () => import('../views/Ranking.vue')
+  },
 ]
 
 const router = new VueRouter({
