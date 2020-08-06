@@ -72,7 +72,6 @@ export default {
     },
     watch:{
         searchKeyword : function(){
-            alert(this.searchKeyword + "로 검색합니다.")
             this.fetchQuestionsByKeyword(this.searchKeyword)
             this.setKeyword(this.searchKeyword)
         }
