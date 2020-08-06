@@ -29,7 +29,7 @@ Vue.use(VueRouter)
     component: () => import('../views/Profile.vue')
   },
   {
-    path: '/search',
+    path: '/search/:search_keyword',
     name: 'Search',
     component: () => import('../views/Search.vue')
   },

@@ -35,7 +35,6 @@
 </template>
 
 <script>
-
 export default{
     name: 'SearchResultCard',
     data() {
@@ -49,12 +48,8 @@ export default{
         }
     },
     props: {
-        question: Array,
-    },
-    computed:{
-
-    },    
-
+        question: Object,
+    }
 }
 </script>
 
