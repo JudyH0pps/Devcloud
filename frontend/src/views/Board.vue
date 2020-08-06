@@ -29,8 +29,7 @@
                 </div>
             </div>
             <hr>
-            <div v-html="highlight()"></div>
-            <BoardResultlist/>
+            <BoardResultlist :keyword="this.searchKeyword" />
         </div>
     </div>
 </template>
@@ -53,19 +52,10 @@ export default {
     },
     data(){
         return {
-            word: this.keyword,
         }
     },
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
-        highlight(){
-            if(this.word){
-                return this.word.replace(new RegExp(this.word, 'gi'), match => {
-                    return '<span class="highlighted">' + match + '</span>';
-                });
-            
-            }
-        }
     },
     created(){
         this.fetchQuestionsByKeyword(this.searchKeyword)
@@ -80,8 +70,5 @@ export default {
 </script>
 
 <style>
-.highlighted {
-    color: white;
-    background-color: orangered;
-}
+
 </style>
