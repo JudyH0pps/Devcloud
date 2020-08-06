@@ -1,8 +1,15 @@
 <template>
     <section class="ranking">
         <div class="leaderboard">
+            <div class="line leaderboardheader">
+                <i class="fas fa-medal"></i>
+                <h3>leaderboard</h3>
+            </div>
             <div class="line" v-for="user in users" :key="user">
-
+                <img src="@/assets/damgom.png">
+                <h3>Nongdamgom</h3>
+                <h4 style="margin-left: auto;">1500</h4>
+                <span style="margin: 0 100px 0 10px;">pts</span>
             </div>
         </div>
         <!-- Add Pagination -->
@@ -29,13 +36,39 @@ export default {
   margin: 80px 50px 0;
   padding: 10px;
 }
+.fa-medal {
+    color: white;
+    font-size: 50px;
+    padding: 20px 0 0 100px;;
+    height: 100%;
+}
+.leaderboardheader {
+    background-color: rgb(149, 68, 196);
+    color: white;
+    justify-content: space-between;
+}
+.leaderboardheader h3 {
+    text-transform: uppercase;
+    padding-right: 100px;
+}
 .leaderboard {
     width: 100%;
 }
 .line {
-    width: 100%;
-    height: 100px;
-    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
+    line-height: 85px;
+    width: 70%;
+    height: 90px;
+    margin-left: auto;
+    margin-right: auto;
+    /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
+    display: flex;
+    flex-direction: row;
 }
-
+.line img {
+    height: 70%;
+    border-radius: 50%;
+    margin: 15px 15px 15px 40px;
+    border: 4px solid #fff;
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
+}
 </style>
