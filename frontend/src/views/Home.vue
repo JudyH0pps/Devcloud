@@ -22,24 +22,13 @@
 <script>
 // @ is an alias to /src
 import Searchbar from '@/components/Searchbar.vue'
-import {mapState,mapMutations} from 'vuex'
+
 
 export default {
   name: 'Home',
   components: {
     Searchbar,
   },
-  computed:{
-    ...mapState({
-      keyword : state => state.keyword
-    })
-  },
-  methods:{
-    ...mapMutations(['resetKeyword'])
-  },
-  created(){
-    this.resetKeyword()
-  }
 }
 </script>
 

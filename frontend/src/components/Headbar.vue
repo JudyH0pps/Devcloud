@@ -8,10 +8,10 @@
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-form>
-                        <b-form-input size="md" placeholder="Search" v-model="word"></b-form-input>
-                        <b-button size="md" @click="search">Search</b-button>
-                    </b-nav-form>
+                    <div class="input-group">
+                        <b-form-input size="md" placeholder="Search" @keyup.enter="searchItem" v-model="keyword"></b-form-input>
+                        <b-button size="md" @click="searchItem">Search</b-button>
+                    </div>
                     
                     <div class="ml-4 mr-4">
                         <!-- before login -->
@@ -62,7 +62,7 @@
 <script>
 import Sidebar from './Sidebar.vue'
 // import Btn from '@/components/Btn'
-import {mapState,mapMutations,mapActions} from 'vuex'
+import {mapState,mapActions} from 'vuex'
 
 
 export default {
@@ -73,15 +73,18 @@ export default {
     },
     computed:{
         ...mapState({
-            keyword : state => state.keyword,
+            //keyword : state => state.keyword,
             user : state => state.user.user,
         }),
-        word :{
+        keyword:{
             get(){
-                return this.keyword
+                if(this.$route.name == 'Board')
+                    return this.$route.params.search_keyword
+                else
+                    return null
             },
             set(val){
-                this.setKeyword(val)
+                return this.setKeyword = val
             }
         },
         loginTokened(){
@@ -95,12 +98,13 @@ export default {
         return {
             localTokend: false,
             showModal: false,
-            userImage : this.$cookie.get('user_image')
+            userImage : this.$cookie.get('user_image'),
+            setKeyword : ""
         }
     },
     methods: {
         ...mapActions('user',['fetchUserProfile']),
-        ...mapMutations(['setKeyword']),
+       
         signInBtn() {
             this.showModal = true;
         },
@@ -140,19 +144,26 @@ export default {
                 } 
             } 
         },
-        search(){
-            //alert(this.word)
-            // this.setKeyword(this.word)
-            //alert(this.keyword)
-            this.$router.push({
-                name:'Board'
-            })
+        searchItem(){
+            if(this.setKeyword != ""){
+                this.$router.push({
+                    name:'Board',
+                    params:{
+                        search_keyword : this.setKeyword
+                    }
+                }).catch(()=>{
+                    if(this.setKeyword != ""){
+                        this.$router.go()
+                    }
+                });
+            }else{
+                if(this.setKeyword != "")
+                    this.$router.go()
+            }
         }
     },
     created() {
-        
         let token = this.getParameters('token')
-
         // 토큰이 있으면
         if(token !== undefined){
             // localStorage.setItem('localToken', token);
@@ -161,18 +172,9 @@ export default {
             this.fetchUserProfile(this.$cookie.get('logintoken'));
             // this.$cookie.set('user_id',this.user.id,'1h');
         }
-        // if(localStorage.getItem('localToken') != null){
-        //     this.loginTokened = true;
-        // }
-        // let temp_token = link.slice(link.indexOf('?') + 1, link.length);
-        // let token = temp_token.slice(temp_token.indexOf('=') + 1, temp_token.length);
-        
-        // console.log("토큰"+ token);
-        // var test_localToken = localStorage.getItem('localToken');
-        //var test_localToken = this.$cookie.get('logintoken');
 
         
-    }
+    },
 }
 </script>
 
