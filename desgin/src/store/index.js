@@ -10,16 +10,28 @@ import notification from "@/store/modules/notification.js";
 
 export default new Vuex.Store({
   state: {
-    keyword : "",
+    // keyword : "",
     searchBarinHeadbar: true,
   },
   mutations: {
-    setKeyword(state, payload){
-      state.keyword = payload
-    },
-    resetKeyword(state){
-      state.keyword=""
-    }
+    // setKeyword(state, payload){
+    //   state.keyword = payload
+    // },
+    // resetKeyword(state){
+    //   state.keyword=""
+    // },
+    // searchItem() {
+    //   if(this.keyword != "")
+    //   {
+    //     this.keyword = '';
+    //     this.$router.push({
+    //       name:'Search',
+    //       params:{
+    //           search_keyword : this.keyword
+    //       }
+    //     })          
+    //   }
+    // }
   },
   actions: {
   },
