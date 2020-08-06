@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <section class="banner">
+    <!-- <section class="banner"> -->
     <HeadBar/>
-    </section>
+    <!-- </section> -->
     <!-- <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -78,11 +78,11 @@ body {
   background: white;
 }
 
-.banner {
+/* .banner {
   position: relative;
   width: 100%;
   height: 100%;
-}
+} */
 
 /* .botmargin400px {
   margin-bottom: 400px !important;
