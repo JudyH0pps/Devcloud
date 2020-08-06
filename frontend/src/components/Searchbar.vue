@@ -9,7 +9,7 @@
                     </span>
                 </b-input-group-prepend>
                 <b-form-input
-                    v-model="word"
+                    v-model="keyword"
                     v-on:keyup.enter="searchItem" 
                     placeholder="Search">
                 </b-form-input>
@@ -20,30 +20,25 @@
 </template>
 
 <script>
-import {mapState,mapMutations} from 'vuex'
 
 export default {
     name: "searchInput",
     data(){
         return {
-            word : this.keyword
+            keyword :""
         };
     },
-    computed:{
-        ...mapState({
-            keyword : state => state.keyword
-        })
-    },  
     methods: {
-        ...mapMutations([
-            'setKeyword'
-        ]),
         searchItem() {
-            this.setKeyword(this.word);
-            this.$router.push({
-                name:'Board'
-            })
-            // localStorage.setItem(this.inputValue, this.searchItem);
+            if(this.keyword != "")
+            {
+                this.$router.push({
+                    name:'Board',
+                    params:{
+                        search_keyword : this.keyword
+                    }
+                })          
+            }
         }
     }
 }
