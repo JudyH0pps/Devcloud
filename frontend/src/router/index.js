@@ -30,7 +30,7 @@ Vue.use(VueRouter)
     component: DetailPage
   },
   {
-    path: '/board',
+    path: '/board/:search_keyword',
     name: 'Board',
     component: BoardPage
   },
