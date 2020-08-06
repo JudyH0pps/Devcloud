@@ -9,8 +9,8 @@
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
                     <div class="input-group">
-                        <b-form-input size="md" placeholder="Search" @keyup.enter="searchItem" v-model="keyword"></b-form-input>
-                        <b-button size="md" @click="searchItem">Search</b-button>
+                        <b-form-input size="lg" placeholder="검색어를 넣어주세요 >>" @keyup.enter="searchItem" v-model="keyword"></b-form-input>
+                        <button type="button" class="btn btn-info" style="height: 48px;" @click="searchItem">Search</button>
                     </div>
                     
                     <div class="ml-4 mr-4">
