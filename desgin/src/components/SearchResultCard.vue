@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="image-data" style="background: url('../assets/cloud.png') center no-repeat;">
+        <div class="image-data">
             <div class="background-image"></div>
             <div class="publication-details">
                 <p class="author">{{ question.user.name }}</p>
@@ -8,8 +8,10 @@
             </div>
         </div>
         <div class="post-data">
-            <h1 class="title">{{ question.title }}</h1>
-            <h2 class="subtitle">it's subtitle</h2>
+            <h1 class="title">Q. {{ question.title }}</h1>
+            <h2 class="subtitle">
+                <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
+            </h2>
             <p class="description">
                 {{ question.content }}
             </p>
@@ -41,7 +43,7 @@ export default{
         return {
             // title: '이거 어떻게해요?',
             // content: '이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요',
-            // tags: ['Java','Python','Django'],
+            tags: ['Java','Python','Django'],
             // date: '2020년 07월 20일',
             // like: 104,
             // user: 'Nongdamgom',
@@ -70,14 +72,18 @@ export default{
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    box-shadow: 0 3px 2px rgba(0, 0, 0, .5);
+    /* box-shadow: 0 3px 2px rgba(0, 0, 0, .5); */
     margin: 10px auto 10px auto;
     /* border-radius: 15px; */
     overflow: hidden;
+    flex-direction: row;
+}
+.card:hover {
+    cursor: pointer;
 }
 .image-data {
-    height: 250px;
-    width: 250px;
+    /* height: 250px; */
+    width: 50px;
     position: relative;
     z-index: 1;
     overflow: hidden;
@@ -85,6 +91,7 @@ export default{
 .author {
     display: inline-block;
     margin-bottom: .5rem;
+    font-size: 10px;
 }
 .author:hover {
     color: rgba(255, 255, 255, .75);
@@ -113,7 +120,7 @@ export default{
     color: #fff;
     top: 0;
     left: 0;
-    padding: 10px;
+    padding: 5px;
 }
 .post-data {
     background-color: #fff;
@@ -148,27 +155,12 @@ export default{
                                             rgba(0, 242, 254, .6));
     border-radius: 20px;
 }
-@media screen and (min-width: 600px) {
-    .card {
-        flex-direction: row;
-        max-height: 750px;
-    }
-    .image-data {
-        flex-basis: 40%;
-        height: unset;
-    }
-    .publication-details {
-        transform: translateX(-100%);
-    }
-    .card:hover .publication-details {
-        transform: translateX(0);
-    }
-    .post-data{
-        flex-basis: 60%;
-    }
+.publication-details {
+    transform: translateX(-100%);
 }
-
-
+.card:hover .publication-details {
+    transform: translateX(0);
+}
 .tag {
     font-size: 12px;
     margin: 1px;

@@ -37,15 +37,27 @@ export default {
   padding: 10px;
 }
 .fa-medal {
+    /* position: absolute; */
     color: white;
     font-size: 50px;
     padding: 20px 0 0 100px;;
     height: 100%;
 }
+/* .fa-medal::after {
+    content: '';
+    position: absolute;
+    border: 3px solid rgba(255,255,255,.5);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    transform: translate(-80%, -20%);
+    filter: blur();
+} */
 .leaderboardheader {
-    background-color: rgb(149, 68, 196);
+    background-color: skyblue;
     color: white;
     justify-content: space-between;
+    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
 }
 .leaderboardheader h3 {
     text-transform: uppercase;

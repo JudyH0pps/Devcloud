@@ -109,8 +109,9 @@ header {
 }
 header.sticky {
   padding: 10px 80px;
-  background: #000;
-  box-shadow: 0px 5px 5px rgba(0,0,0,.5);
+  background: #fff;
+  box-shadow: 0px 3px 5px rgba(0,0,0,.5);
+  /* box-shadow: 0px 5px 10px rgba(0,0,0,.2); */
   /* background: rgb(202, 237, 248); */
 }
 header .logo {
@@ -146,7 +147,7 @@ header ul li {
 }
 header.sticky .logo,
 header.sticky ul li{
-  color: #fff;
+  /* color: #fff; */
   /* color: #000; */
 }
 .red{
@@ -163,7 +164,7 @@ header.sticky ul li{
   transition: width .3s;
 }
 .sticky .underline::after{
-  background: #fff;
+  /* background: #fff; */
 }
 .underline:hover::after {
   position: relative;
