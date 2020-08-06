@@ -1,11 +1,35 @@
 <template>
     <!-- <div class="wrapper"> -->
     <div class="search_box">
-        <input type="text" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
+        <input type="text" v-model="keyword"  v-on:keyup.enter="searchItem" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
         <i class="fas fa-search"></i>
     </div>
     <!-- </div> -->
 </template>
+
+<script>
+export default{
+  name: 'HeadSearchBar',
+  data() {
+    return {
+      keyword: '',
+    }
+  },
+  methods: {
+    searchItem() {
+      if(this.keyword != "")
+      {
+        this.$router.push({
+          name:'Search',
+          params:{
+              search_keyword : this.keyword
+          }
+        })          
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 *{

@@ -30,9 +30,6 @@ export default{
             
             }
         },
-        getImages(name) {
-            return require('../assets/' + name);
-        },
         move(qid){
             this.$router.push({
                 name:'Detail',
