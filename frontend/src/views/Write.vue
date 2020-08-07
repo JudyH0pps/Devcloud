@@ -6,8 +6,15 @@
         <input v-model="questionData.title" type="text" class="form-control" id="title" placeholder="질문의 제목을 입력해주세요" />
       </div>
       <div class="form-group text-left col-12 col-md-7 px-0 my-4">
-        <label for="content" class="mb-0 d-block"><h3 class="font-weight-bolder">Body</h3></label>
-        <textarea  v-model="questionData.content" type="text" class="form-control" id="content" placeholder="내용을 입력해주세요" />
+        <!-- <label for="content" class="mb-0 d-block"><h3 class="font-weight-bolder">Body</h3></label>
+        <textarea  v-model="questionData.content" type="text" class="form-control" id="content" placeholder="내용을 입력해주세요" /> -->
+        <editor
+          v-model="questionData.content"
+          :options="editorOptions"
+          height="350px"
+          initialEditType="wysiwyg"
+          previewStyle="vertical"
+        />
       </div>
       <div class="form-group text-left col-12 col-md-7 px-0 my-4">
         <label for="tag" class="mb-0 d-block"><h4 class="font-weight-bolder">Tags</h4></label>
@@ -19,9 +26,17 @@
 </template>
 
 <script>
+import 'codemirror/lib/codemirror.css';
+import '@toast-ui/editor/dist/toastui-editor.css';
+
+import { Editor } from '@toast-ui/vue-editor';
+
 import {mapActions} from 'vuex'
 export default {
   name: 'Write',
+  components: {
+    "editor": Editor
+  },
   data() {
     return {
       questionData: {
@@ -29,7 +44,14 @@ export default {
         "content": '',
         "user_id": this.$cookie.get('user_id')
       },
-      isEditPage: null
+      isEditPage: null,
+      defaultOptions: {
+        minHeight: '200px',
+        useCommandShortcut: true,
+        useDefaultHTMLSanitizer: true,
+        usageStatistics: true,
+        hideModeSwitch: false,
+      }
     }
   },
   methods: {
