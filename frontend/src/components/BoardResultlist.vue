@@ -14,7 +14,7 @@
                         v-for="(question, index) in questions.slice().reverse()"
                         :key="index"
                         img-width= "400"
-                        img-height= "280"
+                        img-height= "auto"
                         @click="move(question.id)"
                     >
                         <!-- image issue -->
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div style="width: 30%; float: right; text-align: center">
-                            <img src="@/assets/sun-icon.png"/>
+                            <img src="@/assets/rainbow_heart.png" width="50px" height="50px"/>
                             <h1 style="margin-top: 50px">0</h1>
                         </div>
 
