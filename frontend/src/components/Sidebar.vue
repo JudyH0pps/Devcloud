@@ -25,7 +25,7 @@
   <div align="left" class="m-0 p-0">
     <b-button v-b-toggle.sidebar-backdrop >></b-button>
     <b-sidebar id="sidebar-backdrop"
-               title="Sidebar"
+               title="DevCloud"
                backdrop
                shadow>
         <b-list-group>

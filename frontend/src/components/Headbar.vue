@@ -10,7 +10,7 @@
                 <b-navbar-nav class="ml-auto">
                     <div class="input-group">
                         <b-form-input size="lg" placeholder="검색어를 넣어주세요 >>" @keyup.enter="searchItem" v-model="keyword"></b-form-input>
-                        <button type="button" class="btn btn-info" style="height: 48px;" @click="searchItem">Search</button>
+                        <button type="button" class="btn btn-dark" style="height: 48px;" @click="searchItem">Search</button>
                     </div>
                     
                     <div class="ml-4 mr-4">
@@ -37,7 +37,7 @@
                         <!-- after login -->
                         <div v-else>
                             <!-- <Btn/> -->
-                            <b-button class="btn btn-info" varient="outline" size="md" @click="signInBtn">Sign In</b-button>
+                            <button type="button" style="width: 100px; height: 48px;" class="btn btn-primary" varient="outline" size="md" @click="signInBtn">Sign In</button>
                         </div>
                     </div>
                 </b-navbar-nav>
@@ -52,8 +52,8 @@
                 <div>
                     <h3>Please Login</h3>
                 </div>
-                <b-button class="btn btn-success mt-3" block @click="loginOk" >OK</b-button>
-                <b-button class="btn btn-warning mt-2" block @click="loginNo">NO</b-button>
+                <b-button class="btn btn-danger mt-3" block @click="loginOk" >google Login</b-button>
+                <b-button class="btn btn-dark mt-2" block @click="loginNo">Cancel</b-button>
             </div>
         </b-modal>
     </div>
