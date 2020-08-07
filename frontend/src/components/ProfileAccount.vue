@@ -12,28 +12,30 @@
                     </div>
                 </div>
                 <br><hr>
-                <!-- 닉네임 -->
-                <div>
-                    <label>Nick Name</label>
-                    <b-form-input type="text" v-model="user.name" :readonly="validated"></b-form-input>
-                    <!-- user.email.split('@')[0] -->
-                    <p style="margin-top:10px">공식적으로 보여지는 이름입니다.</p>
-                </div>
-                <hr>
-                <!-- ID 또는 Email -->
-                <div>
-                    <label>User ID</label>
-                    <b-form-input v-model="user.email" readonly></b-form-input>
-                    <p style="margin-top:10px">ID는 변경하실 수 없습니다.</p>
-                </div>
-                <hr>
-                <!-- 국적 -->
-                <div>
-                    <label>Region</label>
-                    <!-- <b-form-input v-model="user.region" :readonly="validated" ></b-form-input> -->
-                    <b-form-input v-model="user.region" :readonly="validated" ></b-form-input>
-                    
-                    <p style="margin-top:10px">현재 활동하고 있는 지역을 나타냅니다.</p>
+                <div style="width: 50%; text-align: left; margin-left: auto; margin-right: auto">
+                    <!-- 닉네임 -->
+                    <div>
+                        <label>Nick Name</label>
+                        <b-form-input type="text" v-model="user.name" :readonly="validated"></b-form-input>
+                        <!-- user.email.split('@')[0] -->
+                        <p style="margin-top:10px">공식적으로 보여지는 이름입니다.</p>
+                    </div>
+                    <hr>
+                    <!-- ID 또는 Email -->
+                    <div>
+                        <label>User ID</label>
+                        <b-form-input v-model="user.email" readonly></b-form-input>
+                        <p style="margin-top:10px">ID는 변경하실 수 없습니다.</p>
+                    </div>
+                    <hr>
+                    <!-- 국적 -->
+                    <div>
+                        <label>Region</label>
+                        <!-- <b-form-input v-model="user.region" :readonly="validated" ></b-form-input> -->
+                        <b-form-input v-model="user.region" :readonly="validated" ></b-form-input>
+                        
+                        <p style="margin-top:10px">현재 활동하고 있는 지역을 나타냅니다.</p>
+                    </div>
                 </div>
                 <hr>
                 <a href="#"> 더보기...</a>

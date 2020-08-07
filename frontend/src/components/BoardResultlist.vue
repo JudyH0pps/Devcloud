@@ -4,7 +4,7 @@
                     <h2>Questions</h2>
                 </div>
 
-                <div align="left" style="height: 100px;">
+                <div align="left" style="height: 100px;" class="cursor_test">
                         <!-- :img-src="getImages(question.avatar)" -->
                         <!-- :img-src="question.avatar" -->
 
@@ -14,7 +14,7 @@
                         v-for="(question, index) in questions.slice().reverse()"
                         :key="index"
                         img-width= "400"
-                        img-height= "280"
+                        img-height= "auto"
                         @click="move(question.id)"
                     >
                         <!-- image issue -->
@@ -24,7 +24,7 @@
 
                             </b-card-text>
                             <hr>
-                            <b-card-text v-html="$options.filters.highlights2(question.content, keyword)" style="font-size: 18px;">
+                            <b-card-text v-html="$options.filters.highlights2(question.content, keyword)" style="font-size: 18px; text-overflow: ellipsis">
                                 {{question.content}}
                             </b-card-text>
 
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <div style="width: 30%; float: right; text-align: center">
-                            <img src="@/assets/sun-icon.png"/>
+                            <img src="@/assets/rainbow_heart.png" width="50px" height="50px"/>
                             <h1 style="margin-top: 50px">0</h1>
                         </div>
 
@@ -136,6 +136,7 @@ Vue.filter("highlights2", function(item, keyword){
     font-family: 'Jua', sans-serif;
 }
 .highlight {
-    background-color: yellow;
+    background-color: #5ABEFF;
 }
+.cursor_test {cursor: pointer;}
 </style>
