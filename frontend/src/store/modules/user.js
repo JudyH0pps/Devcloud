@@ -8,11 +8,11 @@ export default {
         user: {
             id:"",
             email:"",
-            region:"default region",
+            tech : "Vue.js",
             introduction:"자기소개를 입력하세요",
             name:"",
             avatar:"",
-            
+            github:"https://github.com/",
         },
     },
 	mutations: {
@@ -21,10 +21,14 @@ export default {
             state.user.email = payload.email;
             state.user.name = payload.name;
             state.user.avatar =payload.imageUrl;
+        },
+        setProfile(state, payload){
+            state.user = payload
         }
     },
 	actions: {
-        fetchUserProfile(context,payload){
+        // 자기 프로필을 조회 (인증필요)
+        fetchMyProfile(context,payload){
             http
                 .get('/user/me',{
                     headers:{
@@ -41,6 +45,21 @@ export default {
                 .catch(() =>{
                     //alert('유저정보 조회중 오류 발생');
                 });
+        },
+        //다른사람의 프로필 페이지를 들어갈때
+        fetchUserProfile(context,user_id){
+            http
+                .get('/user/info',{
+                    params : {
+                        user_id : user_id
+                    }
+                })
+                .then(({data}) => {
+                    context.commit('setProfile',data)
+                })
+                .catch(()=>{
+                    alert('다른 유저정보 조회중 오류 발생')
+                })
         }
     },
 	getters: {},
