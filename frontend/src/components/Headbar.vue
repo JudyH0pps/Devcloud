@@ -163,11 +163,6 @@ export default {
             }
         },
         moveProfile(){
-            // if(this.$route.name == 'Profile'){
-            //     this.$route.params.user_id = this.$cookie.get('user_id')
-            //     this.$router.go()
-            // }
-
             this.$router.push({
                 name : 'Profile',
                 params : {
@@ -179,11 +174,6 @@ export default {
             })
         }
     },
-    // watch : {
-    //     loginTokened:function(){
-    //         this.$router.go()
-    //     }
-    // },
     created() {
         let token = this.getParameters('token')
         // 토큰이 있으면
