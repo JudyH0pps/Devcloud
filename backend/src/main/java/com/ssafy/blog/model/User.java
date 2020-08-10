@@ -1,6 +1,5 @@
 package com.ssafy.blog.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,25 +7,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import lombok.Data;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "email") })
 @Data
 public class User {
 
@@ -35,10 +30,10 @@ public class User {
     private Long id;
 
     @Email
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String name;
 
     @JsonIgnore
@@ -54,7 +49,17 @@ public class User {
 
     private String providerId;
 
+    private String introduction;
+
+    private String githubUrl;
+
     @CreatedDate
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
+    private Date createdAt;
+
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date created_at;
+    private Date updatedAt;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<UserTech> userTechs;
 }

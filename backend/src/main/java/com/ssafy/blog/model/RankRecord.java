@@ -7,43 +7,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Question {
-
+public class RankRecord {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne
     private User user;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false, length = 1023)
-    private String content;
+    private int ranking;
 
     @Column(nullable = false)
-    private int likeCnt;
-
-    @Column(nullable = false)
-    private int viewCnt;
+    private int rankPoint;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date updatedAt;
-
+    private Date createdAt;
 }

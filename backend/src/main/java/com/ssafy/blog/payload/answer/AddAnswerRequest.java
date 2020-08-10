@@ -15,17 +15,4 @@ public class AddAnswerRequest {
     private Long question_id;
     private String content;
 
-    @JsonIgnore
-    public User getUser() {
-        User user = new User();
-        user.setId(user_id);
-        return user;
-    }
-
-    @JsonIgnore
-    public Question getQuestion(){
-        Question question = new Question();
-        question.setId(question_id);
-        return question;
-    }
 }

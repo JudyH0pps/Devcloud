@@ -1,15 +1,20 @@
 package com.ssafy.blog.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Answer;
+import com.ssafy.blog.model.Question;
+import com.ssafy.blog.model.Rank;
+import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.answer.AddAnswerRequest;
-import com.ssafy.blog.payload.answer.AnswerResponse;
-import com.ssafy.blog.payload.answer.ReadAnswerResponse;
 import com.ssafy.blog.payload.answer.UpdateAnswerRequest;
 import com.ssafy.blog.repository.AnswerRepository;
+import com.ssafy.blog.repository.QuestionRepository;
+import com.ssafy.blog.repository.RankRepository;
+import com.ssafy.blog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,97 +31,104 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 public class AnswerController {
-    
+
     @Autowired
     private AnswerRepository answerRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private RankRepository rankRepository;
+
+    private ResponseEntity<Answer> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
     @GetMapping("/api/answers")
     @ApiOperation(value = "답변 검색")
-    public ResponseEntity<List<ReadAnswerResponse>> read(@RequestParam(required = false) Long user_id,
+    public ResponseEntity<List<Answer>> read(@RequestParam(required = false) Long user_id,
             @RequestParam(required = false) Long question_id) {
-        List<ReadAnswerResponse> list = new ArrayList<>();
+        List<Answer> list = new ArrayList<>();
 
-        if(user_id == null && question_id == null) {
-            for(Answer answer : answerRepository.findAll()) {
-                list.add(new ReadAnswerResponse(
-                    answer.getId(), 
-                    answer.getUser(), 
-                    answer.getQuestion(), 
-                    answer.getContent())
-                );
-            }
-        } else if(user_id != null) {
-            for(Answer answer : answerRepository.findAllByUserId(user_id)) {
-                list.add(new ReadAnswerResponse(
-                    answer.getId(), 
-                    answer.getUser(), 
-                    answer.getQuestion(), 
-                    answer.getContent())
-                );
-            }
-        } else if(question_id != null) {
-            for(Answer answer : answerRepository.findAllByQuestionId(question_id)) {
-                list.add(new ReadAnswerResponse(
-                    answer.getId(), 
-                    answer.getUser(), 
-                    answer.getQuestion(), 
-                    answer.getContent())
-                );
-            }
+        if (user_id == null && question_id == null) {
+            list = answerRepository.findAll();
+
+        } else if (user_id != null) {
+            list = answerRepository.findAllByUserId(user_id);
+
+        } else if (question_id != null) {
+            list = answerRepository.findAllByQuestionId(question_id);
         }
 
-        ResponseEntity<List<ReadAnswerResponse>> responseEntity = new ResponseEntity<>(list, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/api/answers")
     @ApiOperation(value = "답변 등록")
-    public ResponseEntity<AnswerResponse> create(@RequestBody AddAnswerRequest request) {
-        Answer answer = new Answer(
-            (long) 0, 
-            request.getUser(),
-            request.getQuestion(),
-            request.getContent()
-        );
+    public ResponseEntity<Answer> create(@RequestBody AddAnswerRequest request) {
+        // 1. 유저 있는지 찾기
+        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        if (!optionalUser.isPresent())
+            return badResponse;
+
+        // 2. 질문 있는지 찾기
+        Optional<Question> optionalQuestion = questionRepository.findById(request.getQuestion_id());
+        if (!optionalQuestion.isPresent())
+            return badResponse;
+
+        // 3. 둘다 있으면 답변 등록
+        Answer answer = new Answer();
+        answer.setUser(optionalUser.get());
+        answer.setQuestion(optionalQuestion.get());
+        answer.setContent(request.getContent());
+        answer.setLikeCnt(0);
+        answer.setSelected(false);
+        answer.setUpdatedAt(new Date());
         answer = answerRepository.save(answer);
 
-        AnswerResponse response = new AnswerResponse(
-            answer.getId(), 
-            answer.getUser().getId(), 
-            answer.getQuestion().getId(), 
-            answer.getContent()
-        );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // 4. rank cnt
+        updateRank(request.getUser_id(), 1);
+
+        return new ResponseEntity<>(answer, HttpStatus.OK);
     }
 
     @PutMapping("/api/answers")
     @ApiOperation(value = "답변 수정")
-    public ResponseEntity<AnswerResponse> update(@RequestBody UpdateAnswerRequest request) {
-        Answer answer = new Answer(
-            request.getId(), 
-            request.getUser(),
-            request.getQuestion(),
-            request.getContent()
-        );
+    public ResponseEntity<Answer> update(@RequestBody UpdateAnswerRequest request) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswer_id());
+        if (!optionalAnswer.isPresent())
+            return badResponse;
+
+        Answer answer = optionalAnswer.get();
+        answer.setContent(request.getContent());
         answer = answerRepository.save(answer);
 
-        AnswerResponse response = new AnswerResponse(
-            answer.getId(), 
-            answer.getUser().getId(), 
-            answer.getQuestion().getId(), 
-            answer.getContent()
-        );
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(answer, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/answers")
     @ApiOperation(value = "답변 삭제")
-    public ResponseEntity<String> delete(@RequestParam(required = true) Long id) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(id);
-        if(optionalAnswer.isPresent()) {
-            answerRepository.deleteById(id);
-            return new ResponseEntity<>("success", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> delete(@RequestParam("answer_id") Long answer_id) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
+        if (!optionalAnswer.isPresent())
+            return new ResponseEntity<>("not exist", HttpStatus.OK);
+
+        Long user_id = optionalAnswer.get().getUser().getId();
+        answerRepository.deleteById(answer_id);
+
+        updateRank(user_id, -1);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    // 좋아요 증감 api 만들기
+
+    private void updateRank(Long user_id, int step) {
+        Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
+        Rank rank = optionalRank.get();
+        rank.setQuestionCnt(rank.getQuestionCnt() + step);
+        rankRepository.save(rank);
     }
 }
