@@ -10,6 +10,7 @@ import com.ssafy.blog.model.Question;
 import com.ssafy.blog.model.Rank;
 import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.answer.AddAnswerRequest;
+import com.ssafy.blog.payload.answer.AnswerResponse;
 import com.ssafy.blog.payload.answer.UpdateAnswerRequest;
 import com.ssafy.blog.repository.AnswerRepository;
 import com.ssafy.blog.repository.QuestionRepository;
@@ -44,39 +45,41 @@ public class AnswerController {
     @Autowired
     private RankRepository rankRepository;
 
-    private ResponseEntity<Answer> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
-    @GetMapping("/api/answers")
+    @GetMapping("/api/answer")
     @ApiOperation(value = "답변 검색")
-    public ResponseEntity<List<Answer>> read(@RequestParam(required = false) Long user_id,
-            @RequestParam(required = false) Long question_id) {
-        List<Answer> list = new ArrayList<>();
+    public ResponseEntity<List<AnswerResponse>> searchAnswer(
+            @RequestParam(required = false, name = "user_id") Long user_id,
+            @RequestParam(required = false, name = "question_id") Long question_id) {
+        List<AnswerResponse> list = new ArrayList<>();
 
         if (user_id == null && question_id == null) {
-            list = answerRepository.findAll();
+            for (Answer answer : answerRepository.findAll())
+                list.add(makeAnswerResponse(answer));
 
         } else if (user_id != null) {
-            list = answerRepository.findAllByUserId(user_id);
+            for (Answer answer : answerRepository.findAllByUserId(user_id))
+                list.add(makeAnswerResponse(answer));
 
         } else if (question_id != null) {
-            list = answerRepository.findAllByQuestionId(question_id);
+            for (Answer answer : answerRepository.findAllByQuestionId(question_id))
+                list.add(makeAnswerResponse(answer));
         }
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @PostMapping("/api/answers")
+    @PostMapping("/api/answer")
     @ApiOperation(value = "답변 등록")
-    public ResponseEntity<Answer> create(@RequestBody AddAnswerRequest request) {
+    public ResponseEntity<AnswerResponse> addAnswer(@RequestBody AddAnswerRequest request) {
         // 1. 유저 있는지 찾기
         Optional<User> optionalUser = userRepository.findById(request.getUser_id());
         if (!optionalUser.isPresent())
-            return badResponse;
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
         // 2. 질문 있는지 찾기
         Optional<Question> optionalQuestion = questionRepository.findById(request.getQuestion_id());
         if (!optionalQuestion.isPresent())
-            return badResponse;
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
         // 3. 둘다 있으면 답변 등록
         Answer answer = new Answer();
@@ -91,26 +94,29 @@ public class AnswerController {
         // 4. rank cnt
         updateRank(request.getUser_id(), 1);
 
-        return new ResponseEntity<>(answer, HttpStatus.OK);
+        AnswerResponse response = makeAnswerResponse(answer);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/api/answers")
+    @PutMapping("/api/answer")
     @ApiOperation(value = "답변 수정")
-    public ResponseEntity<Answer> update(@RequestBody UpdateAnswerRequest request) {
+    public ResponseEntity<AnswerResponse> modifyAnswer(@RequestBody UpdateAnswerRequest request) {
         Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswer_id());
         if (!optionalAnswer.isPresent())
-            return badResponse;
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
         Answer answer = optionalAnswer.get();
         answer.setContent(request.getContent());
+        answer.setUpdatedAt(new Date());
         answer = answerRepository.save(answer);
 
-        return new ResponseEntity<>(answer, HttpStatus.OK);
+        AnswerResponse response = makeAnswerResponse(answer);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/answers")
+    @DeleteMapping("/api/answer")
     @ApiOperation(value = "답변 삭제")
-    public ResponseEntity<String> delete(@RequestParam("answer_id") Long answer_id) {
+    public ResponseEntity<String> deleteAnswer(@RequestParam("answer_id") Long answer_id) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
         if (!optionalAnswer.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
@@ -123,12 +129,36 @@ public class AnswerController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    // 좋아요 증감 api 만들기
+    @GetMapping("/api/answer/select")
+    @ApiOperation(value = "답변 채택")
+    public ResponseEntity<Answer> selectAnswer(@RequestParam("answer_id") Long answer_id) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
+        if (!optionalAnswer.isPresent())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        Answer answer = optionalAnswer.get();
+        answer.setSelected(true);
+        answer = answerRepository.save(answer);
+
+        return new ResponseEntity<>(answer, HttpStatus.OK);
+    }
 
     private void updateRank(Long user_id, int step) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
         Rank rank = optionalRank.get();
-        rank.setQuestionCnt(rank.getQuestionCnt() + step);
+        rank.setAnswerCnt(rank.getAnswerCnt() + step);
         rankRepository.save(rank);
+    }
+
+    private AnswerResponse makeAnswerResponse(Answer answer) {
+        AnswerResponse response = new AnswerResponse();
+        response.setId(answer.getId());
+        response.setUser(answer.getUser());
+        response.setQuestion_id(answer.getQuestion().getId());
+        response.setContent(answer.getContent());
+        response.setLike_cnt(answer.getLikeCnt());
+        response.setSelected(answer.isSelected());
+        response.setUpdated_at(answer.getUpdatedAt());
+        return response;
     }
 }

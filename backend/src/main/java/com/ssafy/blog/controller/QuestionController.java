@@ -6,15 +6,21 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Question;
+import com.ssafy.blog.model.QuestionTag;
 import com.ssafy.blog.model.Rank;
+import com.ssafy.blog.model.Tag;
 import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.question.AddQuestionRequest;
 import com.ssafy.blog.payload.question.UpdateQuestionRequest;
 import com.ssafy.blog.repository.QuestionRepository;
+import com.ssafy.blog.repository.QuestionTagRepository;
 import com.ssafy.blog.repository.RankRepository;
+import com.ssafy.blog.repository.TagRepository;
 import com.ssafy.blog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,24 +45,34 @@ public class QuestionController {
     @Autowired
     private RankRepository rankRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private QuestionTagRepository questionTagRepository;
+
     private ResponseEntity<Question> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
     @GetMapping("/api/question")
     @ApiOperation(value = "질문 검색")
-    public ResponseEntity<List<Question>> searchQuestion(
-            @RequestParam(required = false, name = "keyword") String keyword,
+    // paging 기법 적용하기
+    public ResponseEntity<Object> searchQuestion(@RequestParam(required = false, name = "keyword") String keyword,
             @RequestParam(required = false, name = "user_id") Long user_id,
-            @RequestParam(required = false, name = "question_id") Long question_id) {
-        List<Question> list = new ArrayList<>();
+            @RequestParam(required = false, name = "question_id") Long question_id,
+            @RequestParam(required = false, name = "page") Integer page) {
+        Page<Question> pageList = null;
+        if (page == null)
+            page = 1;
 
         if (keyword == null && user_id == null && question_id == null) {
-            list = questionRepository.findAll();
+            pageList = questionRepository.findAll(PageRequest.of(page - 1, 10));
 
         } else if (keyword != null) {
-            list = questionRepository.findByTitleContainsOrContentContains(keyword, keyword);
+            pageList = questionRepository.findByTitleContainsOrContentContains(keyword, keyword,
+                    PageRequest.of(page - 1, 10));
 
         } else if (user_id != null) {
-            list = questionRepository.findAllByUserId(user_id);
+            pageList = questionRepository.findAllByUserId(user_id, PageRequest.of(page - 1, 10));
 
         } else if (question_id != null) {
             Optional<Question> optionalQuestion = questionRepository.findById(question_id);
@@ -66,16 +82,15 @@ public class QuestionController {
             Question question = optionalQuestion.get();
             question.setViewCnt(question.getViewCnt() + 1);
             question = questionRepository.save(question);
-
-            list.add(question);
+            return new ResponseEntity<>(question, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>(pageList, HttpStatus.OK);
     }
 
     @PostMapping("/api/question")
     @ApiOperation(value = "질문 등록")
-    public ResponseEntity<Question> create(@RequestBody AddQuestionRequest request) {
+    public ResponseEntity<Question> addQuestion(@RequestBody AddQuestionRequest request) {
         Question question = new Question();
 
         Optional<User> optionalUser = userRepository.findById(request.getUser_id());
@@ -86,8 +101,16 @@ public class QuestionController {
         question.setContent(request.getContent());
         question.setViewCnt(1);
         question.setUpdatedAt(new Date());
-
         question = questionRepository.save(question);
+
+        // tag 등록
+        List<Tag> tagList = request.getTagList();
+        for (Tag tag : tagList) {
+            QuestionTag questionTag = new QuestionTag();
+            questionTag.setQuestion(question);
+            questionTag.setTag(tag);
+            questionTagRepository.save(questionTag);
+        }
 
         updateRank(request.getUser_id(), 1);
 
@@ -96,7 +119,7 @@ public class QuestionController {
 
     @PutMapping("/api/question")
     @ApiOperation(value = "질문 수정")
-    public ResponseEntity<Question> update(@RequestBody UpdateQuestionRequest request) {
+    public ResponseEntity<Question> modifyQuestion(@RequestBody UpdateQuestionRequest request) {
         Optional<Question> optionalQuestion = questionRepository.findById(request.getQuestion_id());
         if (!optionalQuestion.isPresent())
             return badResponse;
@@ -107,12 +130,22 @@ public class QuestionController {
         question.setViewCnt(question.getViewCnt() + 1);
         question = questionRepository.save(question);
 
+        // tag 수정
+        questionTagRepository.deleteAllByQuestionId(request.getQuestion_id());
+        List<Tag> tagList = request.getTagList();
+        for(Tag tag : tagList) {
+            QuestionTag questionTag = new QuestionTag();
+            questionTag.setQuestion(question);
+            questionTag.setTag(tag);
+            questionTagRepository.save(questionTag);
+        }
+
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
 
     @DeleteMapping("/api/question")
     @ApiOperation(value = "질문 삭제")
-    public ResponseEntity<String> delete(@RequestParam("question_id") Long question_id) {
+    public ResponseEntity<String> deleteQuestion(@RequestParam("question_id") Long question_id) {
         Optional<Question> optionalQuestion = questionRepository.findById(question_id);
         if (!optionalQuestion.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
@@ -125,7 +158,17 @@ public class QuestionController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    // 좋아요 증감 api 만들기
+    @GetMapping("/api/question/tag")
+    @ApiOperation(value = "질문 태그로 검색")
+    public ResponseEntity<Object> searchQuestionByTag(@RequestParam(required = true, name = "tag_id") Long tag_id,
+            @RequestParam(required = false, name = "page") Integer page) {
+        if (page == null)
+            page = 1;
+
+        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id, PageRequest.of(page - 1, 10));
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
     private void updateRank(Long user_id, int step) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
