@@ -1,6 +1,5 @@
 package com.ssafy.blog.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +14,6 @@ import com.ssafy.blog.payload.question.UpdateQuestionRequest;
 import com.ssafy.blog.repository.QuestionRepository;
 import com.ssafy.blog.repository.QuestionTagRepository;
 import com.ssafy.blog.repository.RankRepository;
-import com.ssafy.blog.repository.TagRepository;
 import com.ssafy.blog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +42,6 @@ public class QuestionController {
 
     @Autowired
     private RankRepository rankRepository;
-
-    @Autowired
-    private TagRepository tagRepository;
 
     @Autowired
     private QuestionTagRepository questionTagRepository;

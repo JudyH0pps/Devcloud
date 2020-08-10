@@ -15,7 +15,6 @@ import com.ssafy.blog.repository.RankRecordRepository;
 import com.ssafy.blog.repository.RankRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
