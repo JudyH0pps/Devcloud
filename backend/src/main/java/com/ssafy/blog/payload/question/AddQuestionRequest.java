@@ -1,7 +1,8 @@
 package com.ssafy.blog.payload.question;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.blog.model.User;
+import java.util.List;
+
+import com.ssafy.blog.model.Tag;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,15 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddQuestionRequest {
-    
+
     private Long user_id;
     private String title;
     private String content;
-
-    @JsonIgnore
-    public User getUser() {
-        User user = new User();
-        user.setId(user_id);
-        return user;
-    }
+    private List<Tag> tagList;
 }

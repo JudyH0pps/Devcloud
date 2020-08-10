@@ -38,17 +38,8 @@ export default{
   padding: 0;
 }
 
-.wrapper{
-  width: 100%;
-  height: 100vh;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .search_box{
-  width: 50%;
+  width: 45%;
   position: relative;
   -moz-box-shadow:    3px 3px 3px 3px #ccc;
   -webkit-box-shadow: 3px 3px 3px 3px #ccc;
