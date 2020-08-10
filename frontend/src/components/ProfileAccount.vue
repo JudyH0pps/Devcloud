@@ -46,6 +46,9 @@
 </template>
 <script>
 import {mapState,mapMutations} from 'vuex';
+import Vue from 'vue'
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+Vue.component('tags-input', VoerroTagsInput);
 
 export default {
     name: 'ProfileAccount',

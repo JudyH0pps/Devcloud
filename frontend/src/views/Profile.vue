@@ -2,19 +2,19 @@
   <div class="container p-0">
     <div class="p-0 row profile-header rounded-lg">
       <div class="m-0 my-3 p-0 col-5">
-        <img alt="profile picture" class="border rounded-circle profile-picture" :src="user.avatar">
+        <img alt="profile picture" class="border rounded-circle profile-picture" :src="user.imageUrl">
       </div>
       <div class="col-7 m-0 p-0 mt-3">
         <div class="col-12 m-0 p-0 my-3">
           <h2 class="p-0 text-left">{{user.name }}</h2>
           <!-- <p class="text-left">{{ user.introduction }}</p> -->
           <p class="text-left">
-            <textarea v-if="this.valid == true" v-model="user.introduction" style="resize: none; border: none ; width:100%; height:100%"
+            <textarea v-if="this.valid == true" v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: none ; width:100%; height:100%"
             readonly></textarea>
-            <textarea v-else v-model="user.introduction" style="resize: none; border: Solid ; width:100%; height:100%"
+            <textarea v-else v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: Solid ; width:100%; height:100%"
             ></textarea>
-          <i class="fab fa-github"></i><a :href="user.github"> {{user.github}}</a><br>
-          <i class="fas fa-layer-group"></i>{{user.tech}}
+          <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
+          <i class="fas fa-layer-group"></i>{{user.userTechs}}
           </p>
         </div>
         <div class="col-3 m-0 p-0 my-3">
@@ -82,7 +82,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user',['fetchMyProfile']),
+    ...mapActions('user',['fetchMyProfile','fetchUserProfile']),
     ...mapActions('answer',['fetchAnswersById']),
     ...mapActions('question',['fetchUserQuestions']),
     checkAuth(){
@@ -118,19 +118,25 @@ export default {
     }
   },
   mounted (){
-    alert(this.valid)
     this.checkAuth();
-    if(this.myProfile){
-      this.fetchMyProfile(this.$cookie.get('logintoken'));
-      //작성한 답변 조회 
-      this.fetchAnswersById(this.$cookie.get('user_id'));
-      //작성한 질문 조회
-      this.fetchUserQuestions(this.$cookie.get('user_id'));
-      //console.log(this.user);
-    }
-    else{
-      alert("다른사람의 프로필로 접근")
-    }
+    // 주석처리부분 본인일때와 타인일때 다르게처리하려면 ...
+    // if(this.myProfile){ //본인
+    //   this.fetchMyProfile(this.$cookie.get('logintoken'));
+    //   //작성한 답변 조회 
+    //   this.fetchAnswersById(this.$cookie.get('user_id'));
+    //   //작성한 질문 조회
+    //   this.fetchUserQuestions(this.$cookie.get('user_id'));
+    //   //console.log(this.user);
+    // }
+    // else{ // 다른사람
+    //   alert("다른사람의 프로필로 접근")
+    // }
+    // 프로필페이지에서 정보변경을 제외하고는 조회방식이 동일함
+    this.fetchUserProfile(this.$route.params.user_id)
+    //작성한 답변 조회 
+    this.fetchAnswersById(this.$route.params.user_id);
+    //작성한 질문 조회
+    this.fetchUserQuestions(this.$route.params.user_id);
   },
 }
 
