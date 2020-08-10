@@ -19,14 +19,14 @@ export default {
 	actions: {
         fetchUserQuestions(context,payload){
             http
-                .get('/api/questions',{
+                .get('/api/question',{
                     params:{
                         user_id : payload
                     }
                 })
                 .then(({data}) => {
                     // console.log(data)
-                    context.commit('setQuestions',data);
+                    context.commit('setQuestions',data.content);
                     // console.log(data['data']);
                 })
                 .catch((err) =>{
@@ -36,13 +36,13 @@ export default {
         },
         fetchQuestion(context, qid) {
             http
-                .get('/api/questions', {
+                .get('/api/question', {
                     params: {
-                        "id": qid
+                        "question_id": qid
                     }
                 })
                 .then(({data}) => {
-                    context.commit('setQuestion', data[0])
+                    context.commit('setQuestion', data)
                 })
                 .catch(err => console.log(err.response))
         },
@@ -51,7 +51,7 @@ export default {
                 alert('제목과 내용을 입력해주세요!')
             }   else {
                 http
-                    .post('/api/questions', questionData)
+                    .post('/api/question', questionData)
                     .then(() => router.push({name: 'Board'}))
                     .catch(err => console.log(err.response))
             }
@@ -61,7 +61,7 @@ export default {
                 alert('제목과 내용을 입력해주세요!')
             }   else {
                 http
-                    .put('/api/questions', questionData)
+                    .put('/api/question', questionData)
                     .then(() => {
                         router.push({name: 'Detail'})
                     })
@@ -73,9 +73,9 @@ export default {
         },
         fetchQuestionByQid(context, qid){
             http
-                .get('/api/questions',{
+                .get('/api/question',{
                     params:{
-                        qid : qid
+                        question_id : qid
                     }
                 })
                 .then(({data})=>{
@@ -87,13 +87,13 @@ export default {
         },
         fetchQuestionsByKeyword(context,keyword){
             http
-                .get('/api/questions',{
+                .get('/api/question',{
                     params:{
                         keyword : keyword
                     } 
                 })
                 .then(({data}) =>{
-                    context.commit('setQuestions',data)
+                    context.commit('setQuestions',data.content)
                 })
                 .catch((err) =>{
                     console.log(err);
@@ -102,9 +102,9 @@ export default {
         },
         deleteQuestion(context, qid) {
             http
-                .delete('/api/questions', {
+                .delete('/api/question', {
                     params: {
-                        "id": qid
+                        "question_id": qid
                     }
                 })
                 .then(() => {
