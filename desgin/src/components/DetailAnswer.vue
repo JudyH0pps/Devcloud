@@ -1,6 +1,6 @@
 <template>
     <div class="detailanswer">
-        <h1 class="q-title">A. {{ title }}</h1>
+        <h1 class="q-title">A.</h1>
         <div class="leftline">
             <div class="q-info">
                 <p>Written by {{ user.name }}</p>

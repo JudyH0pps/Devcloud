@@ -62,6 +62,7 @@ export default{
   },
   methods: {
     signOutBtn() {
+        this.toggleDropdown();
         alert("로그아웃 되었습니다.");
         this.loginTokened = false;
 
