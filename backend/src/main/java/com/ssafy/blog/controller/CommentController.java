@@ -1,0 +1,99 @@
+package com.ssafy.blog.controller;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import com.ssafy.blog.model.Answer;
+import com.ssafy.blog.model.Comment;
+import com.ssafy.blog.model.User;
+import com.ssafy.blog.payload.comment.AddCommentRequest;
+import com.ssafy.blog.payload.comment.ModifyCommentRequest;
+import com.ssafy.blog.repository.AnswerRepository;
+import com.ssafy.blog.repository.CommentRepository;
+import com.ssafy.blog.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+public class CommentController {
+
+    @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private ResponseEntity<Comment> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+    @GetMapping("/api/comment")
+    @ApiOperation(value = "댓글 조회하기")
+    public ResponseEntity<List<Comment>> searchComment(@RequestParam("answer_id") Long answer_id) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
+        if (!optionalAnswer.isPresent())
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        List<Comment> list = commentRepository.findAllByAnswerId(answer_id);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/comment")
+    @ApiOperation(value = "댓글 작성하기")
+    public ResponseEntity<Comment> addComment(@RequestBody AddCommentRequest request) {
+        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        if (!optionalUser.isPresent())
+            return badResponse;
+
+        Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswer_id());
+        if (!optionalAnswer.isPresent())
+            return badResponse;
+
+        Comment comment = new Comment();
+        comment.setUser(optionalUser.get());
+        comment.setAnswer(optionalAnswer.get());
+        comment.setContent(request.getContent());
+        comment.setUpdatedAt(new Date());
+        comment = commentRepository.save(comment);
+
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
+
+    @PutMapping("/api/comment")
+    @ApiOperation(value = "댓글 수정하기")
+    public ResponseEntity<Comment> modifyComment(@RequestBody ModifyCommentRequest request) {
+        Optional<Comment> optionalComment = commentRepository.findById(request.getComment_id());
+        if(!optionalComment.isPresent()) return badResponse;
+
+        Comment comment = optionalComment.get();
+        comment.setContent(request.getContent());
+        comment.setUpdatedAt(new Date());
+        comment = commentRepository.save(comment);
+
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/api/comment")
+    @ApiOperation(value = "댓글 삭제하기")
+    public ResponseEntity<String> deleteComment(@RequestParam("comment_id") Long comment_id) {
+        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+        if(!optionalComment.isPresent()) return new ResponseEntity<>("not exist", HttpStatus.OK);
+
+        commentRepository.deleteById(comment_id);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+}
