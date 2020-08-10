@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@toast-ui/vue-editor": "^2.3.1",
+    "@voerro/vue-tagsinput": "^2.2.0",
     "axios": "^0.19.2",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^3.6.5",
