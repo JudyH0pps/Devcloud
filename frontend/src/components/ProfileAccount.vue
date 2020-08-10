@@ -30,11 +30,11 @@
                     <hr>
                     <!-- 국적 -->
                     <div>
-                        <label>Region</label>
+                        <label>Technical Skills</label>
                         <!-- <b-form-input v-model="user.region" :readonly="validated" ></b-form-input> -->
-                        <b-form-input v-model="user.region" :readonly="validated" ></b-form-input>
+                        <b-form-input v-model="user.tech" :readonly="validated" ></b-form-input>
                         
-                        <p style="margin-top:10px">현재 활동하고 있는 지역을 나타냅니다.</p>
+                        <p style="margin-top:10px">주로 사용하는 언어와 기술사항을 표시합니다.</p>
                     </div>
                 </div>
                 <hr>
@@ -45,7 +45,7 @@
 
 </template>
 <script>
-import {mapState} from 'vuex';
+import {mapState,mapMutations} from 'vuex';
 
 export default {
     name: 'ProfileAccount',
@@ -56,12 +56,15 @@ export default {
     },
     computed:{
         ...mapState({
-        user : state => state.user.user
+        user : state => state.user.user,
+        valid : state => state.testValid
         })
     },
     methods:{
+        ...mapMutations(['settestValid']),
         edit:function(){
             this.validated = !this.validated
+            this.settestValid(!this.valid)
         }
     },
 }

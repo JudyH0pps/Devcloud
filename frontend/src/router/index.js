@@ -35,7 +35,7 @@ Vue.use(VueRouter)
     component: BoardPage
   },
   {
-    path: '/account/profile',
+    path: '/profile/:user_id',
     name: 'Profile',
     component: Profile
   },

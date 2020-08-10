@@ -29,7 +29,8 @@
                                             :src="userImage"
                                             style="width: 48px; height: 48px;">
                                     </template>
-                                    <b-dropdown-item router-link :to="{ name : 'Profile' }"> My Profile</b-dropdown-item>
+                                    <!-- <b-dropdown-item router-link :to="{ name : 'Profile' , params : { user_id : this.$cookie.get('user_id')}}"> My Profile</b-dropdown-item> -->
+                                    <b-dropdown-item @click="moveProfile"> My Profile</b-dropdown-item>
                                     <b-dropdown-item href="#" @click="signOutBtn">Sign Out</b-dropdown-item>
                                 </b-nav-item-dropdown>
                             </div>
@@ -103,7 +104,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('user',['fetchUserProfile']),
+        ...mapActions('user',['fetchMyProfile']),
        
         signInBtn() {
             this.showModal = true;
@@ -160,6 +161,17 @@ export default {
                 if(this.setKeyword != "")
                     this.$router.go()
             }
+        },
+        moveProfile(){
+            this.$router.push({
+                name : 'Profile',
+                params : {
+                    user_id : this.$cookie.get('user_id')
+                }
+            }).catch(()=>{
+                // 프로필에서 다시 프로필로 이동시에 새로고침 해줌
+                this.$router.go()
+            })
         }
     },
     created() {
@@ -169,8 +181,9 @@ export default {
             // localStorage.setItem('localToken', token);
             this.$cookie.set('logintoken',token, '1h');
             //this.loginTokened = true;
-            this.fetchUserProfile(this.$cookie.get('logintoken'));
+            this.fetchMyProfile(this.$cookie.get('logintoken'));
             // this.$cookie.set('user_id',this.user.id,'1h');
+            
         }
 
         
