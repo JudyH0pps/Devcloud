@@ -15,7 +15,7 @@
             <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
             <!--<button @click.prevent="doAjax">fetch Data</button>-->
         </div>
-        <div class="container">
+        <div class="container-xl">
             <!-- 상단 글 작성 버튼 -->
             <!-- 로그인 후에 입력 가능 -->
             <div class="pl-4 pr-4 pt-4 pb-4 mt-4 mb-4">
