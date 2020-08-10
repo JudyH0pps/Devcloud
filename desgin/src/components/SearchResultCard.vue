@@ -1,12 +1,12 @@
 <template>
     <div class="card">
-        <div class="image-data">
-            <div class="background-image"></div>
+        <!-- <div class="image-data"> -->
+            <!-- <div class="background-image"></div>
             <div class="publication-details">
                 <p class="author">{{ question.user.name }}</p>
                 <p class="date">{{ question.date }}</p>
-            </div>
-        </div>
+            </div> -->
+        <!-- </div> -->
         <div class="post-data">
             <h1 class="title">Q. {{ question.title }}</h1>
             <h2 class="subtitle">
@@ -77,39 +77,40 @@ export default{
     /* border-radius: 15px; */
     overflow: hidden;
     flex-direction: row;
+    /* height: 200px; */
 }
 .card:hover {
     cursor: pointer;
 }
-.image-data {
-    /* height: 250px; */
-    width: 50px;
+/* .image-data {
+    height: 250px;
+    width: 10px;
     position: relative;
     z-index: 1;
     overflow: hidden;
-}
-.author {
+} */
+/* .author {
     display: inline-block;
     margin-bottom: .5rem;
     font-size: 10px;
-}
-.author:hover {
+} */
+/* .author:hover {
     color: rgba(255, 255, 255, .75);
-}
-.background-image {
+} */
+/* .background-image {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    /* background: url('../assets/cloud.png') center no-repeat; */
+    background: url('../assets/cloud.png') center no-repeat;
     background-size: cover;
     z-index: -1;
     transition: transform 5s;
-}
-.card:hover .background-image {
+} */
+/* .card:hover .background-image {
     transform: scale(1.5);
-}
+} */
 .publication-details {
     width: 100%;
     height: 100%;
@@ -124,15 +125,15 @@ export default{
 }
 .post-data {
     background-color: #fff;
-    padding: 20px 30px;
+    padding: 10px 20px;
     position: relative;
 }
 .title {
-    font-size:30px;
+    font-size:20px;
     line-height: 1;
 }
 .subtitle {
-    font-size: 1.2rem;
+    font-size: 12px;
     font-weight: 400;
     text-transform: uppercase;
     color: #a2a2a2;
@@ -161,7 +162,7 @@ export default{
 .card:hover .publication-details {
     transform: translateX(0);
 }
-.tag {
+/* .tag {
     font-size: 12px;
     margin: 1px;
     padding: 3px 5px;
@@ -170,10 +171,7 @@ export default{
     background: #e1ecf4;
     color:#60829b
 }
-.tag:hover {
-    background: #d0eafd;
-    cursor: pointer;
-}
+. */
 .icon {
     width: 25px;
 }

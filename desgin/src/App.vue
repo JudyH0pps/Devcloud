@@ -15,6 +15,7 @@
 <script>
 import HeadBar from '@/components/HeadBar.vue'
 import Footer from '@/components/Footer.vue'
+import {mapState,mapActions,mapMutations} from 'vuex'
 
 export default{
   name: 'App',
@@ -22,7 +23,10 @@ export default{
     HeadBar,
     Footer
   },
+  
   methods: {
+    ...mapActions('user',['fetchUserProfile']),
+    ...mapMutations('user',['setisLoggedIn']),
     getParameters(paramName) { 
       // 리턴값을 위한 변수 선언 
       var returnValue; 
@@ -41,16 +45,25 @@ export default{
     },
   },
   created() {
-    // let token = this.getParameters('token')
+    let token = this.getParameters('token')
     // // 토큰이 있으면
-    // if(token !== undefined){
-    //     // localStorage.setItem('localToken', token);
-    //     this.$cookie.set('logintoken',token, '1h');
-    //     //this.loginTokened = true;
-    //     this.fetchUserProfile(this.$cookie.get('logintoken'));
-    //     // this.$cookie.set('user_id',this.user.id,'1h');
-    //     this.$router.push({'name':'Home'});
-    // }
+    if(token !== undefined){
+        // localStorage.setItem('localToken', token);
+        this.$cookie.set('logintoken',token, '1h');
+        //this.loginTokened = true;
+        this.fetchUserProfile(this.$cookie.get('logintoken'));
+        //this.$cookie.set('user_id',this.user.id,'1h');
+        this.$router.push({'name':'Home'});
+    }
+    if(this.$cookie.get('logintoken')){
+      this.setisLoggedIn(true)
+      // alert(this.isLoggedIn)
+    }
+  },
+  computed: {
+    ...mapState({
+      isLoggedIn : state => state.user.isLoggedIn
+    })
   },
 }
 
@@ -106,4 +119,21 @@ body {
 /* .botmargin400px {
   margin-bottom: 400px !important;
 } */
+
+.tag {
+    font-size: 12px;
+    margin: 1px;
+    padding: 3px 5px;
+    border-radius: 2px;
+    border: 1px solid #e1ecf4;
+    background: #e1ecf4;
+    color:#60829b;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin: 10px 5 15px 0;
+}
+.tag:hover {
+    background: #d0eafd;
+    cursor: pointer;
+}
 </style>

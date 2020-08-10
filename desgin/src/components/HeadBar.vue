@@ -7,30 +7,36 @@
       <HeadSearchBar v-show="this.$store.state.searchBarinHeadbar"/>
       <div>
         <ul>
-          <!-- <router-link :to="{ 'name':'Home' }">
-            <li class="underline">Home</li>
-          </router-link> -->
+          <router-link :to="{ 'name':'Detail' }">
+            <li class="underline">Detail</li>
+          </router-link>
           <!-- <router-link :to="{ 'name':'Search' }">
             <li class="underline">Search</li>
           </router-link> -->
-          <router-link :to="{ 'name':'Board' }">
-            <li class="underline">Board</li>
+          <router-link :to="{ 'name':'Write' }">
+            <li class="underline">New Question</li>
           </router-link>
           <router-link :to="{ 'name':'Ranking' }">
             <li class="underline">Ranking</li>
           </router-link>
-          <router-link :to="{ 'name':'Profile' }">
-            <li class="underline">Profile</li>
-          </router-link>
-          <li class="loginbutton" v-if="!this.$store.state.isLoggedIn" @click="toggleModal">
+          <li class="loginbutton" v-if="!this.$store.state.user.isLoggedIn" @click="toggleModal">
             <i class="fas fa-power-off fa-2x"></i>
             <small>login</small>
           </li>
-          <!-- <img 
+          <div class="profile" v-if="this.$store.state.user.isLoggedIn">
+            <img 
             alt="profile picture"
+            @click="toggleDropdown"
             class="border rounded-circle profile-picture"
             :src="userImage"
-            style="width: 48px; height: 48px;"> -->
+            style="width: 48px; height: 48px;">
+            <div class="dropdown" v-show="showDropdown">
+              <router-link :to="{ 'name':'Profile' }">
+                <li class="dropdown-list" @click="toggleDropdown">MyProfile</li>
+              </router-link>
+              <li class="dropdown-list" @click="signOutBtn">Logout</li>
+            </div>
+          </div>
           <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
         </ul>
       </div>
@@ -40,7 +46,6 @@
 <script>
 import LoginModal from '@/components/LoginModal.vue'
 import HeadSearchBar from '@/components/HeadSearchBar.vue'
-import {mapActions} from 'vuex'
 
 export default{
   name: 'HeadBar',
@@ -51,10 +56,28 @@ export default{
   data() {
       return {
         loginModalOn: false,
+        userImage: this.$cookie.get('user_image'),
+        showDropdown: false,
       }
   },
   methods: {
-    ...mapActions('user',['googleLogin']),
+    signOutBtn() {
+        alert("로그아웃 되었습니다.");
+        this.loginTokened = false;
+
+        // 로컬 스토리지 토큰 제거
+        //localStorage.removeItem('localToken');
+        this.$cookie.delete("logintoken");
+        this.$cookie.delete("user_id");
+        this.$router.push({name:'Home'});
+        this.$router.go();
+    },
+    googleLogin() {
+        // alert('asdfsad21312f');
+        // alert('asdfsadf');
+        window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        // alert("구글로그인 창으로 이동합니다.");
+    },
     navbarSpan() {
       window.addEventListener("scroll", function(){
         let header = document.querySelector("header");
@@ -65,6 +88,9 @@ export default{
       // alert('바꾸자')
       this.loginModalOn = !this.loginModalOn;
     },
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    }
   },
   mounted() {
     this.navbarSpan();
@@ -81,8 +107,8 @@ p {
   font-weight: 700;
   color: #000;
   text-decoration: none;
-  font-size: 2em;
-  text-transform: uppercase;
+  font-size: 15px;
+  /* text-transform: uppercase; */
   letter-spacing: 2px;
   transition: 0.6s;
   margin: 0;
@@ -106,6 +132,32 @@ header {
   padding: 15px 80px;
   z-index: 100;
   min-width: 1024px;
+}
+.dropdown {
+  position: absolute;
+  top: 70px;
+  right: -42px;
+  /* margin-left: 10px; */
+  padding: 0 10px 0;
+  background: white;
+  border: 2px solid #eeeeee;
+  border-radius: 15px;
+}
+.dropdown-list {
+  margin: 0;
+  padding: 10px;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dropdown-list:hover {
+  color: #b8b8b8;
+}
+.profile-picture {
+  border-radius: 50%;
+  margin-left: 15px;
+  cursor: pointer;
+  /* box-shadow: 0px 5px 10px rgba(0,0,0,.2); */
 }
 header.sticky {
   padding: 10px 80px;

@@ -1,5 +1,5 @@
 <template>
-  <section class="board">
+  <section class="write">
     <h1>Board</h1>
   </section>
 </template>
@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: 'Board',
+  name: 'Write',
   components: {
 
   }
