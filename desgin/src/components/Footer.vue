@@ -1,6 +1,6 @@
 <template>
     <footer class="fixed-footer">
-        <h2>Footer</h2>
+        <h4>SSAFY</h4>
         
         <!-- <h2>김시영</h2>
         <h2>김기영</h2>
@@ -25,11 +25,11 @@ footer {
     /* position: fixed; */
     bottom: 0;
     width: 100%;
-    height: 400px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2em;
+    font-size: 25px;
     text-transform: uppercase;
     z-index: -1;
 }

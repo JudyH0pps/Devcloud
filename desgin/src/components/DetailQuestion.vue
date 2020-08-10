@@ -35,6 +35,8 @@ export default {
 <style scoped>
 .q-title {
   padding: 10px 0;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 10px;
 }
 .tags {
     text-align: right;
