@@ -1,5 +1,5 @@
 <template>
-  <section class="write">
+  <section class="writeform">
     <div class="form">
       <input type="text" name="title" autocomplete="off" required/>
       <label class="label-name" for="title">
@@ -27,10 +27,10 @@ export default {
 </script>
 
 <style scoped>
-.write{
+.writeform{
   font-family: "Poppins", sans-serif;
-  margin: 80px auto 0;
-  padding: 10px;
+  /* margin: 80px auto 0; */
+  /* padding: 10px; */
   max-width: 900px;
   min-height: 100vh;
   display: flex;
@@ -39,7 +39,7 @@ export default {
 }
 
 .form {
-  width: 80%;
+  width: 100%;
   position: relative;
   height: 50px;
   margin-left: auto;

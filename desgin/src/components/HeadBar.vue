@@ -13,9 +13,9 @@
           <!-- <router-link :to="{ 'name':'Search' }">
             <li class="underline">Search</li>
           </router-link> -->
-          <router-link :to="{ 'name':'Write' }">
+          <!-- <router-link :to="{ 'name':'Write' }">
             <li class="underline">New Question</li>
-          </router-link>
+          </router-link> -->
           <router-link :to="{ 'name':'Ranking' }">
             <li class="underline">Ranking</li>
           </router-link>

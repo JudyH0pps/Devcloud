@@ -2,7 +2,7 @@
   <section class="detail">
     <DetailQuestion/>
     <DetailAnswer/>
-    <button>새 답변작성</button>
+    <button @click="moveToWrite">답변달기</button>
   </section>
 </template>
 
@@ -19,6 +19,11 @@ export default {
   data() {
     return {
 
+    }
+  },
+  methods: {
+    moveToWrite() {
+      this.$router.push({'name':'WriteAnswer'});
     }
   }
 }

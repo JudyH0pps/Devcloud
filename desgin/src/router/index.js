@@ -17,9 +17,14 @@ Vue.use(VueRouter)
     component: () => import('@/views/Home.vue')
   },
   {
-    path: '/board',
+    path: '/write',
     name: 'Write',
     component: () => import('../views/Write.vue')
+  },
+  {
+    path: '/writeanswer',
+    name: 'WriteAnswer',
+    component: () => import('../components/WriteAnswer.vue')
   },
   {
     path: '/profile',
