@@ -1,10 +1,8 @@
 package com.ssafy.blog.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Question;
-import com.ssafy.blog.model.QuestionTag;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

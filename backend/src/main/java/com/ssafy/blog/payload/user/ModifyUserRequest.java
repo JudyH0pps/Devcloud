@@ -1,9 +1,7 @@
 package com.ssafy.blog.payload.user;
 
-import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.blog.model.Tech;
 
 import lombok.Getter;
