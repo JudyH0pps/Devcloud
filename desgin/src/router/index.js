@@ -22,7 +22,7 @@ Vue.use(VueRouter)
     component: () => import('../views/Write.vue')
   },
   {
-    path: '/writeanswer',
+    path: '/detail/:question_id/write',
     name: 'WriteAnswer',
     component: () => import('../components/WriteAnswer.vue')
   },
@@ -42,7 +42,7 @@ Vue.use(VueRouter)
     component: () => import('../views/Ranking.vue')
   },
   {
-    path: '/detail',
+    path: '/detail/:question_id',
     name: 'Detail',
     component: () => import('../views/Detail.vue')
   },

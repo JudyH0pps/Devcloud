@@ -7,9 +7,9 @@
       <HeadSearchBar v-show="this.$store.state.searchBarinHeadbar"/>
       <div>
         <ul>
-          <router-link :to="{ 'name':'Detail' }">
+          <!-- <router-link :to="{ 'name':'Detail' }">
             <li class="underline">Detail</li>
-          </router-link>
+          </router-link> -->
           <!-- <router-link :to="{ 'name':'Search' }">
             <li class="underline">Search</li>
           </router-link> -->
@@ -30,6 +30,7 @@
             class="border rounded-circle profile-picture"
             :src="userImage"
             style="width: 48px; height: 48px;">
+            <i class="fas fa-caret-down"></i>
             <div class="dropdown" v-show="showDropdown">
               <router-link :to="{ 'name':'Profile' }">
                 <li class="dropdown-list" @click="toggleDropdown">MyProfile</li>
@@ -153,6 +154,14 @@ header {
 }
 .dropdown-list:hover {
   color: #b8b8b8;
+}
+.fas {
+  margin-left: 15px;
+  text-align: center;
+}
+.profile {
+  display: flex;
+  flex-direction: column;
 }
 .profile-picture {
   border-radius: 50%;

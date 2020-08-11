@@ -15,7 +15,7 @@ export default {
 	actions: {
         fetchAnswers({ commit }, question_id) {
 					http
-						.get('/api/answers', {
+						.get('/api/answer', {
 							params: {
 								question_id: question_id
 							}
@@ -28,7 +28,7 @@ export default {
 		},
 		fetchAnswersById(context,payload){
 					http
-						.get('/api/answers',{
+						.get('/api/answer',{
 							params:{
 								user_id : payload
 							}
@@ -44,7 +44,7 @@ export default {
 		},
 		postAnswer(context, answerData) {
 			http
-				.post('/api/answers', answerData)
+				.post('/api/answer', answerData)
 				.then(() => {
 					router.push({name: 'Detail', params: {"question_id": answerData.question_id}})
 				})
@@ -52,7 +52,7 @@ export default {
 		},
 		editAnswer(context, answerData) {
 			http
-				.put('/api/answers', answerData)
+				.put('/api/answer', answerData)
 				.then(() => {
 					router.push({name: 'Detail', params: {"question_id": answerData.question_id}})
 				})
@@ -60,7 +60,7 @@ export default {
 		},
 		deleteAnswer(context, answerData) {
 			http
-				.delete('/api/answers', {params: {id: answerData.answer_id}})
+				.delete('/api/answer', {params: {id: answerData.answer_id}})
 				.then(() => context.dispatch('fetchAnswers', answerData.question_id))
 				.catch(err => console.log(err))
 		}
