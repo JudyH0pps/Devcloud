@@ -30,12 +30,6 @@ export default{
             
             }
         },
-        move(qid){
-            this.$router.push({
-                name:'Detail',
-                params:{ "question_id" : qid},
-            })
-        },
     },
     computed:{
         ...mapState({

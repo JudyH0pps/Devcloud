@@ -8,7 +8,7 @@
             </div> -->
         <!-- </div> -->
         <div class="post-data">
-            <h1 class="title">Q. {{ question.title }}</h1>
+            <h1 class="title" @click="moveTodetail(question.id)">Q. {{ question.title }}</h1>
             <h2 class="subtitle">
                 <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
             </h2>
@@ -56,6 +56,12 @@ export default{
         getImages(name) {
             return require('../assets/' + name);
         },
+        moveTodetail(question_id) {
+            this.$router.push({
+                'name':'Detail',
+                params:{ "question_id" : question_id},
+                })
+        }
     }
 }
 </script>
@@ -79,7 +85,7 @@ export default{
     flex-direction: row;
     /* height: 200px; */
 }
-.card:hover {
+.card .title:hover {
     cursor: pointer;
 }
 /* .image-data {

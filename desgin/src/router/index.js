@@ -42,7 +42,7 @@ Vue.use(VueRouter)
     component: () => import('../views/Ranking.vue')
   },
   {
-    path: '/detail',
+    path: '/detail/:question_id',
     name: 'Detail',
     component: () => import('../views/Detail.vue')
   },
