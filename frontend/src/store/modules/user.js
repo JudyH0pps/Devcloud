@@ -1,4 +1,5 @@
 import http from "@/util/http-common";
+import router from '@/router'
 import cookie from "vue-cookie"
 
 export default {
@@ -61,7 +62,18 @@ export default {
                 .catch(()=>{
                     alert('다른 유저정보 조회중 오류 발생')
                 })
+        },
+        editProfile(context, profileData) {
+            http
+                .put('/api/user', profileData)
+                .then(() => {
+                    //router.push({name: 'Detail'})
+                    alert('프로필 수정완료')
+                    router.go()
+                })
+                .catch(err => console.log(err.response))
         }
+        
     },
 	getters: {},
 }
