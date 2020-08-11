@@ -1,34 +1,47 @@
 <template>
-    <div class="detailquestion">
-        <h1 class="q-title">Q. {{ title }}</h1>
+    <div class="detailquestion" v-if="this.$store.state.question.question">
+        <h1 class="q-title">Q. {{ question.title }}</h1>
         <div class="leftline">
             <div class="tags">
-                <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
+                <span class="tag" v-for="tag in question.questionTags" :key="tag">{{ tag }}</span>
             </div>
             <div class="q-info">
-                <p>Written by {{ user.name }}</p>
-                <p>{{ date }}</p>
+                <div class='profile'>
+                    <img :src="question.user.imageUrl" class="profile_img">
+                    <p>{{ question.user.name }}</p>
+                </div>
+                <p>{{ question.updatedAt }}</p>
             </div>
         </div>
-        <p class="q-content">{{ content }}</p>
+        <p class="q-content">{{ question.content }}</p>
     </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'DetailQuestion',
     data() {
         return {
-            user: {
-                name: 'Damgom',
-            },
-            tags: ['Java','django','spring'],
-            title: 'Spring코드에서 @data 어노테이션의미가 뭔가요?',
-            content: '다운받은 코드의 model 부분에 @data라고 된부분이있는데 무슨의미인지 모르겠어요',
-            date: '2020년 8월 10일'
+            // question: {},
         }
     },
+    computed: {
+        ...mapState({
+			question: state => state.question.question
+		})
+    },
+	methods: {
+        ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
+	},
+	created() {
+        // alert(this.$route.params.question_id)
+        this.fetchQuestion(this.$route.params.question_id)
+	},
+    // mounted() {
+    //     console.log(this.$store.state.question.question)
+    // }
 }
 </script>
 
@@ -58,5 +71,14 @@ export default {
     font-size: 14px;
     color: gray;
 }
-
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.profile_img {
+    border-radius: 50%;
+    height: 40px;
+    margin-right: 10px;
+}
 </style>

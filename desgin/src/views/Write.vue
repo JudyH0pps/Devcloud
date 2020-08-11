@@ -29,9 +29,10 @@ export default {
 <style scoped>
 .writeform{
   font-family: "Poppins", sans-serif;
-  /* margin: 80px auto 0; */
+  margin: 100px auto 0;
   /* padding: 10px; */
   max-width: 900px;
+  width: 100%;
   min-height: 100vh;
   display: flex;
   /* justify-content: center; */

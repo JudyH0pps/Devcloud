@@ -1,18 +1,18 @@
 <template>
     <section class="write">
-        <DetailAnswer/>
+        <DetailQuestion/>
         <Write/>
     </section>
 </template>
 
 <script>
-import DetailAnswer from '@/components/DetailAnswer.vue'
+import DetailQuestion from '@/components/DetailQuestion.vue'
 import Write from '@/views/Write.vue'
 
 export default {
     name: 'WriteAnswer',
     components: {
-        DetailAnswer,
+        DetailQuestion,
         Write,
     }
 }

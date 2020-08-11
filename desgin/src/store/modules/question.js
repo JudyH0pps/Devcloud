@@ -5,8 +5,8 @@ export default {
     namespaced: true,
 
 	state: {
-        questions:[],
-        question:{},
+        questions: [],
+        question: null,
     },
 	mutations: {
         setQuestions(state, payload){
