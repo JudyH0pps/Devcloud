@@ -29,7 +29,7 @@
 					user_id
 
 				-->
-				<li><i class="fas fa-sign-language" @click="clickLike"></i></li>
+				<li><i class="fas fa-sign-language" @click="clickLike(likeData)"></i></li>
 				
 				<li v-if="question.user.id===parseInt($cookie.get('user_id'))"><i @click="goEditQuestion" class="fas fa-edit"></i></li>
 				<li v-if="question.user.id===parseInt($cookie.get('user_id'))"><i @click="deleteQuestion(qid)" class="far fa-trash-alt"></i></li>
@@ -63,7 +63,7 @@ export default {
 	data() {
 		return{
 			likeData: {
-				"question_id": this.question.id,
+				"question_id": "",
 				"user_id": this.$cookie.get('user_id')
 			},
 		}
@@ -71,7 +71,11 @@ export default {
 	computed: {
 		...mapState({
 			question: state => state.question.question,
-		})
+		}),
+
+		questionId() {
+			return parseInt(this.$route.params.question_id)
+		}
 	},
 	methods: {
 		onClickWriteAnswer() {
@@ -79,15 +83,20 @@ export default {
 		},
 		...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
 		
-		// store action 호출
+		// like store modules action 호출
 		...mapActions('like', ['postQuestionLike']),
 
 		// click event
 		// 
 		clickLike(likeData) {
-			if(this.user_id == ''){
+			if(likeData.user_id === undefined){
 				alert("you need login");
+				// 로그인페이지나 메인페이지로 이동이 필요
 			} else{
+				// likeData에 데이터 추가
+				likeData.question_id = this.questionId;
+				alert("현재 질문번호 : " + likeData.question_id + " " + "현재 유저 번호 : " + likeData.user_id);
+				// postQuestionLike 함수 실행
 				this.postQuestionLike(likeData);
 			}
 		}
