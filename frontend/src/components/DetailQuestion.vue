@@ -13,7 +13,21 @@
 				<a class="text-decoration-none text-reset">{{ question.user.name }}</a>
 			</div>
 			<ul class="d-flex">
-				<li><i class="fas fa-sign-language"></i></li>
+				<!-- suggestion button part -->
+				<!-- 
+					1. 추천 클릭 버튼을 클릭시 해당유저의 정보를 확인해 해당 포스트에 좋아요 버튼을 입력했는지
+					아닌지 확인한다.
+
+					2. 추천 버튼이 눌러져 있는 상태라면 추천 취소 아니라면 추천값을 올린다.
+
+					[like table]
+					id
+					post_id
+					user_id
+
+				-->
+				<li><i class="fas fa-sign-language" @click="clickLike"></i></li>
+				
 				<li v-if="question.user.id===parseInt($cookie.get('user_id'))"><i @click="goEditQuestion" class="fas fa-edit"></i></li>
 				<li v-if="question.user.id===parseInt($cookie.get('user_id'))"><i @click="deleteQuestion(qid)" class="far fa-trash-alt"></i></li>
 			</ul>
@@ -43,16 +57,37 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
 	name: "DetailQuestion",
+	data() {
+		return{
+			likeData: {
+				"question_id": this.question.id,
+				"user_id": this.$cookie.get('user_id')
+			},
+		}
+    },
 	computed: {
 		...mapState({
-			question: state => state.question.question
+			question: state => state.question.question,
 		})
 	},
 	methods: {
 		onClickWriteAnswer() {
 			this.$router.push({ name: 'WriteAnswer', params: { question_id: this.qid }})
 		},
-		...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion'])
+		...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
+		
+		// store action 호출
+		...mapActions('like', ['postQuestionLike']),
+
+		// click event
+		// 
+		clickLike(likeData) {
+			if(this.user_id == ''){
+				alert("you need login");
+			} else{
+				this.postQuestionLike(likeData);
+			}
+		}
 	},
 	created() {
 		this.fetchQuestion(this.qid)
