@@ -1,5 +1,6 @@
 package com.ssafy.blog.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,7 @@ import com.ssafy.blog.model.Question;
 import com.ssafy.blog.model.Rank;
 import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.like.AddLikeToQuestionRequest;
+import com.ssafy.blog.payload.like.LikeToQuestionResponse;
 import com.ssafy.blog.repository.LikeToQuestionRepository;
 import com.ssafy.blog.repository.QuestionRepository;
 import com.ssafy.blog.repository.RankRepository;
@@ -42,24 +44,31 @@ public class LikeToQuestionController {
 
     @GetMapping("/api/liketoquestion")
     @ApiOperation(value = "질문에 대한 좋아요 목록 조회")
-    public ResponseEntity<Object> searchLikeToQuestion(@RequestParam(required = false, name = "user_id") Long user_id,
+    public ResponseEntity<List<LikeToQuestionResponse>> searchLikeToQuestion(
+            @RequestParam(required = false, name = "user_id") Long user_id,
             @RequestParam(required = false, name = "question_id") Long question_id) {
-        List<LikeToQuestion> list = null;
-        if (user_id != null) {
-            list = likeToQuestionRepository.findAllByUserId(user_id);
+        List<LikeToQuestionResponse> list = new ArrayList<>();
 
+        if (user_id != null) {
+            for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAllByUserId(user_id)) {
+                list.add(makeResponse(likeToQuestion));
+            }
         } else if (question_id != null) {
-            list = likeToQuestionRepository.findAllByQuestionId(question_id);
+            for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAllByQuestionId(question_id)) {
+                list.add(makeResponse(likeToQuestion));
+            }
 
         } else {
-            list = likeToQuestionRepository.findAll();
+            for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAll()) {
+                list.add(makeResponse(likeToQuestion));
+            }
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/api/liketoquestion")
-    @ApiOperation(value = "질문에 대한 좋아요 추가")
-    public ResponseEntity<Object> addLikeToQuestion(@RequestBody AddLikeToQuestionRequest request) {
+    @ApiOperation(value = "질문에 대한 좋아요: 없으면 추가, 있으면 삭제 (toggle)")
+    public ResponseEntity<String> addLikeToQuestion(@RequestBody AddLikeToQuestionRequest request) {
         Optional<User> optionalUser = userRepository.findById(request.getUser_id());
         if (!optionalUser.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -70,43 +79,36 @@ public class LikeToQuestionController {
 
         Optional<LikeToQuestion> optionalLikeToQuestion = likeToQuestionRepository
                 .findByUserIdAndQuestionId(request.getUser_id(), request.getQuestion_id());
-        if (optionalLikeToQuestion.isPresent())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        LikeToQuestion likeToQuestion = null;
+        if (optionalLikeToQuestion.isPresent()) {
+            // 있으면 삭제
+            likeToQuestion = optionalLikeToQuestion.get();
+            likeToQuestionRepository.delete(likeToQuestion);
 
-        LikeToQuestion likeToQuestion = new LikeToQuestion();
-        likeToQuestion.setUser(optionalUser.get());
-        likeToQuestion.setQuestion(optionalQuestion.get());
-        likeToQuestion = likeToQuestionRepository.save(likeToQuestion);
+            // 좋아요 숫자 반영
+            Question question = likeToQuestion.getQuestion();
+            question.setLikeCnt(question.getLikeCnt() - 1);
+            questionRepository.save(question);
 
-        // 좋아요 숫자 반영
-        Question question = optionalQuestion.get();
-        question.setLikeCnt(question.getLikeCnt() + 1);
-        questionRepository.save(question);
+            // rank 반영
+            updateRank(question.getUser().getId(), -1);
+            return new ResponseEntity<>("delete", HttpStatus.OK);
+        } else {
+            // 없으면 추가
+            likeToQuestion = new LikeToQuestion();
+            likeToQuestion.setUser(optionalUser.get());
+            likeToQuestion.setQuestion(optionalQuestion.get());
+            likeToQuestion = likeToQuestionRepository.save(likeToQuestion);
 
-        // rank 반영
-        updateRank(question.getUser().getId(), 1);
+            // 좋아요 숫자 반영
+            Question question = optionalQuestion.get();
+            question.setLikeCnt(question.getLikeCnt() + 1);
+            questionRepository.save(question);
 
-        return new ResponseEntity<>(likeToQuestion, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/api/liketoquestion")
-    @ApiOperation(value = "질문에 대한 좋아요 삭제")
-    public ResponseEntity<Object> deleleLikeToQuestion(@RequestParam("like_to_question_id") Long like_to_question_id) {
-        Optional<LikeToQuestion> optionalLikeToQuestion = likeToQuestionRepository.findById(like_to_question_id);
-        if (!optionalLikeToQuestion.isPresent())
-            return new ResponseEntity<>("not exist", HttpStatus.OK);
-        LikeToQuestion likeToQuestion = optionalLikeToQuestion.get();
-        likeToQuestionRepository.delete(likeToQuestion);
-
-        // 좋아요 숫자 반영
-        Question question = likeToQuestion.getQuestion();
-        question.setLikeCnt(question.getLikeCnt() - 1);
-        questionRepository.save(question);
-
-        // rank 반영
-        updateRank(question.getUser().getId(), -1);
-
-        return new ResponseEntity<>("success", HttpStatus.OK);
+            // rank 반영
+            updateRank(question.getUser().getId(), 1);
+            return new ResponseEntity<>("add", HttpStatus.OK);
+        }
     }
 
     private void updateRank(Long user_id, int step) {
@@ -114,5 +116,13 @@ public class LikeToQuestionController {
         Rank rank = optionalRank.get();
         rank.setLikeCnt(rank.getLikeCnt() + step);
         rankRepository.save(rank);
+    }
+
+    private LikeToQuestionResponse makeResponse(LikeToQuestion likeToQuestion) {
+        LikeToQuestionResponse response = new LikeToQuestionResponse();
+        response.setId(likeToQuestion.getId());
+        response.setUser_id(likeToQuestion.getUser().getId());
+        response.setQuestion_id(likeToQuestion.getQuestion().getId());
+        return response;
     }
 }
