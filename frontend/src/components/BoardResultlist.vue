@@ -18,11 +18,17 @@
                         @click="move(question.id)"
                     >
                         <!-- image issue -->
-                        <div style="width: 70%; float: left">
-                            <b-card-text v-html="$options.filters.highlights1(question.title, keyword)" style="font-size: 30px;">
+                        <div >
+                            <b-card-text v-html="$options.filters.highlights1(question.title, keyword)" 
+                                style="font-size: 30px; display: inline-block; float: left;
+                                       padding-right: 50%; ">
                                 {{question.title}}
 
                             </b-card-text>
+                            <div>
+                                <img src="@/assets/rainbow_heart.png" width="32px" height="32px"/>
+                                <span style="margin-left: 30px; font-size: 24px;">{{question.like_cnt}}1</span>
+                            </div>
                             <hr>
                             <b-card-text v-html="$options.filters.highlights2(question.content, keyword)" style="font-size: 18px; text-overflow: ellipsis">
                                 {{question.content}}
@@ -48,12 +54,11 @@
                                 <b-icon-tag>tag3</b-icon-tag>
                             </div>
                         </div>
-                        <div style="width: 30%; float: right; text-align: center">
-                            <img src="@/assets/rainbow_heart.png" width="50px" height="50px"/>
-                            <h1 style="margin-top: 50px">0</h1>
-                        </div>
 
                     </b-card>
+                    <div style="padding-top: 20px; padding-bottom: 20px;">
+                        <hr>
+                    </div>
 
                     
                 </div>
