@@ -14,8 +14,12 @@ export default {
             avatar:"",
             
         },
+        isLoggedIn: false,
     },
 	mutations: {
+        setisLoggedIn(state,payload){
+            state.isLoggedIn = payload
+        },
         setUser(state, payload){
             // state.user= payload;
             state.user.email = payload.email;
@@ -41,6 +45,20 @@ export default {
                 .catch(() =>{
                     //alert('유저정보 조회중 오류 발생');
                 });
+        },
+              // signInBtn() {
+      //   this.showModal = true;
+      // },
+        // loginNo() {
+        //     this.showModal = false;
+        // },
+        search(){
+            //alert(this.word)
+            // this.setKeyword(this.word)
+            //alert(this.keyword)
+            this.$router.push({
+                name:'Board'
+            })
         }
     },
 	getters: {},

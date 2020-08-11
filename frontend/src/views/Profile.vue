@@ -5,9 +5,17 @@
         <img alt="profile picture" class="border rounded-circle profile-picture" :src="user.avatar">
       </div>
       <div class="col-7 m-0 p-0 mt-3">
-        <div class="col-4 m-0 p-0 my-3">
+        <div class="col-12 m-0 p-0 my-3">
           <h2 class="p-0 text-left">{{user.name }}</h2>
-          <p class="text-left">{{ user.introduction }}</p>
+          <!-- <p class="text-left">{{ user.introduction }}</p> -->
+          <p class="text-left">
+            <textarea v-if="this.valid == true" v-model="user.introduction" style="resize: none; border: none ; width:100%; height:100%"
+            readonly></textarea>
+            <textarea v-else v-model="user.introduction" style="resize: none; border: Solid ; width:100%; height:100%"
+            ></textarea>
+          <i class="fab fa-github"></i><a :href="user.github"> {{user.github}}</a><br>
+          <i class="fas fa-layer-group"></i>{{user.tech}}
+          </p>
         </div>
         <div class="col-3 m-0 p-0 my-3">
         </div>
@@ -20,7 +28,7 @@
             <h4>{{ questions.length }}</h4>
             <p>questions</p>
           </li>
-          <li class="list-group-item" @click="click3">
+          <li class="list-group-item" @click="click3" v-if="myProfile">
             <h4> + </h4>
             <p>account</p>
           </li>
@@ -29,7 +37,7 @@
     </div>
     <ProfileAnswerlist :myA="myA" v-show="showmenu1"/>
     <ProfileQuestionlist v-show="showmenu2"/>
-    <ProfileAccount v-show="showmenu3"/>
+    <ProfileAccount v-if="myProfile && showmenu3"/>
   </div>
 </template>
 
@@ -49,12 +57,7 @@ export default {
   },
   data: () => {
     return {
-      // user: {
-      //   id:'',
-      //   email:'',
-      //   introduction: '',
-      //   profileImage: '',
-      // },
+      myProfile : false,
       showmenu1: true,
       showmenu2: false,
       showmenu3: false,
@@ -66,15 +69,31 @@ export default {
     ...mapState({
       user : state => state.user.user,
       questions : state => state.question.questions,
-      answers : state => state.answer.answers
-
-    })
+      answers : state => state.answer.answers,
+      valid : state => state.testValid
+    }),
+    changeUser(){
+      return this.$route.params.user_id
+    }
+  },
+  watch :{
+    changeUser: function(){
+      this.$router.go()
+    }
   },
   methods: {
-    ...mapActions('user',['fetchUserProfile']),
+    ...mapActions('user',['fetchMyProfile']),
     ...mapActions('answer',['fetchAnswersById']),
     ...mapActions('question',['fetchUserQuestions']),
-
+    checkAuth(){
+      if(this.$cookie.get('user_id') == this.$route.params.user_id){
+        this.myProfile = true,
+        alert(this.myProfile)
+      }else{
+        this.myProfile = false,
+        alert(this.myProfile)
+      }
+    },
     getProfile() {
       // this.user.id = 'JudyHopps'
       // this.user.introduction = '안녕하세요 자기소개'
@@ -98,17 +117,21 @@ export default {
       this.showmenu3 = true;
     }
   },
-  created() {
-    //this.getProfile();
-    //프로필페이지 들어가기전에 id = payload로 ? 유정정보를 받아오기
-    this.fetchUserProfile(this.$cookie.get('logintoken'));
-    //작성한 답변 조회 
-    this.fetchAnswersById(this.$cookie.get('user_id'));
-    //작성한 질문 조회
-    this.fetchUserQuestions(this.$cookie.get('user_id'));
-    //console.log(this.user);
+  mounted (){
+    alert(this.valid)
+    this.checkAuth();
+    if(this.myProfile){
+      this.fetchMyProfile(this.$cookie.get('logintoken'));
+      //작성한 답변 조회 
+      this.fetchAnswersById(this.$cookie.get('user_id'));
+      //작성한 질문 조회
+      this.fetchUserQuestions(this.$cookie.get('user_id'));
+      //console.log(this.user);
+    }
+    else{
+      alert("다른사람의 프로필로 접근")
+    }
   },
-
 }
 
 </script>

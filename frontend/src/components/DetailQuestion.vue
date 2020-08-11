@@ -10,7 +10,10 @@
 		<aside v-if="question.user" class="d-flex justify-content-between">
 			<div>
 				질문자 :
-				<a class="text-decoration-none text-reset">{{ question.user.name }}</a>
+				<router-link :to= "{ name : 'Profile' , params : {'user_id' : question.user.id}}">
+					{{question.user.name}}
+				</router-link>
+				<!-- <a class="text-decoration-none text-reset">{{ question.user.name }}</a> -->
 			</div>
 			<ul class="d-flex">
 				<!-- suggestion button part -->

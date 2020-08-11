@@ -9,8 +9,14 @@ import answer from "@/store/modules/answer.js";
 import notification from "@/store/modules/notification.js";
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
+  state: {
+    testValid : true
+  },
+  mutations: {
+      settestValid(state,payload){
+        state.testValid = payload
+      }
+  },
   actions: {
   },
   modules: {

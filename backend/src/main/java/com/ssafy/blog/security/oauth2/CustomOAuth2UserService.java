@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import com.ssafy.blog.exception.OAuth2AuthenticationProcessingException;
 import com.ssafy.blog.model.AuthProvider;
+import com.ssafy.blog.model.Rank;
 import com.ssafy.blog.model.User;
+import com.ssafy.blog.repository.RankRepository;
 import com.ssafy.blog.repository.UserRepository;
 import com.ssafy.blog.security.UserPrincipal;
 import com.ssafy.blog.security.oauth2.user.OAuth2UserInfo;
@@ -29,6 +31,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RankRepository rankRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -81,7 +86,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        return userRepository.save(user);
+        user = userRepository.save(user);
+
+        Rank rank = new Rank();
+        rank.setUser(user);
+        rank.setRankPoint(0);
+        rank.setAnswerCnt(0);
+        rank.setLikeCnt(0);
+        rank.setSelectCnt(0);
+        rankRepository.save(rank);
+
+        return user;
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {

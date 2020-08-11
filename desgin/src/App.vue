@@ -15,6 +15,7 @@
 <script>
 import HeadBar from '@/components/HeadBar.vue'
 import Footer from '@/components/Footer.vue'
+import {mapState,mapActions,mapMutations} from 'vuex'
 
 export default{
   name: 'App',
@@ -22,17 +23,48 @@ export default{
     HeadBar,
     Footer
   },
+  
   methods: {
-    navbarSpan() {
-      window.addEventListener("scroll", function(){
-        let header = document.querySelector("header");
-        header.classList.toggle("sticky", window.scrollY > 0);
-      })
+    ...mapActions('user',['fetchUserProfile']),
+    ...mapMutations('user',['setisLoggedIn']),
+    getParameters(paramName) { 
+      // 리턴값을 위한 변수 선언 
+      var returnValue; 
+      // 현재 URL 가져오기 
+      var url = location.href; 
+      // get 파라미터 값을 가져올 수 있는 ? 를 기점으로 slice 한 후 split 으로 나눔 
+      var parameters = (url.slice(url.indexOf('?') + 1, url.length)).split('&'); 
+      // 나누어진 값의 비교를 통해 paramName 으로 요청된 데이터의 값만 
+      for (var i = 0; i < parameters.length; i++) { 
+        var varName = parameters[i].split('=')[0]; 
+        if (varName.toUpperCase() == paramName.toUpperCase()) {
+            returnValue = parameters[i].split('=')[1];
+            return decodeURIComponent(returnValue); 
+        } 
+      } 
+    },
+  },
+  created() {
+    let token = this.getParameters('token')
+    // // 토큰이 있으면
+    if(token !== undefined){
+        // localStorage.setItem('localToken', token);
+        this.$cookie.set('logintoken',token, '1h');
+        //this.loginTokened = true;
+        this.fetchUserProfile(this.$cookie.get('logintoken'));
+        //this.$cookie.set('user_id',this.user.id,'1h');
+        this.$router.push({'name':'Home'});
+    }
+    if(this.$cookie.get('logintoken')){
+      this.setisLoggedIn(true)
+      // alert(this.isLoggedIn)
     }
   },
-  mounted() {
-    this.navbarSpan();
-  }
+  computed: {
+    ...mapState({
+      isLoggedIn : state => state.user.isLoggedIn
+    })
+  },
 }
 
 </script>
@@ -87,4 +119,21 @@ body {
 /* .botmargin400px {
   margin-bottom: 400px !important;
 } */
+
+.tag {
+    font-size: 12px;
+    margin: 1px;
+    padding: 3px 5px;
+    border-radius: 2px;
+    border: 1px solid #e1ecf4;
+    background: #e1ecf4;
+    color:#60829b;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin: 10px 5 15px 0;
+}
+.tag:hover {
+    background: #d0eafd;
+    cursor: pointer;
+}
 </style>

@@ -1,11 +1,36 @@
 <template>
     <!-- <div class="wrapper"> -->
     <div class="search_box">
-        <input type="text" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
+        <input type="text" v-model="keyword"  @keypress.enter="searchItem" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
         <i class="fas fa-search"></i>
     </div>
     <!-- </div> -->
 </template>
+
+<script>
+export default{
+  name: 'HeadSearchBar',
+  data() {
+    return {
+      keyword: '',
+    }
+  },
+  methods: {
+    searchItem() {
+      if(this.keyword != "")
+      {
+        this.$router.push({
+          name:'Search',
+          params:{
+              search_keyword : this.keyword
+          }
+        })          
+        this.keyword = '';
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 *{
@@ -13,17 +38,8 @@
   padding: 0;
 }
 
-.wrapper{
-  width: 100%;
-  height: 100vh;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .search_box{
-  width: 50%;
+  width: 45%;
   position: relative;
   -moz-box-shadow:    3px 3px 3px 3px #ccc;
   -webkit-box-shadow: 3px 3px 3px 3px #ccc;

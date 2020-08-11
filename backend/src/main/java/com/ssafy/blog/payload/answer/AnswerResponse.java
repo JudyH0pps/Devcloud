@@ -1,18 +1,21 @@
 package com.ssafy.blog.payload.answer;
 
-import lombok.AllArgsConstructor;
+import java.util.Date;
+
+import com.ssafy.blog.model.User;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class AnswerResponse {
-    
+
     private Long id;
-    private Long user_id;
+    private User user;
     private Long question_id;
     private String content;
+    private int like_cnt;
+    private boolean selected;
+    private Date updated_at;
 }
