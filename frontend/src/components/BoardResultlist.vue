@@ -15,22 +15,21 @@
                         :key="index"
                         img-width= "400"
                         img-height= "auto"
-                        @click="move(question.id)"
                     >
                         <!-- image issue -->
                         <div >
                             <b-card-text v-html="$options.filters.highlights1(question.title, keyword)" 
                                 style="font-size: 30px; display: inline-block; float: left;
-                                       padding-right: 50%; ">
+                                       padding-right: 50%;" @click="move(question.id)">
                                 {{question.title}}
 
                             </b-card-text>
                             <div>
-                                <img src="@/assets/rainbow_heart.png" width="32px" height="32px"/>
-                                <span style="margin-left: 30px; font-size: 24px;">{{question.like_cnt}}1</span>
+                                <img src="@/assets/rainbow_heart.png" width="32px" height="32px" style="padding-bottom: 6px;"/>
+                                <span style="margin-left: 30px; font-size: 26px;">{{question.like_cnt}}1</span>
                             </div>
                             <hr>
-                            <b-card-text v-html="$options.filters.highlights2(question.content, keyword)" style="font-size: 18px; text-overflow: ellipsis">
+                            <b-card-text v-html="$options.filters.highlights2(question.content, keyword)" style="font-size: 18px; text-overflow: ellipsis" @click="move(question.id)">
                                 {{question.content}}
                             </b-card-text>
 
