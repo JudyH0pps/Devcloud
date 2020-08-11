@@ -3,11 +3,14 @@
         <h1 class="q-title">A.</h1>
         <div class="leftline">
             <div class="q-info">
-                <p>Written by {{ user.name }}</p>
-                <p>{{ date }}</p>
+                <div class="profile">
+                    <img :src="answer.user.imageUrl" class="profile_img">
+                    <p>{{ answer.user.name }}</p>
+                </div>
+                <p>{{ answer.updated_at }}</p>
             </div>
         </div>
-        <p class="q-content">{{ content }}</p>
+        <p class="q-content">{{ answer.content }}</p>
     </div>
 </template>
 
@@ -17,13 +20,14 @@ export default {
     name: 'DetailAnswer',
     data() {
         return {
-            user: {
-                name: 'Kong',
-            },
-            content: '다운받은 코드의 model 부분에 @data라고 된부분이있는데 의미는 그것입니다',
-            date: '2020년 8월 10일'
         }
     },
+    props: {
+        answer: Object,
+    },
+    // created() {
+    //     console.log(this.answer);
+    // }
 }
 </script>
 
@@ -52,5 +56,14 @@ export default {
 .q-content {
     padding: 10px 0;
 }
-
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.profile_img {
+    border-radius: 50%;
+    height: 40px;
+    margin-right: 10px;
+}
 </style>

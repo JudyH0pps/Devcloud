@@ -7,9 +7,9 @@
       <HeadSearchBar v-show="this.$store.state.searchBarinHeadbar"/>
       <div>
         <ul>
-          <router-link :to="{ 'name':'Detail' }">
+          <!-- <router-link :to="{ 'name':'Detail' }">
             <li class="underline">Detail</li>
-          </router-link>
+          </router-link> -->
           <!-- <router-link :to="{ 'name':'Search' }">
             <li class="underline">Search</li>
           </router-link> -->

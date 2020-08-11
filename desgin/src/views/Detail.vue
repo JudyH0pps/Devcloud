@@ -1,7 +1,7 @@
 <template>
   <section class="detail">
     <DetailQuestion/>
-    <DetailAnswer/>
+    <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer"/>
     <button @click="moveToWrite">답변달기</button>
   </section>
 </template>
@@ -9,6 +9,7 @@
 <script>
 import DetailQuestion from '@/components/DetailQuestion.vue'
 import DetailAnswer from '@/components/DetailAnswer.vue'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Detail',
@@ -21,11 +22,27 @@ export default {
 
     }
   },
+	computed: {
+		...mapState({
+			answers: state => state.answer.answers,
+		}),
+	},
   methods: {
+    ...mapActions('answer',['fetchAnswers']),
     moveToWrite() {
-      this.$router.push({'name':'WriteAnswer'});
+      this.$router.push({
+        name:'WriteAnswer',
+        params:{ 
+          "question_id" : this.$route.params.question_id
+          },
+        });
     }
-  }
+  },
+	created() {
+		// alert("조회한 글번호 :" +this.$route.params.question_id)
+		// this.fetchAnswers(this.$route.params.qid);
+    this.fetchAnswers(this.$route.params.question_id)
+	}
 }
 </script>
 
