@@ -26,6 +26,9 @@ public class Rank {
     private int rankPoint;
 
     @Column(nullable = false)
+    private int ranking;
+
+    @Column(nullable = false)
     private int questionCnt;
 
     @Column(nullable = false)
