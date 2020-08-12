@@ -46,6 +46,11 @@ Vue.use(VueRouter)
     name: 'Detail',
     component: () => import('../views/Detail.vue')
   },
+  {
+    path: '/detail/:question_id/edit/:answer_id',
+    name: 'EditAnswer',
+    component: () => import('../components/WriteAnswer.vue')
+  }
 ]
 
 const router = new VueRouter({
