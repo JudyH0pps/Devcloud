@@ -17,44 +17,35 @@ export default {
         // question like count
         // quesiont_id && user_id 있으면 좋아요 취소
         // quesiont_id && !user_id  좋아요
-        getQuestonLikeCount({commit}, question_id) {
-            http
-                // 'api/question_id' get 요청
-                .get('/api/liketoquestion'), {
-                    // body parameter에 question_id를 실어서 보낸다.
-                    params: {
-                        "question_id": question_id
-                    }
-                }
-                // 요청 이후 동작
-                .then(({data}) => {
-                    commit('setLikeToQustion', data)
-                })
-                // 요청시 에러발생시 동작
-                .catch(err => console.log(err.response))
-        },
-        postQuestionLike(context, question_id) {
+        postQuestionLike(context, likeData) {
             http
                 .post('/api/liketoquestion'), {
                     params: {
                         "question_id": question_id,
-
-                    }
-                }
-        },
-        // answer like count
-        getAnswerLikeCount(context, answer_id){
-            http
-                .get('api/likeytoanswer'), {
-                    // body parameter에 answer_id를 실어서 보낸다.
-                    params: {
-                        "answer_id": answer_id
+                        "user_id": user_id,
                     }
                 }
                 .then(({data}) => {
-                    context.commit('setLikeToAnswer', data)
+                    
+                    // 좋아요 상태 변화....
+                    commit('setLikeToQuestion', data);
                 })
                 .catch(err => console.log(err.response))
-        }
+        },
+        postAnswerLike(context, likeData) {
+            http
+                .post('/api/liketoanswer'), {
+                    params: {
+                        "question_id": question_id,
+                        "user_id": user_id,
+                    }
+                }
+                .then(({data}) => {
+                    
+                    // 좋아요 상태 변화....
+                    commit('setLikeToQuestion', data);
+                })
+                .catch(err => console.log(err.response))
+        },
     }
 }
