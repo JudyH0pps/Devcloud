@@ -1,27 +1,95 @@
 <template>
   <section class="writeform">
-    <div class="form">
-      <input type="text" name="title" autocomplete="off" required/>
-      <label class="label-name" for="title">
+    <div class="form" v-if="!isAnswer">
+      <input type="text" name="title" autocomplete="off" required v-model="title"/>
+      <label class="label-name" for="title" v-if="isEdit === false">
         <span class="content-name">Title</span>
       </label>
     </div>
     <div class="form">
-      <input type="text" name="content" autocomplete="off" required/>
-      <label class="label-name" for="content">
+      <input type="text" name="content" autocomplete="off" required v-model="content"/>
+      <label class="label-name" for="content" v-if="isEdit === false">
         <span class="content-name">Content</span>
       </label>
     </div>
-    <button>Submit</button>
+    <button @click="postData">Submit</button>
   </section>
 </template>
 
 <script>
-
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Write',
+  props: {
+    isAnswer: Boolean,
+  },
+  data() {
+    return {
+      title: '',
+      content: '',
+      tags: [],
+      isEdit: false
+    }
+  },
+  computed: {
+    ...mapState({
+      question: state => state.question.question,
+      answers: state => state.answer.answers
+    })
+  },
   components: {
-
+  },
+  methods: {
+    ...mapActions('answer', ['postAnswer', 'editAnswer']),
+    ...mapActions('question', ['postQuestion']),
+    postData() {
+      // 질문 페이지라면
+      if (this.isAnswer === false) {
+        const questionData = {
+          title: this.title,
+          content: this.content,
+          user_id: parseInt(this.$cookie.get('user_id')),
+          tagList: [{
+            id: 0,
+            name: 'vue.js'
+          }]
+        }
+        this.postQuestion(questionData)
+      }
+      // 답변 페이지일 때
+      else {
+        const answerData = {
+          content: this.content,
+        }
+          // 수정일 경우
+        if (this.isEdit) {
+          answerData.answer_id = parseInt(this.$route.params.answer_id),
+          this.editAnswer(answerData)
+          }
+        // 작성일 경우
+        else {
+          answerData.question_id = parseInt(this.$route.params.question_id),
+          answerData.user_id = this.$cookie.get('user_id')
+          this.postAnswer(answerData)
+        }
+      }
+    },
+  },
+  created() {
+    // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
+    if (this.isAnswer) {
+      if (this.$route.params.answer_id) {
+        this.isEdit = true
+        this.content = this.answers.find(answer => answer.id === parseInt(this.$route.params.answer_id)).content
+      }
+    }
+    else {
+      if (this.$route.params.question_id) {
+        this.isEdit = true
+        this.title = this.question.title
+        this.content = this.question.content
+      }
+    }
   }
 }
 </script>
