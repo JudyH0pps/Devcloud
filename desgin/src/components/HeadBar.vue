@@ -32,9 +32,9 @@
             style="width: 48px; height: 48px;">
             <i class="fas fa-caret-down"></i>
             <div class="dropdown" v-show="showDropdown">
-              <router-link :to="{ 'name':'Profile' }">
-                <li class="dropdown-list" @click="toggleDropdown">MyProfile</li>
-              </router-link>
+              <!-- <router-link :to="{ 'name':'Profile' }"> -->
+              <li class="dropdown-list" @click="moveProfile">MyProfile</li>
+              <!-- </router-link> -->
               <li class="dropdown-list" @click="signOutBtn">Logout</li>
             </div>
           </div>
@@ -47,13 +47,20 @@
 <script>
 import LoginModal from '@/components/LoginModal.vue'
 import HeadSearchBar from '@/components/HeadSearchBar.vue'
+//import {mapState,mapActions} from 'vuex'
 
-export default{
+export default {
   name: 'HeadBar',
   components: {
       LoginModal,
       HeadSearchBar
   },
+  // computed:{
+  //       ...mapState({
+  //           //keyword : state => state.keyword,
+  //           user : state => state.user.user,
+  //       }),
+  // },
   data() {
       return {
         loginModalOn: false,
@@ -62,6 +69,8 @@ export default{
       }
   },
   methods: {
+    //...mapActions('user',['fetchMyProfile']),
+
     signOutBtn() {
         this.toggleDropdown();
         alert("로그아웃 되었습니다.");
@@ -92,7 +101,19 @@ export default{
     },
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
-    }
+    },
+    moveProfile(){
+            this.$router.push({
+                name : 'Profile',
+                params : {
+                    user_id : this.$cookie.get('user_id')
+                }
+            }).catch(()=>{
+                // 프로필에서 다시 프로필로 이동시에 새로고침 해줌
+                this.$router.go()
+            })
+            this.toggleDropdown()
+        }
   },
   mounted() {
     this.navbarSpan();
