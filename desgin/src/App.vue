@@ -54,7 +54,7 @@ export default{
         //this.loginTokened = true;
         this.fetchMyProfile(this.$cookie.get('logintoken'));
         //this.$cookie.set('user_id',this.user.id,'1h');
-        //this.$router.push({'name':'Home'});
+        this.$router.push({'name':'Home'});
     }
     if(this.$cookie.get('logintoken')){
       this.setisLoggedIn(true)
