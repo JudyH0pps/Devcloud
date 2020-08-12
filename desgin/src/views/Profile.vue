@@ -3,16 +3,18 @@
     <div class="container">
       <div class="profile-header">
         <div class="profile-img">
-          <img src="../assets/damgom.png" width="200" alt="profile">
+          <img :src="user.imageUrl" width="200" alt="profile">
         </div>
         <div class="profile-nav-info">
-          <h3 class="user-name">Nongdamgom</h3>
-          <div class="address">
+          <h3 class="user-name">{{user.name }}</h3>
+          <!-- <div class="address">
             <p class="state">
               Gwanju,
             </p>
             <span class="country">Republic of Korea</span>
-          </div>
+          </div> -->
+          <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
+          <i class="fas fa-layer-group"></i><span v-if="user.userTechs.length != 0">{{user.userTechs[0].tech.name}}</span>
         </div>
         <div class="profile-option">
           <div class="notification">
@@ -26,13 +28,10 @@
           <div class="profile-side">
             <div class="user-bio">
               <p class="bio">
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
+                <textarea v-if="this.valid == true" v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: none ; width:100%; height:100%"
+                readonly></textarea>
+                <textarea v-else v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: Solid ; width:100%; height:100%"
+                ></textarea>
               </p>
             </div>
           </div>
@@ -42,11 +41,12 @@
             <ul>
               <li class="user-post tab" :class="{ 'active': selectedMenu===1 }" @click="selectedMenu=1">Questions</li>
               <li class="user-post tab" :class="{ 'active': selectedMenu===2 }" @click="selectedMenu=2">Answers</li>
-              <li class="user-post tab" :class="{ 'active': selectedMenu===3 }" @click="selectedMenu=3">Profile</li>
+              <li v-if="myProfile" class="user-post tab" :class="{ 'active': selectedMenu===3 }" @click="selectedMenu=3">Profile</li>
             </ul>
           </div>
           <ProfileQuestions v-show="selectedMenu == 1"/>
           <ProfileAnswers v-show="selectedMenu == 2"/>
+          <ProfileAccount v-if="myProfile && selectedMenu == 3"/>
         </div>
       </div>
     </div>
@@ -56,20 +56,108 @@
 <script>
 import ProfileAnswers from '@/components/ProfileAnswers.vue'
 import ProfileQuestions from '@/components/ProfileQuestions.vue'
+import ProfileAccount from '@/components/ProfileAccount.vue'
+
+import { mapState, mapActions ,mapMutations} from 'vuex';
 
 export default {
   name: 'Profile',
   data() {
     return {
+      myProfile : false,
       selectedMenu: 2,
+      // 선택된 기술스택들
+      selectedTags:[],
     }
-  },
-  computed: {
   },
   components: {
     ProfileAnswers,
-    ProfileQuestions
-  }
+    ProfileQuestions,
+    ProfileAccount
+  },
+  computed: {
+    ...mapState({
+      techs : state => state.tech.techs,
+      isTechs : state => state.tech.isTechs,
+      user : state => state.user.user,
+      questions : state => state.question.questions,
+      answers : state => state.answer.answers,
+      valid : state => state.testValid
+    }),
+    changeUser(){
+      return this.$route.params.user_id
+    },
+  },
+  watch :{
+    changeUser: function(){
+      this.$router.go()
+    },
+    isTechs : function(){
+      if(this.isTechs){
+        alert(this.techs.length)
+        this.inputChange(this.techs)
+        console.log(this.selectedTags)
+        this.setTechsIn(this.selectedTags)
+      }
+    }
+  },
+  methods: {
+    ...mapActions('user',['fetchMyProfile','fetchUserProfile']),
+    ...mapActions('answer',['fetchAnswersById']),
+    ...mapActions('question',['fetchUserQuestions']),
+    ...mapActions('tech',['fetchTechs']),
+    ...mapMutations('tech',['setTechsIn']),
+    ...mapMutations(['settestValid']),
+    checkAuth(){
+      if(this.$cookie.get('user_id') == this.$route.params.user_id){
+        this.myProfile = true;
+        alert(this.myProfile);
+        this.fetchTechs();
+        alert(this.techs.length)
+        this.inputChange(this.techs)
+        console.log(this.selectedTags)
+        this.setTechsIn(this.selectedTags)
+      }else{
+        this.myProfile = false,
+        alert(this.myProfile)
+      }
+    },
+    // 불러온 태그리스트를 자동완성 리스트 형식으로 변경
+    inputChange(arr){
+          for(var i = 0; i < arr.length; i++)
+          {
+            let singleTag = {};
+            singleTag.key = arr[i].name;
+            singleTag.value = arr[i].name;
+            singleTag.id = arr[i].id;
+            this.selectedTags.push(singleTag)
+          } 
+    }
+  },
+  mounted (){
+    this.checkAuth()
+    // 주석처리부분 본인일때와 타인일때 다르게처리하려면 ...
+    // if(this.myProfile){ //본인
+    //   this.fetchMyProfile(this.$cookie.get('logintoken'));
+    //   //작성한 답변 조회 
+    //   this.fetchAnswersById(this.$cookie.get('user_id'));
+    //   //작성한 질문 조회
+    //   this.fetchUserQuestions(this.$cookie.get('user_id'));
+    //   //console.log(this.user);
+    // }
+    // else{ // 다른사람
+    //   alert("다른사람의 프로필로 접근")
+    // }
+    // 프로필페이지에서 정보변경을 제외하고는 조회방식이 동일함
+    this.fetchUserProfile(this.$route.params.user_id)
+    //작성한 답변 조회 
+    this.fetchAnswersById(this.$route.params.user_id);
+    //작성한 질문 조회
+    this.fetchUserQuestions(this.$route.params.user_id);
+    this.settestValid(true);
+    //
+    
+  },
 }
 </script>
 

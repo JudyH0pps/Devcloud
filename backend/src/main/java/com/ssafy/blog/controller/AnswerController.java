@@ -155,6 +155,7 @@ public class AnswerController {
         response.setId(answer.getId());
         response.setUser(answer.getUser());
         response.setQuestion_id(answer.getQuestion().getId());
+        response.setQuestion_title(answer.getQuestion().getTitle());
         response.setContent(answer.getContent());
         response.setLike_cnt(answer.getLikeCnt());
         response.setSelected(answer.isSelected());

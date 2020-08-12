@@ -36,7 +36,7 @@ public class Question {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 1023)
+    @Column(nullable = false, length = 8191)
     private String content;
 
     @Column(nullable = false)

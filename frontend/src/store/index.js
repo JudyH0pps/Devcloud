@@ -7,6 +7,7 @@ import user from "@/store/modules/user.js";
 import question from "@/store/modules/question.js";
 import answer from "@/store/modules/answer.js";
 import notification from "@/store/modules/notification.js";
+import tech from "@/store/modules/tech.js"
 
 export default new Vuex.Store({
   state: {
@@ -24,5 +25,6 @@ export default new Vuex.Store({
     question,
     answer,
     notification,
+    tech,
   },
 })

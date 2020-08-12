@@ -25,7 +25,7 @@ export default{
   },
   
   methods: {
-    ...mapActions('user',['fetchUserProfile']),
+    ...mapActions('user',['fetchMyProfile']),
     ...mapMutations('user',['setisLoggedIn']),
     getParameters(paramName) { 
       // 리턴값을 위한 변수 선언 
@@ -48,10 +48,11 @@ export default{
     let token = this.getParameters('token')
     // // 토큰이 있으면
     if(token !== undefined){
+        let temp = token.split('#')[0];
         // localStorage.setItem('localToken', token);
-        this.$cookie.set('logintoken',token, '1h');
+        this.$cookie.set('logintoken',temp, '1h');
         //this.loginTokened = true;
-        this.fetchUserProfile(this.$cookie.get('logintoken'));
+        this.fetchMyProfile(this.$cookie.get('logintoken'));
         //this.$cookie.set('user_id',this.user.id,'1h');
         this.$router.push({'name':'Home'});
     }
