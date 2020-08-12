@@ -67,6 +67,8 @@ import Vue from 'vue'
 import VoerroTagsInput from '@voerro/vue-tagsinput';
 Vue.component('tags-input', VoerroTagsInput);
 
+
+
 export default {
     name: 'ProfileAccount',
     data: function() {
@@ -122,6 +124,7 @@ export default {
     },
 }
 </script>
+
 <style>
 .tags-input {
     /* display: flex;

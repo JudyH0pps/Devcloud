@@ -14,6 +14,7 @@ public class AnswerResponse {
     private Long id;
     private User user;
     private Long question_id;
+    private String question_title;
     private String content;
     private int like_cnt;
     private boolean selected;

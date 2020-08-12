@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Profile from '../views/Profile.vue'
+import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
   const routes = [
@@ -14,7 +16,7 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue')
+    component: Home
   },
   {
     path: '/write',
@@ -27,9 +29,10 @@ Vue.use(VueRouter)
     component: () => import('../components/WriteAnswer.vue')
   },
   {
-    path: '/profile',
+    path: '/profile/:user_id',
     name: 'Profile',
-    component: () => import('../views/Profile.vue')
+    component: Profile
+    //component: () => import('../views/Profile.vue')
   },
   {
     path: '/search/:search_keyword',
@@ -40,6 +43,10 @@ Vue.use(VueRouter)
     path: '/ranking',
     name: 'Ranking',
     component: () => import('../views/Ranking.vue')
+  },
+  {
+    path: '/oauth2/redirect',
+    redirect: { name: 'Home' }
   },
   {
     path: '/detail/:question_id',

@@ -5,7 +5,7 @@
             <div :to="{ name:'Home' }"  class="card" @click="move(answer.question.id)">
                 <div class="card-body pl-3 pr-3 pb-0">
                 <h5 class="text-left">Q.</h5>
-                <p class="card-text text-left">{{answer.question.title}}</p>
+                <p class="card-text text-left">{{answer.question_id}}</p>
                 </div>
                 <div class="card-body pl-3 pr-3 pt-0">
                 <h5 class="text-left text-right">A.</h5>
