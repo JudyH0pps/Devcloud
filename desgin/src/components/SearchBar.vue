@@ -29,7 +29,7 @@ export default {
               search_keyword : this.keyword
           }
         }) 
-        this.keyword = '';         
+        //this.keyword = '';         
       }
     }
   }
