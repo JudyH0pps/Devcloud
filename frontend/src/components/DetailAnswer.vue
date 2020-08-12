@@ -113,7 +113,7 @@ export default {
 			isEdit: false,
 			commentInput: false
 		}
-	}
+	},
 }
 </script>
 

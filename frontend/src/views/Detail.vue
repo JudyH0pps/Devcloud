@@ -53,6 +53,10 @@ export default {
 		// alert("조회한 글번호 :" +this.$route.params.qid)
 		// this.fetchAnswers(this.$route.params.qid);
 		this.fetchAnswers(this.questionId)
+	},
+	beforeDestroy() {
+		this.answers = []
+		console.log(this.answers)
 	}
 };
 </script>

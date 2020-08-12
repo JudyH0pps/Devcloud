@@ -11,11 +11,13 @@
             </div>
         </div>
         <p class="q-content">{{ answer.content }}</p>
+        <span style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
+        <span @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" style="float: right; margin: 0 2px; cursor: pointer;" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
     </div>
 </template>
 
 <script>
-
+import { mapActions } from 'vuex'
 export default {
     name: 'DetailAnswer',
     data() {
@@ -25,6 +27,9 @@ export default {
     props: {
         answer: Object,
     },
+    methods: {
+        ...mapActions('answer', ['deleteAnswer'])
+    }
     // created() {
     //     console.log(this.answer);
     // }
