@@ -1,7 +1,16 @@
 <template>
     <section class="search">
-        <!-- <h1>검색 결과</h1> -->
-        <SearchResultCard v-for="(question, index) in questions.slice().reverse()" :question="question" :key="index"/>
+
+        <hr style="border: 1px solid #D3D3D3; margin-top: 20px;">
+        
+        <div v-if="this.searchKeyword">
+            <h2>Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
+        </div>
+        <div v-else>
+            <h2>All Questions</h2>
+        </div>
+
+        <SearchResultCard  v-for="(question, index) in questions.slice().reverse()" :question="question" :key="index" :keyword="searchKeyword" />
         <button @click="moveToWrite">새 질문 작성</button>
     </section>
 </template>
@@ -18,19 +27,11 @@ export default{
     data() {
         return {
             // searchresults: [1,2,3,4,5,6,7,8,9],
-            word: this.keyword,
-        }
+        } 
     },
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
-        highlight(){
-            if(this.word){
-                return this.word.replace(new RegExp(this.word, 'gi'), match => {
-                    return '<span class="highlighted">' + match + '</span>';
-                });
-            
-            }
-        },
+        
         moveToWrite() {
             this.$router.push({ 'name' : 'Write' });
         }
