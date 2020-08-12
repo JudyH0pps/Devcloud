@@ -7,15 +7,20 @@
                 <p class="date">{{ question.date }}</p>
             </div> -->
         <!-- </div> -->
+        
         <div class="post-data">
-            <h1 class="title" @click="moveTodetail(question.id)">Q. {{ question.title }}</h1>
-            <h2 class="subtitle">
+            <div class="title">Q. 
+                <div @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)">{{ question.title }}</div>
+            </div>
+            <div class="subtitle">
                 <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
-            </h2>
-            <p class="description">
+            </div>
+            <p v-html="$options.filters.highlights2(question.content, keyword)" class="description">
                 {{ question.content }}
             </p>
+            
         </div>
+        
         <!-- <h2 class="card_title">Q. {{ title }}</h2>
         <p>{{ content }}</p>
         <div>
@@ -34,9 +39,11 @@
         </div> -->
         <!-- <hr/> -->
     </div>
+  
 </template>
 
 <script>
+import Vue from 'vue';
 export default{
     name: 'SearchResultCard',
     data() {
@@ -51,6 +58,7 @@ export default{
     },
     props: {
         question: Object,
+        keyword: String,
     },
     methods: {
         getImages(name) {
@@ -60,12 +68,48 @@ export default{
             this.$router.push({
                 'name':'Detail',
                 params:{ "question_id" : question_id},
-                })
-        }
-    }
+            });
+        },
+    },
+    created() {
+    },
 }
+
+
+//title
+Vue.filter("highlights1", function(item, keyword){
+    if(keyword == "") {
+        return item;
+    }
+    
+
+    // 정규표현식
+    var iQuery = new RegExp(keyword, "ig");
+    // 해당 키워드 하이라이트
+    return item.toString().replace(iQuery, matchedTxt => {
+        return "<span class='highlight'>" + matchedTxt + "</span>";
+    });
+});
+//content
+Vue.filter("highlights2", function(item, keyword){
+    if(keyword == "") return item;
+
+    // 정규표현식
+    var iQuery = new RegExp(keyword, "ig");
+    // 해당 키워드 하이라이트
+    return item.toString().replace(iQuery, matchedTxt => {
+        return "<span class='highlight'>" + matchedTxt + "</span>";
+    });
+});
 </script>
 
+
+<style>
+.highlight {
+    color: red;
+    font-weight: bold;
+}
+</style>
 <style scoped>
 /* *,
 *::before,
@@ -77,7 +121,7 @@ export default{
 .card {
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    /* background-color: #fff; */
     /* box-shadow: 0 3px 2px rgba(0, 0, 0, .5); */
     margin: 10px auto 10px auto;
     /* border-radius: 15px; */
@@ -88,6 +132,7 @@ export default{
 .card .title:hover {
     cursor: pointer;
 }
+
 /* .image-data {
     height: 250px;
     width: 10px;
@@ -137,6 +182,7 @@ export default{
 .title {
     font-size:20px;
     line-height: 1;
+    font-weight: bold;
 }
 .subtitle {
     font-size: 12px;
@@ -209,4 +255,5 @@ export default{
         fill: #ff3187;
     }
 }
+
 </style>
