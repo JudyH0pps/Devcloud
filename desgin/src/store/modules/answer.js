@@ -54,14 +54,18 @@ export default {
 			http
 				.put('/api/answer', answerData)
 				.then(() => {
-					router.push({name: 'Detail', params: {"question_id": answerData.question_id}})
+					router.go(-1)
 				})
 				.catch(err => console.log(err))
 		},
 		deleteAnswer(context, answerData) {
 			http
-				.delete('/api/answer', {params: {id: answerData.answer_id}})
-				.then(() => context.dispatch('fetchAnswers', answerData.question_id))
+				.delete('/api/answer', {params: {answer_id: answerData.answer_id}})
+				.then(() => {
+					// 최상단으로 스크롤 업
+					window.scrollTo(0, 0);
+					context.dispatch('fetchAnswers', answerData.question_id)
+				})
 				.catch(err => console.log(err))
 		}
     },
