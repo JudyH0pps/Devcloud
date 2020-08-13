@@ -3,7 +3,7 @@
         <header style="display: flex; justify-content: space-between; align-items: center">
             <h1 class="q-title">Q. {{ question.title }}</h1>
             <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answerLength < 1" class="buttons">
-                <span>수정</span>
+                <span @click="moveToEdit">수정</span>
                 <span>삭제</span>
             </div>
         </header>
@@ -45,6 +45,14 @@ export default {
     },
 	methods: {
         ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
+        moveToEdit() {
+            this.$router.push({
+                name: 'Edit',
+                params: {
+                    question_id: parseInt(this.$route.params.question_id)
+                }
+            })
+        }
 	},
 	created() {
         // alert(this.$route.params.question_id)
