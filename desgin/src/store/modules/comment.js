@@ -15,8 +15,7 @@ export default {
         postComment(context, commentData) {
             http
                 .post('/api/comment', commentData)
-                .then(({data}) => {
-                    console.log(data)
+                .then(() => {
                     context.dispatch('fetchComments', commentData.answer_id)
                 })
                 .catch(err => console.log(err))
@@ -27,7 +26,6 @@ export default {
                     answer_id: answer_id,
                 }})
                 .then(({data}) => {
-                    console.log(data)
                     context.commit('setComments', data)
                 })
                 .catch(err => console.log(err))
