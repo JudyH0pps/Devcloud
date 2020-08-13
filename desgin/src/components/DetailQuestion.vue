@@ -13,7 +13,9 @@
                 <p>{{ question.updatedAt }}</p>
             </div>
         </div>
-        <p class="q-content">{{ question.content }}</p>
+        <!-- <p class="q-content">{{ question.content }}</p> -->
+        <div v-html="question.content">
+        </div>
     </div>
 </template>
 

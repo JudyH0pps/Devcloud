@@ -7,21 +7,27 @@
       </label>
     </div>
     <div class="form">
-      <input type="text" name="content" autocomplete="off" required v-model="content"/>
+      <input type="text" name="content" autocomplete="off" required/>
       <label class="label-name" for="content" v-if="isEdit === false">
         <span class="content-name">Content</span>
       </label>
     </div>
+    <vue-editor v-model="content"></vue-editor>
     <button @click="postData">Submit</button>
   </section>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import { VueEditor } from 'vue2-editor'
+
 export default {
   name: 'Write',
   props: {
     isAnswer: Boolean,
+  },
+  components: {
+    VueEditor
   },
   data() {
     return {
@@ -37,8 +43,6 @@ export default {
       answers: state => state.answer.answers
     })
   },
-  components: {
-  },
   methods: {
     ...mapActions('answer', ['postAnswer', 'editAnswer']),
     ...mapActions('question', ['postQuestion']),
@@ -49,10 +53,12 @@ export default {
           title: this.title,
           content: this.content,
           user_id: parseInt(this.$cookie.get('user_id')),
-          tagList: [{
-            id: 0,
-            name: 'vue.js'
-          }]
+          tagList: [
+            {
+              "id": 4,
+              "name": "C++"
+            }
+          ],
         }
         this.postQuestion(questionData)
       }
