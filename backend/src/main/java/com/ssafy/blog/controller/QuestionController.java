@@ -99,12 +99,14 @@ public class QuestionController {
         question = questionRepository.save(question);
 
         // tag 등록
-        List<Tag> tagList = request.getTagList();
-        for (Tag tag : tagList) {
-            QuestionTag questionTag = new QuestionTag();
-            questionTag.setQuestion(question);
-            questionTag.setTag(tag);
-            questionTagRepository.save(questionTag);
+        if (request.getTagList() != null) {
+            List<Tag> tagList = request.getTagList();
+            for (Tag tag : tagList) {
+                QuestionTag questionTag = new QuestionTag();
+                questionTag.setQuestion(question);
+                questionTag.setTag(tag);
+                questionTagRepository.save(questionTag);
+            }
         }
 
         updateRank(request.getUser_id(), 1);
@@ -128,7 +130,7 @@ public class QuestionController {
         // tag 수정
         questionTagRepository.deleteAllByQuestionId(request.getQuestion_id());
         List<Tag> tagList = request.getTagList();
-        for(Tag tag : tagList) {
+        for (Tag tag : tagList) {
             QuestionTag questionTag = new QuestionTag();
             questionTag.setQuestion(question);
             questionTag.setTag(tag);

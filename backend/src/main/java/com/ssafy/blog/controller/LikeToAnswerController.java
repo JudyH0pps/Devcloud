@@ -18,7 +18,6 @@ import com.ssafy.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,16 +43,21 @@ public class LikeToAnswerController {
 
     @GetMapping("/api/liketoanswer")
     @ApiOperation(value = "답변에 대한 좋아요 목록 조회")
-    public ResponseEntity<List<LikeToAnswerResponse>> searchLikeToAnswer(
+    public ResponseEntity<Object> searchLikeToAnswer(
             @RequestParam(required = false, name = "user_id") Long user_id,
             @RequestParam(required = false, name = "answer_id") Long answer_id) {
         List<LikeToAnswerResponse> list = new ArrayList<>();
-
-        if (user_id != null) {
+        
+        if(user_id != null && answer_id != null) {
+            Optional<LikeToAnswer> optionalLikeToAnswer = likeToAnswerRepository.findByUserIdAndAnswerId(user_id, answer_id);
+            return new ResponseEntity<>(optionalLikeToAnswer.get(), HttpStatus.OK);
+        }
+        if (user_id != null && answer_id == null) {
             for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAllByUserId(user_id)) {
                 list.add(makeResponse(likeToAnswer));
             }
-        } else if (answer_id != null) {
+
+        } else if (user_id == null && answer_id != null) {
             for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAllByAnswerId(answer_id)) {
                 list.add(makeResponse(likeToAnswer));
             }
