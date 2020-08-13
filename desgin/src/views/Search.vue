@@ -19,7 +19,7 @@
 import SearchResultCard from'../components/SearchResultCard.vue'
 import {mapActions, mapState} from 'vuex'
 
-export default{
+export default {
     name: 'Search',
     components: {
         SearchResultCard,
@@ -51,7 +51,7 @@ export default{
     watch:{
         searchKeyword : function(){
             this.fetchQuestionsByKeyword(this.searchKeyword)
-            this.setKeyword(this.searchKeyword)
+            //this.setKeyword(this.searchKeyword)
         }
     }
 }
