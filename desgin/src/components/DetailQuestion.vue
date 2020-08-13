@@ -1,6 +1,12 @@
 <template>
     <div class="detailquestion" v-if="this.$store.state.question.question">
-        <h1 class="q-title">Q. {{ question.title }}</h1>
+        <header style="display: flex; justify-content: space-between; align-items: center">
+            <h1 class="q-title">Q. {{ question.title }}</h1>
+            <div class="buttons">
+                <span style="">수정</span>
+                <span style="margin: 0 3px; border: 1px solid #ff80d0; border-radius: 10px; padding: 5px; cursor: pointer">삭제</span>
+            </div>
+        </header>
         <div class="leftline">
             <div class="tags">
                 <span class="tag" v-for="tag in question.questionTags" :key="tag">{{ tag }}</span>
@@ -82,5 +88,16 @@ export default {
     border-radius: 50%;
     height: 40px;
     margin-right: 10px;
+}
+.buttons > span {
+    margin: 0 3px; 
+    border: 1px solid #ff80d0; 
+    border-radius: 10px; 
+    padding: 5px; 
+    cursor: pointer;
+}
+.buttons > span:hover {
+    background-color: #ffb5e4;
+    color: white;
 }
 </style>
