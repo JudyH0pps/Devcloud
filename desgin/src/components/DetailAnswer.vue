@@ -10,7 +10,8 @@
                 <p>{{ answer.updated_at }}</p>
             </div>
         </div>
-        <p class="q-content">{{ answer.content }}</p>
+        <!-- <p class="q-content">{{ answer.content }}</p> -->
+        <div v-html="answer.content" class="content-reader"></div>
         <span style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
         <span @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" style="float: right; margin: 0 2px; cursor: pointer;" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
     </div>
@@ -70,5 +71,9 @@ export default {
     border-radius: 50%;
     height: 40px;
     margin-right: 10px;
+}
+.content-reader >>> .ql-syntax {
+    background-color: black;
+    color: white;
 }
 </style>
