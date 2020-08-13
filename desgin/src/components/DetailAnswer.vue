@@ -16,35 +16,60 @@
             <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span>
             <div>
                 <span style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
-                <span @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" style="float: right; margin: 0 2px; cursor: pointer;" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
+                <span style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
             </div>
         </div>
 
         <!-- 댓글 작성란 -->
         <div v-show="commentInput">
             <input @keyup.enter="postComment({user_id: parseInt($cookie.get('user_id')), answer_id: answer.id,content: postContent})" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-            <button @click="postComment({user_id: parseInt($cookie.get('user_id')), answer_id: answer.id,content: postContent})">작성</button>
+            <button style="cursor: pointer" @click="postComment({user_id: parseInt($cookie.get('user_id')), answer_id: answer.id,content: postContent})">작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
         <ul v-if="comments">
-			<!-- <li v-for="comment in comments" :key="comment.id">
-				<img src="" alt="user_profile">
-				<div>
-					<header>
-						<h5>{{ comment.user.name }}</h5>
-						<span>{{ comment.create_at }}</span>
-					</header>
-					<div>
-						<p>{{ comment.content }}</p>
-						<div>
-							<button>Edit</button>
-							<button>Delete</button>
-						</div>
+			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="comment in comments" :key="comment.id">
+                <img src="" alt="user_profile">
+                <div style="display: flex; flex-direction: column; width: 100%">
+                    <header style="display: flex; justify-content: space-between;">
+                        <h5>{{ comment.user.name }}</h5>
+                        <span>{{ comment.updatedAt }}</span>
+                    </header>
+                    
+                    <div style="display: flex; justify-content: space-between;">
+                        <p v-show="!isEdit">{{ comment.content }}</p>
+                        <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="isEdit" type="text" v-model="comment.content">
+                        <div v-show="!isEdit">
+                            <button @click="changeIsEdit">수정</button>
+                            <button @click="deleteComment({ comment_id: comment.id })">삭제</button>
+                        </div>
+                        <div v-show="isEdit">
+                            <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
+                        </div>
+                    </div>
+                </div>
+			</li>
+		</ul>
+
+        <!-- <div class="d-flex w-100">
+			<div class="d-flex flex-column w-100">
+				<header class="d-flex justify-content-between">
+					<h5>홍길동</h5>
+					<span>2020-08-05</span>
+				</header>
+				<div class="d-flex justify-content-between">
+					<p v-show="!isEdit">{{originalContent}}</p>
+					<input @keyup.enter="editComment({content: originalContent})" v-show="isEdit" type="text" v-model="value">
+					<div v-show="!isEdit">
+						<button @click="changeIsEdit" class="btn btn-secondary">수정</button>
+						<button @click="deleteComment({answer_id: answer.id})" class="btn btn-secondary">삭제</button>
+					</div>
+					<div v-show="isEdit">
+						<button @click="editComment({content: originalContent})" class="btn btn-primary">수정</button>
 					</div>
 				</div>
-			</li> -->
-		</ul> 
+			</div>
+		</div> -->
     </div>
 </template>
 
@@ -55,7 +80,8 @@ export default {
     data() {
         return {
             commentInput: false,
-            postContent: ''
+            postContent: '',
+            isEdit: false
         }
     },
     props: {
@@ -71,7 +97,10 @@ export default {
         ...mapActions('comment',['postComment', 'fetchComments', 'editComment', 'deleteComment']),
         changeCommentInput() {
 			this.commentInput = !this.commentInput
-		}
+        },
+        changeIsEdit() {
+            this.isEdit = !this.isEdit
+        }
     },
     created() {
 		this.fetchComments(this.answer.id)
@@ -123,5 +152,15 @@ export default {
 .q-footer {
     display: flex; 
     justify-content: space-between;
+}
+div > button {
+    cursor: pointer;
+    background-color: #78acff;
+    padding: 5px;
+    border-radius: 10px;
+    margin: 2px 2px
+}
+div > button:hover {
+    background-color: #4879c7;
 }
 </style>
