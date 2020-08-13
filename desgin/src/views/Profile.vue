@@ -109,9 +109,9 @@ export default {
         // alert(this.myProfile);
         this.fetchTechs();
         // alert(this.techs.length)
-        this.inputChange(this.techs)
+        //this.inputChange(this.techs)
         // console.log(this.selectedTags)
-        this.setTechsIn(this.selectedTags)
+        //this.setTechsIn(this.selectedTags)
       }else{
         this.myProfile = false;
         // alert(this.myProfile)
