@@ -2,9 +2,9 @@
     <div class="detailquestion" v-if="this.$store.state.question.question">
         <header style="display: flex; justify-content: space-between; align-items: center">
             <h1 class="q-title">Q. {{ question.title }}</h1>
-            <div v-if="question.user.id === parseInt($cookie.get('user_id'))" class="buttons">
-                <span style="">수정</span>
-                <span style="margin: 0 3px; border: 1px solid #ff80d0; border-radius: 10px; padding: 5px; cursor: pointer">삭제</span>
+            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answerLength < 1" class="buttons">
+                <span>수정</span>
+                <span>삭제</span>
             </div>
         </header>
         <div class="leftline">
@@ -30,6 +30,9 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'DetailQuestion',
+    props: {
+        answerLength: Number
+    },
     data() {
         return {
             // question: {},
