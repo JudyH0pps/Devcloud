@@ -39,7 +39,7 @@
                     <div style="display: flex; justify-content: space-between;">
                         <p v-show="selectedIndex !== index">{{ comment.content }}</p>
                         <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
-                        <div v-show="selectedIndex !== index">
+                        <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
                             <button @click="getIndex(index)">수정</button>
                             <button @click="deleteComment(comment.id)">삭제</button>
                         </div>
