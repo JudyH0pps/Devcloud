@@ -26,7 +26,7 @@ Vue.use(VueRouter)
   {
     path: '/detail/:question_id/write',
     name: 'WriteAnswer',
-    component: () => import('../components/WriteAnswer.vue')
+    component: () => import('../views/WriteAnswer.vue')
   },
   {
     path: '/profile/:user_id',
@@ -56,7 +56,7 @@ Vue.use(VueRouter)
   {
     path: '/detail/:question_id/edit/:answer_id',
     name: 'EditAnswer',
-    component: () => import('../components/WriteAnswer.vue')
+    component: () => import('../views/WriteAnswer.vue')
   }
 ]
 
