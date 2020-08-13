@@ -8,7 +8,6 @@ import question from "@/store/modules/question.js";
 import answer from "@/store/modules/answer.js";
 import notification from "@/store/modules/notification.js";
 import tech from "@/store/modules/tech.js"
-import comment from "@/store/modules/comment.js"
 
 
 export default new Vuex.Store({
@@ -29,6 +28,5 @@ export default new Vuex.Store({
     answer,
     notification,
     tech,
-    comment,
   },
 })
