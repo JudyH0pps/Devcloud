@@ -3,7 +3,7 @@
         <h1 class="q-title">Q. {{ question.title }}</h1>
         <div class="leftline">
             <div class="tags">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag">{{ tag }}</span>
+                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
             </div>
             <div class="q-info">
                 <div class='profile'>
