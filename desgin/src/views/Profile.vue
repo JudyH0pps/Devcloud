@@ -13,8 +13,6 @@
             </p>
             <span class="country">Republic of Korea</span>
           </div> -->
-          <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
-          <i class="fas fa-layer-group"></i><span v-if="user.userTechs.length != 0">{{user.userTechs[0].tech.name}}</span>
         </div>
         <div class="profile-option">
           <div class="notification">
@@ -27,12 +25,9 @@
         <div class="left-side">
           <div class="profile-side">
             <div class="user-bio">
-              <p class="bio">
-                <textarea v-if="this.valid == true" v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: none ; width:100%; height:100%"
-                readonly></textarea>
-                <textarea v-else v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: Solid ; width:100%; height:100%"
-                ></textarea>
-              </p>
+              <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
+              <i class="fas fa-layer-group"></i><span v-if="user.userTechs.length != 0">{{user.userTechs[0].tech.name}}</span>
+              <p class="bio">{{ user.introduction }}</p>
             </div>
           </div>
         </div>
@@ -94,9 +89,9 @@ export default {
     },
     isTechs : function(){
       if(this.isTechs){
-        alert(this.techs.length)
+        // alert(this.techs.length)
         this.inputChange(this.techs)
-        console.log(this.selectedTags)
+        // console.log(this.selectedTags)
         this.setTechsIn(this.selectedTags)
       }
     }
@@ -111,15 +106,15 @@ export default {
     checkAuth(){
       if(this.$cookie.get('user_id') == this.$route.params.user_id){
         this.myProfile = true;
-        alert(this.myProfile);
+        // alert(this.myProfile);
         this.fetchTechs();
-        alert(this.techs.length)
+        // alert(this.techs.length)
         this.inputChange(this.techs)
-        console.log(this.selectedTags)
+        // console.log(this.selectedTags)
         this.setTechsIn(this.selectedTags)
       }else{
-        this.myProfile = false,
-        alert(this.myProfile)
+        this.myProfile = false;
+        // alert(this.myProfile)
       }
     },
     // 불러온 태그리스트를 자동완성 리스트 형식으로 변경
