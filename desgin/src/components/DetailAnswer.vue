@@ -50,57 +50,48 @@
                 </div>
 			</li>
 		</ul>
-
-        <!-- <div class="d-flex w-100">
-			<div class="d-flex flex-column w-100">
-				<header class="d-flex justify-content-between">
-					<h5>홍길동</h5>
-					<span>2020-08-05</span>
-				</header>
-				<div class="d-flex justify-content-between">
-					<p v-show="!isEdit">{{originalContent}}</p>
-					<input @keyup.enter="editComment({content: originalContent})" v-show="isEdit" type="text" v-model="value">
-					<div v-show="!isEdit">
-						<button @click="changeIsEdit" class="btn btn-secondary">수정</button>
-						<button @click="deleteComment({answer_id: answer.id})" class="btn btn-secondary">삭제</button>
-					</div>
-					<div v-show="isEdit">
-						<button @click="editComment({content: originalContent})" class="btn btn-primary">수정</button>
-					</div>
-				</div>
-			</div>
-		</div> -->
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import http from "@/util/http-common"
+import { mapActions } from 'vuex'
+
 export default {
     name: 'DetailAnswer',
     data() {
         return {
+            comments: [],
             commentInput: false,
             postContent: '',
-            isEdit: false
+            isEdit: false,
         }
     },
     props: {
         answer: Object,
     },
     computed: {
-		...mapState({
-			comments: state => state.comment.comments
-		}),
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
-        ...mapActions('comment',['postComment', 'fetchComments', 'editComment', 'deleteComment']),
+        ...mapActions('comment',['editComment', 'deleteComment']),
         changeCommentInput() {
 			this.commentInput = !this.commentInput
         },
         changeIsEdit() {
             this.isEdit = !this.isEdit
-        }
+        },
+        fetchComments() {
+            http
+                .get('/api/comment', {params: {
+                    answer_id: this.answer.id,
+                }})
+                .then(({data}) => {
+                    this.comments = data
+                })
+                .catch(err => console.log(err))
+        },
+        
     },
     created() {
 		this.fetchComments(this.answer.id)
