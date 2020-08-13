@@ -28,7 +28,7 @@
 
         <!-- 댓글 목록 -->
         <ul v-if="comments">
-			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="comment in comments" :key="comment.id">
+			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
                 <img src="" alt="user_profile">
                 <div style="display: flex; flex-direction: column; width: 100%">
                     <header style="display: flex; justify-content: space-between;">
@@ -37,13 +37,13 @@
                     </header>
                     
                     <div style="display: flex; justify-content: space-between;">
-                        <p v-show="!isEdit">{{ comment.content }}</p>
-                        <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="isEdit" type="text" v-model="comment.content">
-                        <div v-show="!isEdit">
-                            <button @click="changeIsEdit">수정</button>
-                            <button @click="deleteComment({ comment_id: comment.id })">삭제</button>
+                        <p v-show="selectedIndex !== index">{{ comment.content }}</p>
+                        <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
+                        <div v-show="selectedIndex !== index">
+                            <button @click="getIndex(index)">수정</button>
+                            <button @click="deleteComment(comment.id)">삭제</button>
                         </div>
-                        <div v-show="isEdit">
+                        <div v-show="selectedIndex === index">
                             <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
                         </div>
                     </div>
@@ -64,7 +64,7 @@ export default {
             comments: [],
             postContent: '',
             commentInput: false,
-            isEdit: false,
+            selectedIndex: -1,
         }
     },
     props: {
@@ -74,12 +74,13 @@ export default {
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
-        ...mapActions('comment',['deleteComment']),
         changeCommentInput() {
 			this.commentInput = !this.commentInput
         },
-        changeIsEdit() {
-            this.isEdit = !this.isEdit
+        getIndex(index) {
+            if (index !== this.selectedIndex) {
+                this.selectedIndex = index
+            }
         },
         fetchComments() {
             http
@@ -110,7 +111,15 @@ export default {
                 .put('/api/comment', commentData)
                 .then(() => {
                     this.fetchComments()
-                    this.changeIsEdit()
+                    this.selectedIndex = -1
+                })
+                .catch(err => console.log(err))
+        },
+        deleteComment(comment_id) {
+            http
+                .delete('/api/comment', { params: { comment_id } })
+                .then(() => {
+                    this.fetchComments()
                 })
                 .catch(err => console.log(err))
         }
