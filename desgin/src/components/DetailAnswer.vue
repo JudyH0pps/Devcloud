@@ -22,8 +22,8 @@
 
         <!-- 댓글 작성란 -->
         <div v-show="commentInput">
-            <input @keyup.enter="postComment({user_id: parseInt($cookie.get('user_id')), answer_id: answer.id,content: postContent})" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-            <button style="cursor: pointer" @click="postComment({user_id: parseInt($cookie.get('user_id')), answer_id: answer.id,content: postContent})">작성</button>
+            <input @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
+            <button style="cursor: pointer" @click="postComment">작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
@@ -91,7 +91,20 @@ export default {
                 })
                 .catch(err => console.log(err))
         },
-        
+        postComment() {
+            var commentData = {
+                user_id: parseInt(this.$cookie.get('user_id')), 
+                answer_id: this.answer.id,
+                content: this.postContent
+            }
+            http
+                .post('/api/comment', commentData)
+                .then(() => {
+                    this.fetchComments()
+                    this.postContent = ''
+                })
+                .catch(err => console.log(err))
+        }
     },
     created() {
 		this.fetchComments(this.answer.id)
