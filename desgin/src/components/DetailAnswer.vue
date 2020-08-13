@@ -62,8 +62,8 @@ export default {
     data() {
         return {
             comments: [],
-            commentInput: false,
             postContent: '',
+            commentInput: false,
             isEdit: false,
         }
     },
@@ -74,7 +74,7 @@ export default {
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
-        ...mapActions('comment',['editComment', 'deleteComment']),
+        ...mapActions('comment',['deleteComment']),
         changeCommentInput() {
 			this.commentInput = !this.commentInput
         },
@@ -102,6 +102,15 @@ export default {
                 .then(() => {
                     this.fetchComments()
                     this.postContent = ''
+                })
+                .catch(err => console.log(err))
+        },
+        editComment(commentData) {
+            http
+                .put('/api/comment', commentData)
+                .then(() => {
+                    this.fetchComments()
+                    this.changeIsEdit()
                 })
                 .catch(err => console.log(err))
         }
