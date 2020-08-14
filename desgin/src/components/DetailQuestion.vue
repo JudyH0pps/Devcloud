@@ -14,17 +14,35 @@
             </div>
         </div>
         <p class="q-content">{{ question.content }}</p>
+
+
+        <!-- current user가 like button clicked 상태면 x -->
+        <div>
+            <a @click="likeClick" class="like-button">
+                <span v-if="chkClicked">
+                    <i class="fas fa-heart"></i>
+                    <span>좋아요 취소</span>
+                </span>
+
+                <span v-else>
+                    <i class="far fa-heart"></i>
+                    <span>좋아요</span>
+                </span>
+            </a>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import http from "@/util/http-common"
 
 export default {
     name: 'DetailQuestion',
     data() {
         return {
             // question: {},
+            chkClicked: false,
         }
     },
     computed: {
@@ -34,10 +52,54 @@ export default {
     },
 	methods: {
         ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
+
+        likeClick() {
+            console.log(this.question.id);
+            console.log(parseInt(this.$cookie.get("user_id")));
+            
+
+            http
+                .post('/api/liketoquestion', {
+                    params: {
+                        "question_id": this.question.id,
+                        "user_id": parseInt(this.$cookie.get("user_id")),
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            
+            if(this.chkClicked == false){
+                this.chkClicked = true;
+            } else {
+                this.chkClicked = false;
+            }
+        }
 	},
 	created() {
         // alert(this.$route.params.question_id)
         this.fetchQuestion(this.$route.params.question_id)
+
+        // 좋아요 리스트를 받아와서 있는지 없는지만 확인
+        http
+            .get('/api/liketoquestion', {
+                params: {
+                    "question_id": this.question.id,
+                }
+            })
+            .then(({data}) => {
+                // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
+                console.log(data.user_id)
+
+                if(data.user_id == this.$cookie.get("user_id")) {
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            })
+            .catch((err) =>{
+                console.log(err);
+            });
 	},
     // mounted() {
     //     console.log(this.$store.state.question.question)
@@ -81,4 +143,12 @@ export default {
     height: 40px;
     margin-right: 10px;
 }
+.like-button span {
+    font-size: 3em;
+    color: Tomato;
+}
+.like-button:hover span {
+    color: #FF4500; 
+}
+
 </style>
