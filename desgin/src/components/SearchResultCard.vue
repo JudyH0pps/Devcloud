@@ -10,12 +10,10 @@
         
         <div class="post-data">
             <div class="title" @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)"></div>
-
-            
+            <div style="text-align: right;">
+                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
+            </div>          
             <div class="description">
-                <div style="text-align: right;">
-                    <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
-                </div>
                 <p v-html="$options.filters.highlights2(question.content, keyword)"></p>
             </div>
             <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
@@ -217,6 +215,10 @@ Vue.filter("highlights2", function(item, keyword){
 .description {
     position: relative;
     border-left: 4px solid #ccc;
+}
+.description >>> img,
+.description >>> iframe {
+    display: none;
 }
 /* .description::before {
     content: '';

@@ -177,16 +177,18 @@ header {
   color: #b8b8b8;
 }
 .fas {
-  margin-left: 15px;
+  /* margin-left: 15px; */
   text-align: center;
 }
 .profile {
   display: flex;
   flex-direction: column;
+  margin: 0 15px;
 }
 .profile-picture {
   border-radius: 50%;
-  margin-left: 15px;
+  /* margin-left: 15px; */
+  height: 100%;
   cursor: pointer;
   /* box-shadow: 0px 5px 10px rgba(0,0,0,.2); */
 }

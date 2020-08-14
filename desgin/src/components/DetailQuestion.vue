@@ -17,18 +17,15 @@
 
 
         <!-- current user가 like button clicked 상태면 x -->
-        <div>
-            <a @click="likeClick" class="like-button">
-                <span v-if="chkClicked">
-                    <i class="fas fa-heart"></i>
-                    <span>좋아요 취소</span>
-                </span>
-
-                <span v-else>
-                    <i class="far fa-heart"></i>
-                    <span>좋아요</span>
-                </span>
-            </a>
+        <div @click="likeClick" class="like-button">
+            <div v-if="chkClicked">
+                <i class="fas fa-heart"></i>
+                <span>좋아요 취소</span>
+            </div>
+            <div v-else>
+                <i class="far fa-heart"></i>
+                <span>좋아요</span>
+            </div>
         </div>
     </div>
 </template>
@@ -143,12 +140,25 @@ export default {
     height: 40px;
     margin-right: 10px;
 }
-.like-button span {
-    font-size: 3em;
+.like-button {
+    height: 50px;
+    width: 150px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
     color: Tomato;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
-.like-button:hover span {
+.like-button:hover{
+    background: #eee;
     color: #FF4500; 
 }
+.like-button p {
+}
+
 
 </style>
