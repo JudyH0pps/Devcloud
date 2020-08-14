@@ -1,9 +1,15 @@
 <template>
     <div class="detailquestion" v-if="this.$store.state.question.question">
-        <h1 class="q-title">Q. {{ question.title }}</h1>
+        <header style="display: flex; justify-content: space-between; align-items: center">
+            <h1 class="q-title">Q. {{ question.title }}</h1>
+            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answerLength < 1" class="buttons">
+                <span @click="moveToEdit">수정</span>
+                <span @click="deleteQuestion(parseInt($route.params.question_id))">삭제</span>
+            </div>
+        </header>
         <div class="leftline">
             <div class="tags">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
+                <span class="tag" v-for="data in question.questionTags" :key="data.id">{{ data.tag.name }}</span>
             </div>
             <div class="q-info">
                 <div class='profile'>
@@ -36,6 +42,9 @@ import http from "@/util/http-common"
 
 export default {
     name: 'DetailQuestion',
+    props: {
+        answerLength: Number
+    },
     data() {
         return {
             // question: {},
@@ -49,7 +58,14 @@ export default {
     },
 	methods: {
         ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
-
+        moveToEdit() {
+            this.$router.push({
+                name: 'Edit',
+                params: {
+                    question_id: parseInt(this.$route.params.question_id)
+                }
+            })
+        },
         likeClick() {
             console.log(this.question.id);
             console.log(parseInt(this.$cookie.get("user_id")));
@@ -157,8 +173,4 @@ export default {
     background: #eee;
     color: #FF4500; 
 }
-.like-button p {
-}
-
-
 </style>
