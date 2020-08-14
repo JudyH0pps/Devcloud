@@ -50,6 +50,7 @@ public class LikeToAnswerController {
         
         if(user_id != null && answer_id != null) {
             Optional<LikeToAnswer> optionalLikeToAnswer = likeToAnswerRepository.findByUserIdAndAnswerId(user_id, answer_id);
+            if(!optionalLikeToAnswer.isPresent()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(optionalLikeToAnswer.get(), HttpStatus.OK);
         }
         if (user_id != null && answer_id == null) {
