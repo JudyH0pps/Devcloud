@@ -4,12 +4,12 @@
             <h1 class="q-title">Q. {{ question.title }}</h1>
             <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answerLength < 1" class="buttons">
                 <span @click="moveToEdit">수정</span>
-                <span>삭제</span>
+                <span @click="deleteQuestion(parseInt($route.params.question_id))">삭제</span>
             </div>
         </header>
         <div class="leftline">
             <div class="tags">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag">{{ tag }}</span>
+                <span class="tag" v-for="data in question.questionTags" :key="data.id">{{ data.tag.name }}</span>
             </div>
             <div class="q-info">
                 <div class='profile'>
