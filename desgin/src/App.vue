@@ -41,8 +41,16 @@ export default{
             returnValue = parameters[i].split('=')[1];
             return decodeURIComponent(returnValue); 
         } 
-      } 
+      }
     },
+    checkNotification(){
+      alert("timer test")
+      this.$cookie.set('timerid',setTimeout(this.checkNotification,5000),'1h');
+    },
+    stopCheckNotification(){
+      if(this.$cookie.get('timerid') != null)
+        clearTimeout(this.$cookie.get('timerid'));
+    }
   },
   created() {
     let token = this.getParameters('token')
@@ -51,14 +59,19 @@ export default{
         let temp = token.split('#')[0];
         // localStorage.setItem('localToken', token);
         this.$cookie.set('logintoken',temp, '1h');
+        
         //this.loginTokened = true;
         this.fetchMyProfile(this.$cookie.get('logintoken'));
+        
         //this.$cookie.set('user_id',this.user.id,'1h');
         this.$router.push({'name':'Home'});
     }
     if(this.$cookie.get('logintoken')){
+      //this.checkNotification()
       this.setisLoggedIn(true)
       // alert(this.isLoggedIn)
+    }else{
+      //this.stopCheckNotification()
     }
   },
   computed: {
