@@ -9,6 +9,7 @@ import answer from "@/store/modules/answer.js";
 import notification from "@/store/modules/notification.js";
 import tech from "@/store/modules/tech.js"
 import comment from "@/store/modules/comment.js"
+import tag from "@/store/modules/tag.js"
 
 
 export default new Vuex.Store({
@@ -30,5 +31,6 @@ export default new Vuex.Store({
     notification,
     tech,
     comment,
+    tag,
   },
 })

@@ -13,13 +13,34 @@
       </label>
     </div>
     <vue-editor v-model="content"></vue-editor>
+    <div>
+      <label class="label-name" for="tags">
+        <span class="tag-name">Tags</span>
+      </label>
+    </div>
+    <tags-input element-id="tags"
+                v-model="resultedTags"
+                :existing-tags="this.tagss"
+                :typeahead='true'
+                placeholder="태그를 추가하세요"
+                :typeahead-hide-discard="true"
+                :only-existing-tags="true"
+                :add-tags-on-blur="true"
+                typeahead-style="badges"
+                wrapper-class="write_tags"
+                >
+    </tags-input>  
     <button @click="postData">Submit</button>
   </section>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions,mapGetters } from 'vuex'
 import { VueEditor } from 'vue2-editor'
+import Vue from 'vue'
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+Vue.component('tags-input', VoerroTagsInput);
+
 
 export default {
   name: 'Write',
@@ -33,6 +54,7 @@ export default {
     return {
       title: '',
       content: '',
+      resultedTags:[],
       tags: [],
       isEdit: false
     }
@@ -40,25 +62,30 @@ export default {
   computed: {
     ...mapState({
       question: state => state.question.question,
-      answers: state => state.answer.answers
-    })
+      answers: state => state.answer.answers,
+      //tagsIn : state => state.tag.tagsIn
+    }),
+    ...mapGetters('tag',['tagss'])
   },
   methods: {
     ...mapActions('answer', ['postAnswer', 'editAnswer']),
     ...mapActions('question', ['postQuestion']),
+    ...mapActions('tag',['fetchTags']),
     postData() {
       // 질문 페이지라면
+      // 태그형식 변경 
       if (this.isAnswer === false) {
         const questionData = {
           title: this.title,
           content: this.content,
           user_id: parseInt(this.$cookie.get('user_id')),
-          tagList: [
-            {
-              "id": 4,
-              "name": "C++"
-            }
-          ],
+          // tagList: [
+          //   {
+          //     "id": 4,
+          //     "name": "C++"
+          //   }
+          // ],
+          tagList: this.outputChange(this.resultedTags),
         }
         this.postQuestion(questionData)
       }
@@ -80,6 +107,17 @@ export default {
         }
       }
     },
+    outputChange(arr){
+        let tagList = [];
+        for(var i = 0; i < arr.length; i++)
+        {
+            let singleTag = {};
+            singleTag.id = arr[i].id;
+            singleTag.name = arr[i].value;
+            tagList.push(singleTag)
+        }
+        return tagList 
+    },
   },
   created() {
     // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
@@ -96,6 +134,7 @@ export default {
         this.content = this.question.content
       }
     }
+    this.fetchTags();
   }
 }
 </script>
