@@ -26,7 +26,7 @@
                             </b-card-text>
                             <div>
                                 <img src="@/assets/rainbow_heart.png" width="32px" height="32px" style="padding-bottom: 6px;"/>
-                                <span style="margin-left: 30px; font-size: 26px;">{{question.like_cnt}}1</span>
+                                <span style="margin-left: 30px; font-size: 26px;">{{question.likeCnt}}</span>
                             </div>
                             <hr>
                             <b-card-text v-html="$options.filters.highlights2(question.content, keyword)" style="font-size: 18px; text-overflow: ellipsis" @click="move(question.id)">

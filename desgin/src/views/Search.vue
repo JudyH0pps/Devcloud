@@ -1,6 +1,20 @@
 <template>
     <section class="search">
+        <div class="vld-parent">
+            <loading :active.sync="isLoading" 
+            :can-cancel="true" 
+            :on-cancel="onCancel"
+            :is-full-page="fullPage"
+            color=#5ABEFF
+            :width="128"
+            :height="128"
+            >
+            </loading>
+            
 
+            <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
+            <!--<button @click.prevent="doAjax">fetch Data</button>-->
+        </div>
         <hr style="border: 1px solid #D3D3D3; margin-top: 20px;">
         
         <div v-if="this.searchKeyword">
@@ -18,15 +32,22 @@
 <script>
 import SearchResultCard from'../components/SearchResultCard.vue'
 import {mapActions, mapState} from 'vuex'
-
+// Import component
+import Loading from 'vue-loading-overlay';
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 export default{
     name: 'Search',
     components: {
         SearchResultCard,
+        Loading,
     },
     data() {
         return {
             // searchresults: [1,2,3,4,5,6,7,8,9],
+
+            isLoading: false,
+            fullPage: true
         } 
     },
     methods:{
@@ -34,7 +55,19 @@ export default{
         
         moveToWrite() {
             this.$router.push({ 'name' : 'Write' });
-        }
+        },
+
+        //loading overlay
+        doAjax() {
+            this.isLoading = true;
+            // simulate AJAX
+            setTimeout(() => {
+                this.isLoading = false
+            },800)
+        },
+        onCancel() {
+            console.log('User cancelled the loader.')
+        },
     },
     computed:{
         ...mapState({
@@ -46,7 +79,8 @@ export default{
     },
     created() {
         // alert(this.keyword)
-        this.fetchQuestionsByKeyword(this.searchKeyword)
+        this.fetchQuestionsByKeyword(this.searchKeyword),
+        this.doAjax()
     },
     watch:{
         searchKeyword : function(){

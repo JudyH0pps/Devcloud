@@ -15,6 +15,10 @@
 				</router-link>
 				<!-- <a class="text-decoration-none text-reset">{{ question.user.name }}</a> -->
 			</div>
+			<!-- like test part -->
+			<div>
+				https://stackoverrun.com/ko/q/11171393
+			</div>
 			<ul class="d-flex">
 				<!-- suggestion button part -->
 				<!-- 
