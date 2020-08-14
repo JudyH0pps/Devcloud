@@ -8,26 +8,49 @@
 </template>
 
 <script>
-export default{
+export default {
   name: 'HeadSearchBar',
   data() {
     return {
-      keyword: '',
+      setKeyword: '',
     }
+  },
+  computed:{
+        keyword:{
+            get(){
+                if(this.$route.name == 'Search')
+                    return this.$route.params.search_keyword
+                else
+                    return null
+            },
+            set(val){
+                return this.setKeyword = val
+            }
+        },
   },
   methods: {
     searchItem() {
-      if(this.keyword != "")
-      {
-        this.$router.push({
-          name:'Search',
-          params:{
-              search_keyword : this.keyword
-          }
-        })          
-        this.keyword = '';
+      if(this.setKeyword != ""){
+                this.$router.push({
+                    name:'Search',
+                    params:{
+                        search_keyword : this.setKeyword
+                    }
+                }).catch(()=>{
+                    if(this.setKeyword != ""){
+                        this.$router.go()
+                    }
+                });
+      }else{ 
+        // 검색어가 같아서 새로고침 되는 경우 this.setKeyword 가 ""인경우
+          if(this.keyword == this.setKeyword)
+              this.$router.go()
       }
-    }
+    },
+  },
+  created(){
+    const len = window.location.href.split('/').length
+    this.setKeyword = window.location.href.split('/')[len-1]
   }
 }
 </script>
