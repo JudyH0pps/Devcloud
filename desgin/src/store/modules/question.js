@@ -57,13 +57,13 @@ export default {
             }
         },
         editQuestion(context, questionData) {
-            if (questionData.title==='' || questionData.content==='' || questionData.user_id==='') {
+            if (questionData.title==='' || questionData.content==='' || questionData.question_id==='') {
                 alert('제목과 내용을 입력해주세요!')
             }   else {
                 http
                     .put('/api/question', questionData)
                     .then(() => {
-                        router.push({name: 'Detail'})
+                        router.go(-1)
                     })
                     .catch(err => console.log(err.response))
             }
@@ -109,7 +109,8 @@ export default {
                 })
                 .then(() => {
                     context.commit('setQuestion', {})
-                    router.push({name: 'Board'})
+                    // router.push({name: 'Board'})
+                    router.go(-1)
                 })
                 .catch(err => console.log(err.response))
         } 
