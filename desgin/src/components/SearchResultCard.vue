@@ -78,7 +78,7 @@ export default{
 
 //title
 Vue.filter("highlights1", function(item, keyword){
-    if(keyword == "") {
+    if(keyword == undefined) {
         return item;
     }
     
@@ -92,7 +92,7 @@ Vue.filter("highlights1", function(item, keyword){
 });
 //content
 Vue.filter("highlights2", function(item, keyword){
-    if(keyword == "") return item;
+    if(keyword == undefined) return item;
 
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
