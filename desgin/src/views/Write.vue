@@ -1,27 +1,140 @@
 <template>
   <section class="writeform">
-    <div class="form">
-      <input type="text" name="title" autocomplete="off" required/>
-      <label class="label-name" for="title">
+    <div class="form" v-if="!isAnswer">
+      <input type="text" name="title" autocomplete="off" required v-model="title"/>
+      <label class="label-name" for="title" v-if="isEdit === false">
         <span class="content-name">Title</span>
       </label>
     </div>
     <div class="form">
       <input type="text" name="content" autocomplete="off" required/>
-      <label class="label-name" for="content">
+      <label class="label-name" for="content" v-if="isEdit === false">
         <span class="content-name">Content</span>
       </label>
     </div>
-    <button>Submit</button>
+    <vue-editor v-model="content"></vue-editor>
+    <div>
+      <label class="label-name" for="tags">
+        <span class="tag-name">Tags</span>
+      </label>
+    </div>
+    <tags-input element-id="tags"
+                v-model="resultedTags"
+                :existing-tags="this.tagss"
+                :typeahead='true'
+                placeholder="태그를 추가하세요"
+                :typeahead-hide-discard="true"
+                :only-existing-tags="true"
+                :add-tags-on-blur="true"
+                typeahead-style="badges"
+                wrapper-class="write_tags"
+                >
+    </tags-input>  
+    <button @click="postData">Submit</button>
   </section>
 </template>
 
 <script>
+import { mapState, mapActions,mapGetters } from 'vuex'
+import { VueEditor } from 'vue2-editor'
+import Vue from 'vue'
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+Vue.component('tags-input', VoerroTagsInput);
+
 
 export default {
   name: 'Write',
+  props: {
+    isAnswer: Boolean,
+  },
   components: {
-
+    VueEditor
+  },
+  data() {
+    return {
+      title: '',
+      content: '',
+      resultedTags:[],
+      tags: [],
+      isEdit: false
+    }
+  },
+  computed: {
+    ...mapState({
+      question: state => state.question.question,
+      answers: state => state.answer.answers,
+      //tagsIn : state => state.tag.tagsIn
+    }),
+    ...mapGetters('tag',['tagss'])
+  },
+  methods: {
+    ...mapActions('answer', ['postAnswer', 'editAnswer']),
+    ...mapActions('question', ['postQuestion']),
+    ...mapActions('tag',['fetchTags']),
+    postData() {
+      // 질문 페이지라면
+      // 태그형식 변경 
+      if (this.isAnswer === false) {
+        const questionData = {
+          title: this.title,
+          content: this.content,
+          user_id: parseInt(this.$cookie.get('user_id')),
+          // tagList: [
+          //   {
+          //     "id": 4,
+          //     "name": "C++"
+          //   }
+          // ],
+          tagList: this.outputChange(this.resultedTags),
+        }
+        this.postQuestion(questionData)
+      }
+      // 답변 페이지일 때
+      else {
+        const answerData = {
+          content: this.content,
+        }
+          // 수정일 경우
+        if (this.isEdit) {
+          answerData.answer_id = parseInt(this.$route.params.answer_id),
+          this.editAnswer(answerData)
+          }
+        // 작성일 경우
+        else {
+          answerData.question_id = parseInt(this.$route.params.question_id),
+          answerData.user_id = this.$cookie.get('user_id')
+          this.postAnswer(answerData)
+        }
+      }
+    },
+    outputChange(arr){
+        let tagList = [];
+        for(var i = 0; i < arr.length; i++)
+        {
+            let singleTag = {};
+            singleTag.id = arr[i].id;
+            singleTag.name = arr[i].value;
+            tagList.push(singleTag)
+        }
+        return tagList 
+    },
+  },
+  created() {
+    // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
+    if (this.isAnswer) {
+      if (this.$route.params.answer_id) {
+        this.isEdit = true
+        this.content = this.answers.find(answer => answer.id === parseInt(this.$route.params.answer_id)).content
+      }
+    }
+    else {
+      if (this.$route.params.question_id) {
+        this.isEdit = true
+        this.title = this.question.title
+        this.content = this.question.content
+      }
+    }
+    this.fetchTags();
   }
 }
 </script>

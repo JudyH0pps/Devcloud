@@ -85,7 +85,7 @@ export default{
     watch:{
         searchKeyword : function(){
             this.fetchQuestionsByKeyword(this.searchKeyword)
-            this.setKeyword(this.searchKeyword)
+            //this.setKeyword(this.searchKeyword)
         }
     }
 }

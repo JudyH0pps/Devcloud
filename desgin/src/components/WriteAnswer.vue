@@ -1,7 +1,7 @@
 <template>
     <section class="write">
         <DetailQuestion/>
-        <Write/>
+        <Write :isAnswer="true"/>
     </section>
 </template>
 
@@ -14,7 +14,7 @@ export default {
     components: {
         DetailQuestion,
         Write,
-    }
+    },
 }
 </script>
 

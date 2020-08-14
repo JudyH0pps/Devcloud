@@ -52,7 +52,7 @@ export default {
             }   else {
                 http
                     .post('/api/question', questionData)
-                    .then(() => router.push({name: 'Board'}))
+                    .then(() => router.push({name: 'Search'}))
                     .catch(err => console.log(err.response))
             }
         },

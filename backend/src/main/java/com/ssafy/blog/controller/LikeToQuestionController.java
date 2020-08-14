@@ -44,20 +44,23 @@ public class LikeToQuestionController {
 
     @GetMapping("/api/liketoquestion")
     @ApiOperation(value = "질문에 대한 좋아요 목록 조회")
-    public ResponseEntity<List<LikeToQuestionResponse>> searchLikeToQuestion(
+    public ResponseEntity<Object> searchLikeToQuestion(
             @RequestParam(required = false, name = "user_id") Long user_id,
             @RequestParam(required = false, name = "question_id") Long question_id) {
         List<LikeToQuestionResponse> list = new ArrayList<>();
 
-        if (user_id != null) {
+        if(user_id != null && question_id != null) {
+            Optional<LikeToQuestion> optionalLikeToQuestion = likeToQuestionRepository.findByUserIdAndQuestionId(user_id, question_id);
+            return new ResponseEntity<>(optionalLikeToQuestion.get(), HttpStatus.OK);
+
+        } else if (user_id != null && question_id == null) {
             for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAllByUserId(user_id)) {
                 list.add(makeResponse(likeToQuestion));
             }
-        } else if (question_id != null) {
+        } else if (user_id == null && question_id != null) {
             for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAllByQuestionId(question_id)) {
                 list.add(makeResponse(likeToQuestion));
             }
-
         } else {
             for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAll()) {
                 list.add(makeResponse(likeToQuestion));

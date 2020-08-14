@@ -13,7 +13,7 @@
                 <div @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)">{{ question.title }}</div>
             </div>
             <div class="subtitle">
-                <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
+                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
             </div>
             <p v-html="$options.filters.highlights2(question.content, keyword)" class="description">
                 {{ question.content }}
@@ -79,7 +79,7 @@ export default{
         return {
             // title: '이거 어떻게해요?',
             // content: '이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요',
-            tags: ['Java','Python','Django'],
+            // tags: ['Java','Python','Django'],
             // date: '2020년 07월 20일',
             // like: 104,
             // user: 'Nongdamgom',
