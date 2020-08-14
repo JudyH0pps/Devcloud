@@ -24,7 +24,7 @@
             <h2>All Questions</h2>
         </div>
 
-        <SearchResultCard  v-for="(question, index) in questions.slice().reverse()" :question="question" :key="index" :keyword="searchKeyword" />
+        <SearchResultCard  v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword" />
         <button @click="moveToWrite">새 질문 작성</button>
     </section>
 </template>
