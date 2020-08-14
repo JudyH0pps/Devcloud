@@ -55,7 +55,8 @@ export default {
   },
 	created() {
 		// alert("조회한 글번호 :" +this.$route.params.question_id)
-		// this.fetchAnswers(this.$route.params.qid);
+    // this.fetchAnswers(this.$route.params.qid);
+    document.documentElement.scrollTop = 0;
     this.fetchAnswers()
   },
 }
