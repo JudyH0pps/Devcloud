@@ -18,6 +18,35 @@
             <p v-html="$options.filters.highlights2(question.content, keyword)" class="description">
                 {{ question.content }}
             </p>
+            <!-- 이름, 좋아요 -->
+
+            <!-- 레이아웃 수정 필요: ( 담당자: 시영) -->
+            <div>
+                <div>
+                    <div>                   
+                        <img 
+                            alt="profile picture"
+                            class="profile-rounded"
+                            :src="question.user.imageUrl"
+                            style="width: 50px; height: 50px; display: inline; padding: 0px;"
+                            align: right>
+                        <span style="font-size: 3em; color: black; font-weight: bold">
+                            {{question.user.name}}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        
+                        <span style="font-size: 3em; color: Tomato;">
+                            <i class="fas fa-heart"></i>
+                        </span>
+                    </div>
+                    <div>
+                        <span style="font-size: 3em;">{{question.likeCnt}}</span>
+                    </div>
+                </div>
+            </div>
             
         </div>
         
@@ -106,8 +135,7 @@ Vue.filter("highlights2", function(item, keyword){
 
 <style>
 .highlight {
-    color: red;
-    font-weight: bold;
+    background-color:#FFFACD;
 }
 </style>
 <style scoped>
@@ -254,6 +282,13 @@ Vue.filter("highlights2", function(item, keyword){
         stroke-dashoffset: 3120;
         fill: #ff3187;
     }
+}
+
+/* profile-image */
+.profile-rounded {
+  background: silver;
+  height: 50px; width: 200px;
+  border-radius: 25px;
 }
 
 </style>
