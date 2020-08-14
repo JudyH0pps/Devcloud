@@ -6,12 +6,12 @@
         <span class="content-name">Title</span>
       </label>
     </div>
-    <div class="form">
+    <!-- <div class="form">
       <input type="text" name="content" autocomplete="off" required/>
       <label class="label-name" for="content" v-if="isEdit === false">
         <span class="content-name">Content</span>
       </label>
-    </div>
+    </div> -->
     <vue-editor v-model="content"></vue-editor>
     <button @click="postData">Submit</button>
   </section>
@@ -45,22 +45,25 @@ export default {
   },
   methods: {
     ...mapActions('answer', ['postAnswer', 'editAnswer']),
-    ...mapActions('question', ['postQuestion']),
+    ...mapActions('question', ['postQuestion', 'editQuestion']),
     postData() {
       // 질문 페이지라면
       if (this.isAnswer === false) {
         const questionData = {
           title: this.title,
           content: this.content,
-          user_id: parseInt(this.$cookie.get('user_id')),
-          tagList: [
-            {
-              "id": 4,
-              "name": "C++"
-            }
-          ],
+          tagList: this.tags
         }
-        this.postQuestion(questionData)
+        // 수정
+        if (this.isEdit) {
+          questionData.question_id = parseInt(this.$route.params.question_id)
+          this.editQuestion(questionData)
+          }
+        // 작성
+        else {
+          questionData.user_id = parseInt(this.$cookie.get('user_id')),
+          this.postQuestion(questionData)
+        }
       }
       // 답변 페이지일 때
       else {
@@ -83,17 +86,22 @@ export default {
   },
   created() {
     // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
+    // 답변
     if (this.isAnswer) {
+      // 수정
       if (this.$route.params.answer_id) {
         this.isEdit = true
         this.content = this.answers.find(answer => answer.id === parseInt(this.$route.params.answer_id)).content
       }
     }
+    // 질문
     else {
+      // 수정
       if (this.$route.params.question_id) {
         this.isEdit = true
         this.title = this.question.title
         this.content = this.question.content
+        this.tags = this.question.questionTags.map(data => data.tag)
       }
     }
   }
