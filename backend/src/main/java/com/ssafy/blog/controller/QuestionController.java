@@ -19,6 +19,7 @@ import com.ssafy.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,14 +61,14 @@ public class QuestionController {
             page = 1;
 
         if (keyword == null && user_id == null && question_id == null) {
-            pageList = questionRepository.findAll(PageRequest.of(page - 1, 10));
+            pageList = questionRepository.findAll(PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         } else if (keyword != null) {
             pageList = questionRepository.findByTitleContainsOrContentContains(keyword, keyword,
-                    PageRequest.of(page - 1, 10));
+                    PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         } else if (user_id != null) {
-            pageList = questionRepository.findAllByUserId(user_id, PageRequest.of(page - 1, 10));
+            pageList = questionRepository.findAllByUserId(user_id, PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         } else if (question_id != null) {
             Optional<Question> optionalQuestion = questionRepository.findById(question_id);

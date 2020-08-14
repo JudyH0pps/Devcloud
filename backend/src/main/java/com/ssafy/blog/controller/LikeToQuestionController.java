@@ -18,7 +18,6 @@ import com.ssafy.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,6 +50,7 @@ public class LikeToQuestionController {
 
         if(user_id != null && question_id != null) {
             Optional<LikeToQuestion> optionalLikeToQuestion = likeToQuestionRepository.findByUserIdAndQuestionId(user_id, question_id);
+            if(!optionalLikeToQuestion.isPresent()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(optionalLikeToQuestion.get(), HttpStatus.OK);
 
         } else if (user_id != null && question_id == null) {
