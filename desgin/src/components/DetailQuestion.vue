@@ -30,20 +30,44 @@
                 </span>
             </a>
         </div>
+
+
+        <div class="vld-parent">
+            <loading :active.sync="isLoading" 
+            :can-cancel="true" 
+            :is-full-page="fullPage"
+            color=#5ABEFF
+            :width="128"
+            :height="128"
+            >
+            </loading>
+            
+
+            <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
+            <!--<button @click.prevent="doAjax">fetch Data</button>-->
+        </div>
     </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import http from "@/util/http-common"
-
+// Import component
+import Loading from 'vue-loading-overlay';
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
     name: 'DetailQuestion',
     data() {
         return {
             // question: {},
             chkClicked: false,
+            isLoading: false,
+            fullPage: true
         }
+    },
+     components: {
+        Loading,
     },
     computed: {
         ...mapState({
@@ -52,17 +76,23 @@ export default {
     },
 	methods: {
         ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
-
+        //loading overlay
+        doAjax() {
+            this.isLoading = true;
+            // simulate AJAX
+            setTimeout(() => {
+                this.isLoading = false
+            },800)
+        },
         likeClick() {
             console.log(this.question.id);
             console.log(parseInt(this.$cookie.get("user_id")));
             
-
             http
                 .post('/api/liketoquestion', {
                     params: {
                         "question_id": this.question.id,
-                        "user_id": parseInt(this.$cookie.get("user_id")),
+                        "user_id": parseInt(this.$cookie.get("user_id"))
                     }
                 })
                 .catch(err => {
@@ -74,24 +104,18 @@ export default {
             } else {
                 this.chkClicked = false;
             }
-        }
-	},
-	created() {
-        // alert(this.$route.params.question_id)
-        this.fetchQuestion(this.$route.params.question_id)
-
-        // 좋아요 리스트를 받아와서 있는지 없는지만 확인
-        http
-            .get('/api/liketoquestion', {
+        },
+        loadLikeState() {
+            http.get('/api/liketoquestion', {
                 params: {
                     "question_id": this.question.id,
+                    "user_id": parseInt(this.$cookie.get("user_id"))
                 }
             })
             .then(({data}) => {
                 // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
-                console.log(data.user_id)
-
-                if(data.user_id == this.$cookie.get("user_id")) {
+                console.log("data:" + data)
+                if(data.id != null) {
                     this.chkClicked = true;
                 } else {
                     this.chkClicked = false;
@@ -99,12 +123,18 @@ export default {
             })
             .catch((err) =>{
                 console.log(err);
-            });
+            })
+        }
 	},
-    // mounted() {
-    //     console.log(this.$store.state.question.question)
-    // }
+	created() {
+        // alert(this.$route.params.question_id)
+        this.fetchQuestion(this.$route.params.question_id),
+        this.loadLikeState(),
+        this.doAjax()
+        
+    }
 }
+
 </script>
 
 <style scoped>
@@ -144,8 +174,10 @@ export default {
     margin-right: 10px;
 }
 .like-button span {
-    font-size: 3em;
+    font-size: 1em;
     color: Tomato;
+    margin-left: 4px;
+    cursor: pointer;
 }
 .like-button:hover span {
     color: #FF4500; 
