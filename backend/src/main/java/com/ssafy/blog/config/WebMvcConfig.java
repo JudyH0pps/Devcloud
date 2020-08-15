@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;
-    private final String path = "file:~/imagesAA/";
+    private final String path = "file:/home/ubuntu/imagesAA/";
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

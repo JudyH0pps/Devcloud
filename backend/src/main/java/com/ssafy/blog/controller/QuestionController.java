@@ -176,7 +176,7 @@ public class QuestionController {
     @PostMapping("/api/question/upload")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String pathPrefix = "~/imagesAA/";
+            String pathPrefix = "file:/home/ubuntu/imagesAA/";
             // File temp = new File("C:/Users/Shin/Downloads/test/" + file.getOriginalFilename());
             File newFile = new File(pathPrefix + file.getOriginalFilename());
             newFile.mkdirs();
