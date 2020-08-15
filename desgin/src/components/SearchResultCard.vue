@@ -68,6 +68,8 @@ export default{
             // date: '2020년 07월 20일',
             // like: 104,
             // user: 'Nongdamgom',
+
+            question_create: this.question.createdAt,
         }
     },
     props: {
@@ -84,8 +86,22 @@ export default{
                 params:{ "question_id" : question_id},
             });
         },
+        questionCreate(){
+            var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
+            var now = this.$moment('MM-DD-YYYY');
+
+            console.log(this.question.createdAt);
+
+            var diffDate = now.diff(createDate, 'days');
+            if(diffDate <= 3){
+                this.question_create = diffDate + "day ago";
+            } else {
+               this.question_create = createDate;
+            }
+        }
     },
     created() {
+        this.questionCreate();
     },
 }
 
@@ -95,8 +111,6 @@ Vue.filter("highlights1", function(item, keyword){
     if(keyword == undefined) {
         return item;
     }
-    
-
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
     // 해당 키워드 하이라이트
