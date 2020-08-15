@@ -50,6 +50,16 @@
                 </div>
 			</li>
 		</ul>
+        <div @click="likeClick" class="like-button">
+            <div v-if="chkClicked">
+                <i class="fas fa-heart"></i>
+                <span>좋아요 취소</span>
+            </div>
+            <div v-else>
+                <i class="far fa-heart"></i>
+                <span>좋아요</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -65,6 +75,7 @@ export default {
             postContent: '',
             commentInput: false,
             selectedIndex: -1,
+            chkClicked: false,
         }
     },
     props: {
@@ -122,10 +133,32 @@ export default {
                     this.fetchComments()
                 })
                 .catch(err => console.log(err))
+        },
+        likeClick() {
+            console.log(this.answer.id);
+            console.log(parseInt(this.$cookie.get("user_id")));
+            
+
+            http
+                .post('/api/liketoquestion', {
+                    params: {
+                        "answer_id": this.answer.id,
+                        "user_id": parseInt(this.$cookie.get("user_id")),
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            
+            if(this.chkClicked == false){
+                this.chkClicked = true;
+            } else {
+                this.chkClicked = false;
+            }
         }
     },
     created() {
-		this.fetchComments(this.answer.id)
+        this.fetchComments(this.answer.id)
     }
 }
 </script>
@@ -184,5 +217,22 @@ div > button {
 }
 div > button:hover {
     background-color: #4879c7;
+}
+.like-button {
+    height: 50px;
+    width: 150px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    color: Tomato;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+.like-button:hover{
+    background: #eee;
+    color: #FF4500; 
 }
 </style>

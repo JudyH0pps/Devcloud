@@ -60,7 +60,7 @@ export default {
                     }
                 })
                 .then(({data}) => {
-                    console.log(data)
+                    // console.log(data)
                     context.commit('setProfile',data)
                 })
                 .catch(()=>{
