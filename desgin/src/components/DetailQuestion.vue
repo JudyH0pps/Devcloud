@@ -19,7 +19,7 @@
                 <p>{{ question.updatedAt }}</p>
             </div>
         </div>
-        <p class="q-content">{{ question.content }}</p>
+        <p v-html="question.content" class="q-content">{{ question.content }}</p>
 
 
         <!-- current user가 like button clicked 상태면 x -->

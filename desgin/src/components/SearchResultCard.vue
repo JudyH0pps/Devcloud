@@ -217,7 +217,9 @@ Vue.filter("highlights2", function(item, keyword){
     border-left: 4px solid #ccc;
 }
 .description >>> img,
-.description >>> iframe {
+.description >>> iframe, 
+.description >>> ul
+.descriptiON >>> ol{
     display: none;
 }
 /* .description::before {
