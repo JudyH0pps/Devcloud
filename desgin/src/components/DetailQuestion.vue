@@ -69,7 +69,7 @@ export default {
             // question: {},
             chkClicked: false,
             isLoading: false,
-            fullPage: true
+            fullPage: true,
         }
     },
      components: {
@@ -88,7 +88,8 @@ export default {
             // simulate AJAX
             setTimeout(() => {
                 this.isLoading = false
-            },800),
+            },800)
+        },
         moveToEdit() {
             this.$router.push({
                 name: 'Edit',
@@ -101,16 +102,17 @@ export default {
             console.log(this.question.id);
             console.log(parseInt(this.$cookie.get("user_id")));
             
-            http
-                .post('/api/liketoquestion', {
-                    params: {
-                        "question_id": this.question.id,
-                        "user_id": parseInt(this.$cookie.get("user_id"))
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+            http.post('/api/liketoquestion', {
+                "question_id": this.question.id,
+                "user_id": parseInt(this.$cookie.get("user_id")) 
+            })
+            .then(res => {
+                console.log("like success")
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
             
             if(this.chkClicked == false){
                 this.chkClicked = true;
@@ -120,22 +122,33 @@ export default {
         },
         loadLikeState() {
             http.get('/api/liketoquestion', {
-                params: {
-                    "question_id": this.question.id,
-                    "user_id": parseInt(this.$cookie.get("user_id"))
-                }
+                "question_id": this.question.id,
+                "user_id": parseInt(this.$cookie.get("user_id"))
             })
-            .then(({data}) => {
+            .then(res => {
                 // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
-                console.log("data:" + data)
-                if(data.id != null) {
+
+                // console.log(this.question.id)
+                // console.log(parseInt(this.$cookie.get("user_id")))
+
+                var dataset = res.data;
+                var chk = 100;
+                //해당 데이터에서 현재 question_id가 있는지 찾는다.
+                for(var idx = 0; idx < dataset.length; idx++){
+                    if(dataset[idx].question_id == this.question.id) {
+                        chk = 200;
+                        console.log(dataset[idx]);
+                    }
+                }
+
+                if(chk == 200) {
                     this.chkClicked = true;
                 } else {
                     this.chkClicked = false;
                 }
             })
-            .catch((err) =>{
-                console.log(err);
+            .catch(err => {
+                console.log(err.data);
             })
         }
 	},
@@ -191,6 +204,7 @@ export default {
     color: Tomato;
     margin-left: 4px;
     cursor: pointer;
+}
 .like-button {
     height: 50px;
     width: 150px;
