@@ -177,8 +177,12 @@ public class QuestionController {
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             String pathPrefix = "~/imagesAA/";
+            // File temp = new File("C:/Users/Shin/Downloads/test/" + file.getOriginalFilename());
+            File newFile = new File(pathPrefix + file.getOriginalFilename());
+            newFile.mkdirs();
+            file.transferTo(newFile);
             // file.transferTo(new File("C:/Users/Shin/Downloads/test/" + file.getOriginalFilename()));
-            file.transferTo(new File(pathPrefix + file.getOriginalFilename()));
+            // file.transferTo(new File(pathPrefix + file.getOriginalFilename()));
         } catch(IllegalStateException | IOException e) {
             e.printStackTrace();
         }
