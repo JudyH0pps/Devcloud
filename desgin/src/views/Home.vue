@@ -21,6 +21,7 @@ export default {
   },
   created() {
     this.$store.state.searchBarinHeadbar = false;
+    document.documentElement.scrollTop = 0;
   },
   destroyed() {
     this.$store.state.searchBarinHeadbar = true;

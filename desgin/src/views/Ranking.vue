@@ -25,6 +25,9 @@ export default {
         }
     },
     methods: {
+    },
+    mounted(){
+        document.documentElement.scrollTop = 0;
     }
 }
 

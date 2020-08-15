@@ -1,9 +1,15 @@
 <template>
     <div class="detailquestion" v-if="this.$store.state.question.question">
-        <h1 class="q-title">Q. {{ question.title }}</h1>
+        <header style="display: flex; justify-content: space-between; align-items: center">
+            <h1 class="q-title">Q. {{ question.title }}</h1>
+            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answerLength < 1" class="buttons">
+                <span @click="moveToEdit">수정</span>
+                <span @click="deleteQuestion(parseInt($route.params.question_id))">삭제</span>
+            </div>
+        </header>
         <div class="leftline">
             <div class="tags">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
+                <span class="tag" v-for="data in question.questionTags" :key="data.id">{{ data.tag.name }}</span>
             </div>
             <div class="q-info">
                 <div class='profile'>
@@ -13,22 +19,19 @@
                 <p>{{ question.updatedAt }}</p>
             </div>
         </div>
-        <p class="q-content">{{ question.content }}</p>
+        <p v-html="question.content" class="q-content">{{ question.content }}</p>
 
 
         <!-- current user가 like button clicked 상태면 x -->
-        <div>
-            <a @click="likeClick" class="like-button">
-                <span v-if="chkClicked">
-                    <i class="fas fa-heart"></i>
-                    <span>좋아요 취소</span>
-                </span>
-
-                <span v-else>
-                    <i class="far fa-heart"></i>
-                    <span>좋아요</span>
-                </span>
-            </a>
+        <div @click="likeClick" class="like-button">
+            <div v-if="chkClicked">
+                <i class="fas fa-heart"></i>
+                <span>좋아요 취소</span>
+            </div>
+            <div v-else>
+                <i class="far fa-heart"></i>
+                <span>좋아요</span>
+            </div>
         </div>
 
 
@@ -58,6 +61,9 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
     name: 'DetailQuestion',
+    props: {
+        answerLength: Number
+    },
     data() {
         return {
             // question: {},
@@ -82,7 +88,14 @@ export default {
             // simulate AJAX
             setTimeout(() => {
                 this.isLoading = false
-            },800)
+            },800),
+        moveToEdit() {
+            this.$router.push({
+                name: 'Edit',
+                params: {
+                    question_id: parseInt(this.$route.params.question_id)
+                }
+            })
         },
         likeClick() {
             console.log(this.question.id);
@@ -178,9 +191,21 @@ export default {
     color: Tomato;
     margin-left: 4px;
     cursor: pointer;
+.like-button {
+    height: 50px;
+    width: 150px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    color: Tomato;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
-.like-button:hover span {
+.like-button:hover{
+    background: #eee;
     color: #FF4500; 
 }
-
 </style>
