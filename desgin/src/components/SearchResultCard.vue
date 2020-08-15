@@ -13,8 +13,7 @@
             <div style="text-align: right;">
                 <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
             </div>          
-            <div class="description">
-                <p v-html="$options.filters.highlights2(question.content, keyword)"></p>
+            <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
             </div>
             <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
                 <div style="font-size: 25px; color: Tomato; margin-left: auto;">
@@ -217,9 +216,7 @@ Vue.filter("highlights2", function(item, keyword){
     border-left: 4px solid #ccc;
 }
 .description >>> img,
-.description >>> iframe, 
-.description >>> ul
-.descriptiON >>> ol{
+.description >>> iframe {
     display: none;
 }
 /* .description::before {
