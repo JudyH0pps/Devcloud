@@ -20,6 +20,10 @@
         <input v-model="user.githubUrl" :readonly="validated">
         <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">프로필에 표기할 Github 주소입니다.</p>
 
+        <label>Introduction</label>
+        <input v-model="user.introduction" :readonly="validated">
+        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">자신을 소개할 문구입니다.</p>
+
         
         <div v-if="!validated">
             <label>Technical Skills</label>
