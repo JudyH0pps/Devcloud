@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final long MAX_AGE_SECS = 3600;
-    private final String path = "file:/home/ubuntu/imagesAA/";
+    private final String path = "file:/home/ubuntu/static/images/";
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -24,7 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-            // .addResourceLocations("file:///C:/Users/Shin/Downloads/test/");
             .addResourceLocations(path);
+            // .addResourceLocations("file:///C:/Users/Shin/Downloads/test/");
     }
 }

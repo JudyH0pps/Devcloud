@@ -54,6 +54,9 @@ public class QuestionController {
 
     private ResponseEntity<Question> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
+    private final String pathPrefix = "/home/ubuntu/static/images/";
+    private final String baseImageUrl = "http://i3c202.p.ssafy.io:8080/images/";
+
     @GetMapping("/api/question")
     @ApiOperation(value = "질문 검색")
     // paging 기법 적용하기
@@ -175,21 +178,21 @@ public class QuestionController {
 
     @PostMapping("/api/question/upload")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
+        Date now = new Date();
+        String filename = "";
         try {
-            String pathPrefix = "/home/ubuntu/imagesAA/";
-            // File temp = new File("C:/Users/Shin/Downloads/test/" + file.getOriginalFilename());
-            File newFile = new File(pathPrefix + file.getOriginalFilename());
+            filename = now.getTime() + file.getOriginalFilename();
+            File newFile = new File(pathPrefix + filename);
             newFile.mkdirs();
             file.transferTo(newFile);
-            // file.transferTo(new File("C:/Users/Shin/Downloads/test/" + file.getOriginalFilename()));
             // file.transferTo(new File(pathPrefix + file.getOriginalFilename()));
         } catch(IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        String url = "http://i3c202.p.ssafy.io:8080/images/"+file.getOriginalFilename();
+        String url = baseImageUrl + filename;
         Map<String, String> data = new HashMap<>();
         data.put("url", url);
-        data.put("image_name", file.getOriginalFilename());
+        // data.put("image_name", file.getOriginalFilename());
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
