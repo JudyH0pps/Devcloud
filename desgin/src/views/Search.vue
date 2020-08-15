@@ -25,6 +25,11 @@
         </div>
 
         <SearchResultCard  v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword" />
+        <infinite-loading @infinite="infiniteHandler">
+            <!-- <template slot="no-more">더 많은 질문을 등록해주세요 !</template> -->
+            <span slot="no-more"></span>
+            <span slot="no-results"></span>
+        </infinite-loading>
         <button @click="moveToWrite">새 질문 작성</button>
     </section>
 </template>
@@ -32,27 +37,45 @@
 <script>
 import SearchResultCard from'../components/SearchResultCard.vue'
 import {mapActions, mapState} from 'vuex'
+import http from "@/util/http-common";
 // Import component
+import InfiniteLoading from 'vue-infinite-loading';
 import Loading from 'vue-loading-overlay';
 // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 export default{
     name: 'Search',
     components: {
+        InfiniteLoading,
         SearchResultCard,
         Loading,
     },
     data() {
         return {
             // searchresults: [1,2,3,4,5,6,7,8,9],
-
+            page: 2,
             isLoading: false,
             fullPage: true
         } 
     },
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
-        
+        infiniteHandler($state) {
+            http.get('/api/question', {
+                params: {
+                    keyword : this.searchKeyword,
+                    page: this.page,
+                },
+            }).then(({ data }) => {
+                if (data.content.length) {
+                this.page += 1;
+                this.questions.push(...data.content);
+                $state.loaded();
+                } else {
+                $state.complete();
+                }
+            });
+        },
         moveToWrite() {
             this.$router.push({ 'name' : 'Write' });
         },
@@ -79,6 +102,7 @@ export default{
     },
     created() {
         // alert(this.keyword)
+        document.documentElement.scrollTop = 0;
         this.fetchQuestionsByKeyword(this.searchKeyword),
         this.doAjax()
     },
