@@ -3,7 +3,6 @@
         <div class="vld-parent">
             <loading :active.sync="isLoading" 
             :can-cancel="true" 
-            :on-cancel="onCancel"
             :is-full-page="fullPage"
             color=#5ABEFF
             :width="128"
@@ -45,7 +44,6 @@ export default{
     data() {
         return {
             // searchresults: [1,2,3,4,5,6,7,8,9],
-
             isLoading: false,
             fullPage: true
         } 
@@ -64,9 +62,6 @@ export default{
             setTimeout(() => {
                 this.isLoading = false
             },800)
-        },
-        onCancel() {
-            console.log('User cancelled the loader.')
         },
     },
     computed:{
