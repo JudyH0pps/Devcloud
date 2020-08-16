@@ -12,8 +12,12 @@
         <span class="content-name">Content</span>
       </label>
     </div> -->
-    <vue-editor v-model="content"></vue-editor>
-    <div>
+    <vue-editor id="editor"
+        useCustomImageHandler
+        @imageAdded="handleImageAdded"
+        v-model="content" :editor-toolbar="customToolbar">
+    </vue-editor>
+    <div></div>
       <label class="label-name" for="tags">
         <span class="tag-name">Tags</span>
       </label>
@@ -57,6 +61,15 @@ export default {
       resultedTags:[],
       tags: [],
       isEdit: false,
+      customToolbar: [
+          [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ align: "" }, { align: "center" }, { align: "right" }, { align: "justify" }],
+          ["blockquote", "code-block"],
+          [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+          ["link", "image", "video"],
+          ["clean"]
+      ]
     }
   },
   computed: {
