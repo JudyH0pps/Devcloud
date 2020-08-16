@@ -34,17 +34,18 @@ export default {
                     alert('유저질문 조회중 오류 발생');
                 });
         },
-        fetchQuestion(context, qid) {
-            http
+        async fetchQuestion(context, qid) {
+            const resp = await http
                 .get('/api/question', {
                     params: {
                         "question_id": qid
                     }
                 })
-                .then(({data}) => {
-                    context.commit('setQuestion', data)
-                })
-                .catch(err => console.log(err.response))
+                context.commit('setQuestion',resp.data)
+                // .then(({data}) => {
+                //     context.commit('setQuestion', data)
+                // })
+                // .catch(err => console.log(err.response))
         },
         postQuestion(context, questionData) {
             if (questionData.title==='' || questionData.content==='' || questionData.user_id==='') {
