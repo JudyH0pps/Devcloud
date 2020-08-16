@@ -7,13 +7,6 @@
       <HeadSearchBar v-show="this.$store.state.searchBarinHeadbar"/>
       <div>
         <ul>
-          <!-- <router-link :to="{ 'name':'Detail' }">
-            <li class="underline">Detail</li>
-          </router-link> -->
-          <!-- <router-link :to="{ 'name':'Search' }">
-            <li class="underline">Search</li>
-          </router-link> -->
-          <!-- <router-link :to="{ 'name':'Search' }"> -->
             <li class="underline" @click="moveQuestions">Questions</li>
           <!-- </router-link> -->
           <router-link :to="{ 'name':'Ranking' }">
@@ -27,20 +20,17 @@
             <div class="profile-option" @click="toggleAlarmDropdown">
               <div class="notification">
                 <i class="fa fa-bell"></i>
-                <span class="alert-message">1</span>
+                <span class="alert-message" v-if="notifications.length > 0">{{notifications.length}}</span>
               </div>
             </div>
           </li>
          
          <!-- 알림 목록 표시 -->
-          <div class="alarmdropdown" v-show="showAlarmDropdown">
+          <div class="alarmdropdown" v-show="showAlarmDropdown"
+          v-for="(notification, index) in this.notifications" :key="notification.notification_id">
             <div class="alarm-list">
-              <p>좋아요를 눌렀습니다</p>
-              <i class="fas fa-times"></i>
-            </div>
-            <div class="alarm-list">
-              <p>댓글이 달렸습니다</p>
-              <i class="fas fa-times"></i>
+              <p @click="moveToQuestion(notification.question_id,notification.notification_id,index)">{{notification.content}}</p>
+              <i class="fas fa-times" @click="closeNotification(notification.notification_id,index)"></i>
             </div>
           </div>
 
@@ -68,6 +58,8 @@
 <script>
 import LoginModal from '@/components/LoginModal.vue'
 import HeadSearchBar from '@/components/HeadSearchBar.vue'
+import {mapState} from 'vuex'
+import http from "@/util/http-common"
 //import {mapState,mapActions} from 'vuex'
 
 export default {
@@ -76,12 +68,12 @@ export default {
       LoginModal,
       HeadSearchBar
   },
-  // computed:{
-  //       ...mapState({
-  //           //keyword : state => state.keyword,
-  //           user : state => state.user.user,
-  //       }),
-  // },
+  computed:{
+        ...mapState({
+            notifications : state => state.notification.notifications
+            // user : state => state.user.user,
+        }),
+  },
   data() {
       return {
         loginModalOn: false,
@@ -146,6 +138,19 @@ export default {
             this.$router.go()
             document.documentElement.scrollTop = 0;
         })
+    },
+    async moveToQuestion(question_id,notification_id,index){
+      await http.get('/api/notification/read/'+ notification_id)
+      this.notifications.splice(index,1);
+      this.$router.push({
+              'name':'Detail',
+              params:{ "question_id" : question_id},
+      });
+    },
+    async closeNotification(notification_id,index){
+      await http.get('/api/notification/read/'+ notification_id);
+      this.notifications.splice(index,1);
+      //console.log(resp.data)
     }
   },
   mounted() {
@@ -366,5 +371,15 @@ header.sticky ul li{
   align-items: center;
   font-size: .8rem;
   font-weight: bold;
+}
+.alarm-list{
+  margin : 10px;
+}
+.alarm-list p:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.alarm-list i:hover{
+    cursor: pointer;
 }
 </style>
