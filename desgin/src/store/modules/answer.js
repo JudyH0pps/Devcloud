@@ -62,8 +62,6 @@ export default {
 			http
 				.delete('/api/answer', {params: {answer_id: answerData.answer_id}})
 				.then(() => {
-					// 최상단으로 스크롤 업
-					window.scrollTo(0, 0);
 					context.dispatch('fetchAnswers', answerData.question_id)
 				})
 				.catch(err => console.log(err))
