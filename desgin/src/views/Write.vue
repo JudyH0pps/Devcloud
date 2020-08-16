@@ -12,7 +12,11 @@
         <span class="content-name">Content</span>
       </label>
     </div> -->
-    <vue-editor v-model="content"></vue-editor>
+    <vue-editor id="editor"
+        useCustomImageHandler
+        @imageAdded="handleImageAdded"
+        v-model="content" :editor-toolbar="customToolbar">
+    </vue-editor>
     <div>
       <label class="label-name" for="tags">
         <span class="tag-name">Tags</span>
@@ -39,6 +43,7 @@ import { mapState, mapActions,mapGetters } from 'vuex'
 import { VueEditor } from 'vue2-editor'
 import Vue from 'vue'
 import VoerroTagsInput from '@voerro/vue-tagsinput';
+import axios from 'axios'
 Vue.component('tags-input', VoerroTagsInput);
 
 
@@ -57,6 +62,15 @@ export default {
       resultedTags:[],
       tags: [],
       isEdit: false,
+      customToolbar: [
+          [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ align: "" }, { align: "center" }, { align: "right" }, { align: "justify" }],
+          ["blockquote", "code-block"],
+          [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+          ["link", "image", "video"],
+          ["clean"]
+      ]
     }
   },
   computed: {
@@ -71,6 +85,26 @@ export default {
     ...mapActions('answer', ['postAnswer', 'editAnswer']),
     ...mapActions('question', ['postQuestion', 'editQuestion']),
     ...mapActions('tag',['fetchTags']),
+    /////
+    handleImageAdded(file, Editor, cursorLocation) {
+      var formData = new FormData();
+      formData.append('file', file)
+
+      axios({
+        url: 'http://i3c202.p.ssafy.io:8080/api/question/upload',
+        method: 'POST',
+        // headers:{'Authorization': 'Bearer ' +  + token},
+        data: formData
+      }).then((result) => {
+        let url = result.data.url;
+        Editor.insertEmbed(cursorLocation, 'image', url);
+        var uploader = document.getElementById("file-upload");
+        uploader.value = "";
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    /////
     postData() {
       // 질문 페이지라면
       // 태그형식 변경 
@@ -159,7 +193,7 @@ export default {
   mounted() {
     // 링크 버튼
     const linkBtn = document.querySelector('.ql-link')
-    const textArea = document.querySelector('.ql-editor')
+    // const textArea = document.querySelector('.ql-editor')
     linkBtn.addEventListener('click', function() {
       // 링크 생성
       var inputURL = prompt('URL을 입력해주세요.', 'https://')
@@ -167,10 +201,12 @@ export default {
       hyperLink.innerText = inputURL
       hyperLink.href = inputURL
       
-      var target = document.caretPositionFromPoint()
-      console.log(target)
-      console.log(textArea.children)
-
+      var sel = window.getSelection()
+      var range = sel.getRangeAt(0)
+      range.collapse(false)
+      range.insertNode(hyperLink)
+      sel.removeAllRanges()
+      sel.addRange(range)
     })
   }
 }
