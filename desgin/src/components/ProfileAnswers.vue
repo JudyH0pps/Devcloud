@@ -1,7 +1,7 @@
 <template>
   <section class="answers">
     <div class="cardlist">
-      <CardPost v-for="answer in answers" :key="answer"/>
+      <ProfileAnswerCard v-for="answer in answers" :key="answer"/>
     </div>
     <button class="moreBtn">more</button>
   </section>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import CardPost from './CardPost.vue'
+import ProfileAnswerCard from './ProfileAnswerCard.vue'
 import {mapState} from 'vuex';
 
 export default {
@@ -26,7 +26,7 @@ export default {
       })
   },
   components: {
-    CardPost,
+    ProfileAnswerCard,
   }
 }
 </script>
