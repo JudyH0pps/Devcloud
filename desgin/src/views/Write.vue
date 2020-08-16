@@ -136,7 +136,7 @@ export default {
     // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
     // 답변
     if (this.isAnswer) {
-      // 수정
+      // 수정,,
       if (this.$route.params.answer_id) {
         this.isEdit = true
         this.content = this.answers.find(answer => answer.id === parseInt(this.$route.params.answer_id)).content
