@@ -304,6 +304,7 @@ button {
   border: 0;
   outline: 0;
   z-index: 1;
+  margin: 20px 0;
 }
 button:hover{
   animation: animate 8s linear infinite;
@@ -331,5 +332,12 @@ button::before {
 }
 .quillWrapper >>> .ql-clean {
   display: none !important;
+}
+.quillWrapper >>> .ql-editor {
+  min-height: 250px;
+}
+.quillWrapper >>> img {
+  max-width: 300px;
+  max-height: 300px;
 }
 </style>
