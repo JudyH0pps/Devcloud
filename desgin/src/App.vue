@@ -50,7 +50,7 @@ export default{
     stopCheckNotification(){
       if(this.$cookie.get('timerid') != null)
         clearTimeout(this.$cookie.get('timerid'));
-    }
+    },
   },
   created() {
     let token = this.getParameters('token')
@@ -64,7 +64,9 @@ export default{
         this.fetchMyProfile(this.$cookie.get('logintoken'));
         
         //this.$cookie.set('user_id',this.user.id,'1h');
+        // this.setLoginToken();
         this.$router.push({'name':'Home'});
+        // location.reload();
     }
     if(this.$cookie.get('logintoken')){
       //this.checkNotification()

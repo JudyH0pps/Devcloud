@@ -119,6 +119,7 @@ export default {
         }).catch(()=>{
             // 프로필에서 다시 프로필로 이동시에 새로고침 해줌
             this.$router.go()
+            document.documentElement.scrollTop = 0;
         })
     }
   },

@@ -89,6 +89,8 @@ export default{
             var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
             var now = this.$moment('MM-DD-YYYY');
 
+            //console.log(this.question.createdAt);
+
             var diffDate = now.diff(createDate, 'days');
             if(diffDate <= 3){
                 this.question_create = diffDate + "day ago";
@@ -289,12 +291,15 @@ Vue.filter("highlights2", function(item, keyword){
         fill: #ff3187;
     }
 }
-
 /* profile-image */
 .profile-rounded {
   background: silver;
   height: 50px; width: 200px;
   border-radius: 25px;
+}
+
+.description >>> iframe {
+    display: none;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <section class="detail">
-    <DetailQuestion v-if="answerLength !== null" :answerLength="answerLength" />
+    <DetailQuestion />
     <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer"/>
     <button @click="moveToWrite">답변달기</button>
   </section>
@@ -9,8 +9,7 @@
 <script>
 import DetailQuestion from '@/components/DetailQuestion.vue'
 import DetailAnswer from '@/components/DetailAnswer.vue'
-// import { mapState, mapActions } from 'vuex'
-import http from "@/util/http-common"
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Detail',
@@ -20,17 +19,15 @@ export default {
   },
   data() {
     return {
-      answerLength: null,
-      answers: []
     }
   },
 	computed: {
-		// ...mapState({
-		// 	answers: state => state.answer.answers,
-		// }),
+		...mapState({
+			answers: state => state.answer.answers,
+		}),
 	},
   methods: {
-    // ...mapActions('answer',['fetchAnswers']),
+    ...mapActions('answer',['fetchAnswers']),
     moveToWrite() {
       this.$router.push({
         name:'WriteAnswer',
@@ -39,25 +36,10 @@ export default {
           },
         });
     },
-    fetchAnswers() {
-					http
-						.get('/api/answer', {
-							params: {
-								question_id: parseInt(this.$route.params.question_id)
-							}
-						})
-						.then(({data}) => {
-              this.answers = data
-              this.answerLength = this.answers.length
-						})
-						.catch(err => console.log(err))
-		},
   },
 	created() {
-		// alert("조회한 글번호 :" +this.$route.params.question_id)
-    // this.fetchAnswers(this.$route.params.qid);
+    this.fetchAnswers(this.$route.params.question_id);    
     document.documentElement.scrollTop = 0;
-    this.fetchAnswers()
   },
 }
 </script>

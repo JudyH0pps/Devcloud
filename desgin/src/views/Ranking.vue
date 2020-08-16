@@ -5,10 +5,11 @@
                 <i class="fas fa-medal"></i>
                 <h3>leaderboard</h3>
             </div>
-            <div class="line" v-for="user in users" :key="user">
-                <img src="@/assets/damgom.png">
-                <h3>Nongdamgom</h3>
-                <h4 style="margin-left: auto;">1500</h4>
+            <div class="line" v-for="(user, index) in users" :key="index">
+                <img :src="user.imageUrl">
+
+                <h3>{{ user.name }}</h3>
+                <h4 style="margin-left: auto;">{{ userIdList[index].rank_point }}</h4>
                 <span style="margin: 0 100px 0 10px;">pts</span>
             </div>
         </div>
@@ -17,18 +18,57 @@
 </template>
 
 <script>
+import http from "@/util/http-common";
+
 export default {
     name: 'Ranking',
     data() {
         return {
-            users: [1,2,3,4,5,6,7]
+            userIdList: [],
+            users: [],
         }
     },
     methods: {
+
+        fetchRankList() {
+            http
+                .get('/api/rank')
+                .then(({data}) => {
+                    this.userIdList = data;
+                    for(let i=0; i<this.userIdList.length; i++){
+                        let user = this.userIdList[i];
+                        // console.log(user);
+                        http
+                            .get('/api/user',{
+                                params : {
+                                    user_id : user.user_id
+                                }
+                            })
+                            .then(data => {
+                                this.users.push(data.data);
+                                // this.userIdList = data;
+                                
+                            })
+                            .catch(()=>{
+                                alert('랭킹 목록 조회중 오류 발생')
+                            })
+                    }
+                })
+                .catch(()=>{
+                    alert('랭킹 목록 조회중 오류 발생')
+                })
+        },
+        fetchProfile() {
+            this.fetchRankList();
+        }
+    },
+    created() {
+        this.fetchProfile();
+        // console.log(users);
     },
     mounted(){
         document.documentElement.scrollTop = 0;
-    }
+    },
 }
 
 </script>

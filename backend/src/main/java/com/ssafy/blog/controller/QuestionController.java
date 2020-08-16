@@ -1,7 +1,11 @@
 package com.ssafy.blog.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Question;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -48,6 +53,9 @@ public class QuestionController {
     private QuestionTagRepository questionTagRepository;
 
     private ResponseEntity<Question> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+    private final String pathPrefix = "/home/ubuntu/static/images/";
+    private final String baseImageUrl = "http://i3c202.p.ssafy.io:8080/images/";
 
     @GetMapping("/api/question")
     @ApiOperation(value = "질문 검색")
@@ -166,6 +174,26 @@ public class QuestionController {
         Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id, PageRequest.of(page - 1, 10));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/question/upload")
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
+        Date now = new Date();
+        String filename = "";
+        try {
+            filename = now.getTime() + file.getOriginalFilename();
+            File newFile = new File(pathPrefix + filename);
+            newFile.mkdirs();
+            file.transferTo(newFile);
+            // file.transferTo(new File(pathPrefix + file.getOriginalFilename()));
+        } catch(IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        String url = baseImageUrl + filename;
+        Map<String, String> data = new HashMap<>();
+        data.put("url", url);
+        // data.put("image_name", file.getOriginalFilename());
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     private void updateRank(Long user_id, int step) {
