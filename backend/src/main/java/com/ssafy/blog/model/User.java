@@ -53,6 +53,9 @@ public class User {
 
     private String githubUrl;
 
+    @Column(nullable = false)
+    private Integer unReadNotificationCnt;
+
     @CreatedDate
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private Date createdAt;
