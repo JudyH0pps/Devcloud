@@ -43,6 +43,7 @@ import { mapState, mapActions,mapGetters } from 'vuex'
 import { VueEditor } from 'vue2-editor'
 import Vue from 'vue'
 import VoerroTagsInput from '@voerro/vue-tagsinput';
+import axios from 'axios'
 Vue.component('tags-input', VoerroTagsInput);
 
 
@@ -84,6 +85,26 @@ export default {
     ...mapActions('answer', ['postAnswer', 'editAnswer']),
     ...mapActions('question', ['postQuestion', 'editQuestion']),
     ...mapActions('tag',['fetchTags']),
+    /////
+    handleImageAdded(file, Editor, cursorLocation) {
+      var formData = new FormData();
+      formData.append('file', file)
+
+      axios({
+        url: 'http://i3c202.p.ssafy.io:8080/api/question/upload',
+        method: 'POST',
+        // headers:{'Authorization': 'Bearer ' +  + token},
+        data: formData
+      }).then((result) => {
+        let url = result.data.url;
+        Editor.insertEmbed(cursorLocation, 'image', url);
+        var uploader = document.getElementById("file-upload");
+        uploader.value = "";
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    /////
     postData() {
       // 질문 페이지라면
       // 태그형식 변경 
