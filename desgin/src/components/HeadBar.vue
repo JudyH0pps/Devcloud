@@ -26,9 +26,8 @@
           </li>
          
          <!-- 알림 목록 표시 -->
-          <div class="alarmdropdown" v-show="showAlarmDropdown"
-          v-for="(notification, index) in this.notifications" :key="notification.notification_id">
-            <div class="alarm-list">
+          <div class="alarmdropdown" v-show="showAlarmDropdown">
+            <div class="alarm-list" v-for="(notification, index) in this.notifications.slice(0,5)" :key="notification.notification_id">
               <p @click="moveToQuestion(notification.question_id,notification.notification_id,index)">{{notification.content}}</p>
               <i class="fas fa-times" @click="closeNotification(notification.notification_id,index)"></i>
             </div>

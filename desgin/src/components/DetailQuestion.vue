@@ -97,7 +97,7 @@ export default {
             })
         },
         likeClick() {
-            console.log(this.question.id);
+            //console.log(this.question.id);
             console.log(parseInt(this.$cookie.get("user_id")));
             
             http.post('/api/liketoquestion', {
@@ -120,7 +120,7 @@ export default {
         },
         loadLikeState() {
             http.get('/api/liketoquestion', {
-                "question_id": this.question.id,
+                "question_id": this.$route.params.question_id,
                 "user_id": parseInt(this.$cookie.get("user_id"))
             })
             .then(res => {
