@@ -220,4 +220,8 @@ export default {
     background: #eee;
     color: #FF4500; 
 }
+.q-content >>> img {
+    max-width: 300px;
+    max-height: 300px;
+}
 </style>
