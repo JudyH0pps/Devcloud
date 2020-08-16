@@ -3,7 +3,6 @@
         <div class="vld-parent">
             <loading :active.sync="isLoading" 
             :can-cancel="true" 
-            :on-cancel="onCancel"
             :is-full-page="fullPage"
             color=#5ABEFF
             :width="128"
@@ -24,7 +23,12 @@
             <h2>All Questions</h2>
         </div>
 
-        <SearchResultCard  v-for="(question, index) in questions.slice().reverse()" :question="question" :key="index" :keyword="searchKeyword" />
+        <SearchResultCard  v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword" />
+        <infinite-loading :identifier="infiniteId" @infinite="infiniteHandler">
+            <!-- <template slot="no-more">더 많은 질문을 등록해주세요 !</template> -->
+            <span slot="no-more">더 많은 질문을 등록해주세요 !</span>
+            <span slot="no-results">더 많은 질문을 등록해주세요 !</span>
+        </infinite-loading>
         <button @click="moveToWrite">새 질문 작성</button>
     </section>
 </template>
@@ -32,27 +36,46 @@
 <script>
 import SearchResultCard from'../components/SearchResultCard.vue'
 import {mapActions, mapState} from 'vuex'
+import http from "@/util/http-common";
 // Import component
+import InfiniteLoading from 'vue-infinite-loading';
 import Loading from 'vue-loading-overlay';
 // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 export default{
     name: 'Search',
     components: {
+        InfiniteLoading,
         SearchResultCard,
         Loading,
     },
     data() {
         return {
             // searchresults: [1,2,3,4,5,6,7,8,9],
-
+            page: 2,
             isLoading: false,
-            fullPage: true
+            fullPage: true,
+            infiniteId: +new Date(),
         } 
     },
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
-        
+        infiniteHandler($state) {
+            http.get('/api/question', {
+                params: {
+                    keyword : this.searchKeyword,
+                    page: this.page,
+                },
+            }).then(({ data }) => {
+                if (data.content.length) {
+                this.page += 1;
+                this.questions.push(...data.content);
+                $state.loaded();
+                } else {
+                $state.complete();
+                }
+            });
+        },
         moveToWrite() {
             this.$router.push({ 'name' : 'Write' });
         },
@@ -65,9 +88,6 @@ export default{
                 this.isLoading = false
             },800)
         },
-        onCancel() {
-            console.log('User cancelled the loader.')
-        },
     },
     computed:{
         ...mapState({
@@ -78,14 +98,17 @@ export default{
         }
     },
     created() {
-        // alert(this.keyword)
         this.fetchQuestionsByKeyword(this.searchKeyword),
         this.doAjax()
+        document.documentElement.scrollTop = 0;
     },
     watch:{
         searchKeyword : function(){
+            //this.$router.go()
             this.fetchQuestionsByKeyword(this.searchKeyword)
-            //this.setKeyword(this.searchKeyword)
+            this.page = 2;
+            this.infiniteId += 1;
+            document.documentElement.scrollTop = 0;
         }
     }
 }

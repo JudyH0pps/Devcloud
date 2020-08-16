@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Answer;
+import com.ssafy.blog.model.Notification;
 import com.ssafy.blog.model.Question;
 import com.ssafy.blog.model.Rank;
 import com.ssafy.blog.model.User;
@@ -13,6 +14,7 @@ import com.ssafy.blog.payload.answer.AddAnswerRequest;
 import com.ssafy.blog.payload.answer.AnswerResponse;
 import com.ssafy.blog.payload.answer.UpdateAnswerRequest;
 import com.ssafy.blog.repository.AnswerRepository;
+import com.ssafy.blog.repository.NotificationRepository;
 import com.ssafy.blog.repository.QuestionRepository;
 import com.ssafy.blog.repository.RankRepository;
 import com.ssafy.blog.repository.UserRepository;
@@ -44,6 +46,9 @@ public class AnswerController {
 
     @Autowired
     private RankRepository rankRepository;
+
+    @Autowired
+    private NotificationRepository nr;
 
     @GetMapping("/api/answer")
     @ApiOperation(value = "답변 검색")
@@ -81,10 +86,13 @@ public class AnswerController {
         if (!optionalQuestion.isPresent())
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
+        User user = optionalUser.get();
+        Question question = optionalQuestion.get();
+
         // 3. 둘다 있으면 답변 등록
         Answer answer = new Answer();
-        answer.setUser(optionalUser.get());
-        answer.setQuestion(optionalQuestion.get());
+        answer.setUser(user);
+        answer.setQuestion(question);
         answer.setContent(request.getContent());
         answer.setLikeCnt(0);
         answer.setSelected(false);
@@ -93,6 +101,10 @@ public class AnswerController {
 
         // 4. rank cnt
         updateRank(request.getUser_id(), 1);
+
+        // 5. 알림 푸쉬
+        String message = user.getName() + "님이 질문: " + question.getTitle() + " 에 답변을 달았습니다.";
+        sendNotification(user, question.getUser(), question, message);
 
         AnswerResponse response = makeAnswerResponse(answer);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -140,6 +152,11 @@ public class AnswerController {
         answer.setSelected(true);
         answer = answerRepository.save(answer);
 
+        // 알림 생성
+        Question question = answer.getQuestion();
+        String message = question.getUser().getName() +"님이 답변을 채택했습니다.";
+        sendNotification(question.getUser(), answer.getUser(), question, message);
+
         return new ResponseEntity<>(answer, HttpStatus.OK);
     }
 
@@ -161,5 +178,18 @@ public class AnswerController {
         response.setSelected(answer.isSelected());
         response.setUpdated_at(answer.getUpdatedAt());
         return response;
+    }
+
+    private void sendNotification(User sender, User receiver, Question question, String message) {
+        Notification n = new Notification();
+        n.setUser(receiver);
+        n.setContent(message);
+        n.setQuestion(question);
+        n.setIsRead(false);
+        n.setCreatedAt(new Date());
+        nr.save(n);
+        
+        receiver.setUnReadNotificationCnt(receiver.getUnReadNotificationCnt() + 1);
+        userRepository.save(receiver);
     }
 }

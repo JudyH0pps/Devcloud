@@ -6,11 +6,15 @@ import java.util.Optional;
 
 import com.ssafy.blog.model.Answer;
 import com.ssafy.blog.model.Comment;
+import com.ssafy.blog.model.Notification;
+import com.ssafy.blog.model.Question;
 import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.comment.AddCommentRequest;
 import com.ssafy.blog.payload.comment.ModifyCommentRequest;
+import com.ssafy.blog.payload.notification.NotificationResponse;
 import com.ssafy.blog.repository.AnswerRepository;
 import com.ssafy.blog.repository.CommentRepository;
+import com.ssafy.blog.repository.NotificationRepository;
 import com.ssafy.blog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +42,9 @@ public class CommentController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationRepository nr;
+
     private ResponseEntity<Comment> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
     @GetMapping("/api/comment")
@@ -62,12 +69,19 @@ public class CommentController {
         if (!optionalAnswer.isPresent())
             return badResponse;
 
+        User user = optionalUser.get();
+        Answer answer = optionalAnswer.get();
+
         Comment comment = new Comment();
-        comment.setUser(optionalUser.get());
-        comment.setAnswer(optionalAnswer.get());
+        comment.setUser(user);
+        comment.setAnswer(answer);
         comment.setContent(request.getContent());
         comment.setUpdatedAt(new Date());
         comment = commentRepository.save(comment);
+
+        // 알림 푸쉬
+        Question question = answer.getQuestion();
+        sendNotification(user, answer.getUser(), question);
 
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
@@ -76,7 +90,8 @@ public class CommentController {
     @ApiOperation(value = "댓글 수정하기")
     public ResponseEntity<Comment> modifyComment(@RequestBody ModifyCommentRequest request) {
         Optional<Comment> optionalComment = commentRepository.findById(request.getComment_id());
-        if(!optionalComment.isPresent()) return badResponse;
+        if (!optionalComment.isPresent())
+            return badResponse;
 
         Comment comment = optionalComment.get();
         comment.setContent(request.getContent());
@@ -90,10 +105,25 @@ public class CommentController {
     @ApiOperation(value = "댓글 삭제하기")
     public ResponseEntity<String> deleteComment(@RequestParam("comment_id") Long comment_id) {
         Optional<Comment> optionalComment = commentRepository.findById(comment_id);
-        if(!optionalComment.isPresent()) return new ResponseEntity<>("not exist", HttpStatus.OK);
+        if (!optionalComment.isPresent())
+            return new ResponseEntity<>("not exist", HttpStatus.OK);
 
         commentRepository.deleteById(comment_id);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    private void sendNotification(User sender, User receiver, Question question) {
+        Notification n = new Notification();
+        String content = sender.getName() + "님이 답변에 댓글을 달았습니다.";
+        n.setUser(receiver);
+        n.setContent(content);
+        n.setQuestion(question);
+        n.setIsRead(false);
+        n.setCreatedAt(new Date());
+        nr.save(n);
+        
+        receiver.setUnReadNotificationCnt(receiver.getUnReadNotificationCnt() + 1);
+        userRepository.save(receiver);
     }
 }

@@ -60,6 +60,7 @@ export default {
   box-shadow:         3px 3px 2px 1px #ccc;
   border: 2px solid #fff;
   border-radius: 40px;
+  /* animation: rotate 1s linear infinite; */
 }
 
 .search_box input[type="text"]{
@@ -103,4 +104,9 @@ export default {
   }
 }
 
+@keyframes rotate {
+    to {
+       transform: rotate( 360deg );
+    }
+}
 </style>

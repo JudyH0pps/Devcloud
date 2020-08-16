@@ -9,45 +9,29 @@
         <!-- </div> -->
         
         <div class="post-data">
-            <div class="title">Q. 
-                <div @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)">{{ question.title }}</div>
-            </div>
-            <div class="subtitle">
+            <div class="title" @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)"></div>
+            <div style="text-align: right;">
                 <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
+            </div>          
+            <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
             </div>
-            <p v-html="$options.filters.highlights2(question.content, keyword)" class="description">
-                {{ question.content }}
-            </p>
-            <!-- 이름, 좋아요 -->
-
-            <!-- 레이아웃 수정 필요: ( 담당자: 시영) -->
-            <div>
-                <div>
-                    <div>                   
-                        <img 
-                            alt="profile picture"
-                            class="profile-rounded"
-                            :src="question.user.imageUrl"
-                            style="width: 50px; height: 50px; display: inline; padding: 0px;"
-                            align: right>
-                        <span style="font-size: 3em; color: black; font-weight: bold">
-                            {{question.user.name}}
-                        </span>
-                    </div>
+            <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
+                <div style="font-size: 25px; color: Tomato; margin-left: auto;">
+                    <i class="fas fa-heart"></i>
                 </div>
-                <div>
-                    <div>
-                        
-                        <span style="font-size: 3em; color: Tomato;">
-                            <i class="fas fa-heart"></i>
-                        </span>
-                    </div>
-                    <div>
-                        <span style="font-size: 3em;">{{question.likeCnt}}</span>
-                    </div>
-                </div>
+                <p style="font-size: 15px;">{{question.likeCnt}}</p>
             </div>
-            
+            <div style="display: flex; flex-direction: row; align-items: center; width: 100%">                   
+                <img 
+                    alt="profile picture"
+                    class="profile-rounded"
+                    :src="question.user.imageUrl"
+                    style="margin-left: auto;width: 30px; height: 30px; display: inline; padding: 0px;"
+                    align: right>
+                <p style="font-size: 15px; color: black; font-weight: bold">
+                    {{question.user.name}}
+                </p>
+            </div>
         </div>
         
         <!-- <h2 class="card_title">Q. {{ title }}</h2>
@@ -83,6 +67,8 @@ export default{
             // date: '2020년 07월 20일',
             // like: 104,
             // user: 'Nongdamgom',
+
+            question_create: this.question.createdAt,
         }
     },
     props: {
@@ -99,29 +85,41 @@ export default{
                 params:{ "question_id" : question_id},
             });
         },
+        questionCreate(){
+            var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
+            var now = this.$moment('MM-DD-YYYY');
+
+            //console.log(this.question.createdAt);
+
+            var diffDate = now.diff(createDate, 'days');
+            if(diffDate <= 3){
+                this.question_create = diffDate + "day ago";
+            } else {
+               this.question_create = createDate;
+            }
+        }
     },
     created() {
+        this.questionCreate();
     },
 }
 
 
 //title
 Vue.filter("highlights1", function(item, keyword){
-    if(keyword == "") {
+    if(keyword == undefined) {
         return item;
     }
-    
-
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
     // 해당 키워드 하이라이트
-    return item.toString().replace(iQuery, matchedTxt => {
+    return 'Q. ' + item.toString().replace(iQuery, matchedTxt => {
         return "<span class='highlight'>" + matchedTxt + "</span>";
     });
 });
 //content
 Vue.filter("highlights2", function(item, keyword){
-    if(keyword == "") return item;
+    if(keyword == undefined) return item;
 
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
@@ -135,7 +133,7 @@ Vue.filter("highlights2", function(item, keyword){
 
 <style>
 .highlight {
-    background-color:#FFFACD;
+    background-color:#ffe600;
 }
 </style>
 <style scoped>
@@ -157,8 +155,12 @@ Vue.filter("highlights2", function(item, keyword){
     flex-direction: row;
     /* height: 200px; */
 }
+.card .title {
+    color: rgb(26, 13, 171);;
+}
 .card .title:hover {
     cursor: pointer;
+    text-decoration: underline;
 }
 
 /* .image-data {
@@ -206,26 +208,32 @@ Vue.filter("highlights2", function(item, keyword){
     background-color: #fff;
     padding: 10px 20px;
     position: relative;
+    width: 100%;
 }
 .title {
     font-size:20px;
     line-height: 1;
     font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
 }
 .subtitle {
     font-size: 12px;
     font-weight: 400;
     text-transform: uppercase;
     color: #a2a2a2;
-    margin: 10px 0 15px 0;
+    margin: 0;
 }
 .description {
     position: relative;
+    border-left: 4px solid #ccc;
 }
-.description::first-letter {
-    margin-left: 10px;
+.description >>> img,
+.description >>> iframe {
+    display: none;
 }
-.description::before {
+/* .description::before {
     content: '';
     position: absolute;
     top: 0;
@@ -235,7 +243,7 @@ Vue.filter("highlights2", function(item, keyword){
     background: linear-gradient(to right, rgba(193, 238, 240, 0.76),
                                             rgba(0, 242, 254, .6));
     border-radius: 20px;
-}
+} */
 .publication-details {
     transform: translateX(-100%);
 }

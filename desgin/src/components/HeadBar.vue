@@ -13,9 +13,9 @@
           <!-- <router-link :to="{ 'name':'Search' }">
             <li class="underline">Search</li>
           </router-link> -->
-          <!-- <router-link :to="{ 'name':'Write' }">
-            <li class="underline">New Question</li>
-          </router-link> -->
+          <!-- <router-link :to="{ 'name':'Search' }"> -->
+            <li class="underline" @click="moveQuestions">Questions</li>
+          <!-- </router-link> -->
           <router-link :to="{ 'name':'Ranking' }">
             <li class="underline">Ranking</li>
           </router-link>
@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     //...mapActions('user',['fetchMyProfile']),
-
     signOutBtn() {
         this.toggleDropdown();
         alert("로그아웃 되었습니다.");
@@ -113,7 +112,16 @@ export default {
                 this.$router.go()
             })
             this.toggleDropdown()
-        }
+        },
+    moveQuestions(){
+      this.$router.push({
+        name : 'Search',
+        }).catch(()=>{
+            // 프로필에서 다시 프로필로 이동시에 새로고침 해줌
+            this.$router.go()
+            document.documentElement.scrollTop = 0;
+        })
+    }
   },
   mounted() {
     this.navbarSpan();
@@ -177,16 +185,18 @@ header {
   color: #b8b8b8;
 }
 .fas {
-  margin-left: 15px;
+  /* margin-left: 15px; */
   text-align: center;
 }
 .profile {
   display: flex;
   flex-direction: column;
+  margin: 0 15px;
 }
 .profile-picture {
   border-radius: 50%;
-  margin-left: 15px;
+  /* margin-left: 15px; */
+  height: 100%;
   cursor: pointer;
   /* box-shadow: 0px 5px 10px rgba(0,0,0,.2); */
 }
@@ -218,6 +228,7 @@ header ul {
 header ul li {
   position: relative;
   list-style: none;
+  cursor: pointer;
 }
 header ul li {
   position: relative;
@@ -255,7 +266,7 @@ header.sticky ul li{
   width: 100%;
   transition: width .3s;
 }
-.loginbutton {
+.loginbutton  {
   display: flex;
   flex-direction: column;
   justify-content: center;

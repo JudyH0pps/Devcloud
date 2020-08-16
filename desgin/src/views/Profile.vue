@@ -144,6 +144,7 @@ export default {
     //   alert("다른사람의 프로필로 접근")
     // }
     // 프로필페이지에서 정보변경을 제외하고는 조회방식이 동일함
+    document.documentElement.scrollTop = 0;
     this.fetchUserProfile(this.$route.params.user_id)
     //작성한 답변 조회 
     this.fetchAnswersById(this.$route.params.user_id);

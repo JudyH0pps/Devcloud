@@ -83,6 +83,7 @@ export default {
         // 수정
         if (this.isEdit) {
           questionData.question_id = parseInt(this.$route.params.question_id)
+          questionData.tagList = this.outputChange(this.resultedTags),
           this.editQuestion(questionData)
           }
         // 작성
@@ -120,6 +121,16 @@ export default {
         }
         return tagList 
     },
+    inputChange(arr){
+          for(var i = 0; i < arr.length; i++)
+          {
+            let singleTag = {};
+            singleTag.key = arr[i].name;
+            singleTag.value = arr[i].name;
+            singleTag.id = arr[i].id;
+            this.resultedTags.push(singleTag)
+          } 
+    },
   },
   created() {
     // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
@@ -139,6 +150,7 @@ export default {
         this.title = this.question.title
         this.content = this.question.content
         this.tags = this.question.questionTags.map(data => data.tag)
+        this.inputChange(this.tags)
       }
     }
     this.fetchTags();

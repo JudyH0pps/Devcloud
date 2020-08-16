@@ -39,6 +39,7 @@ export default {
   },
 	created() {
     this.fetchAnswers(this.$route.params.question_id);    
+    document.documentElement.scrollTop = 0;
   },
 }
 </script>
