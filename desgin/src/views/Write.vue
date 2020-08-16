@@ -17,7 +17,7 @@
         @imageAdded="handleImageAdded"
         v-model="content" :editor-toolbar="customToolbar">
     </vue-editor>
-    <div>
+    <div v-if="!isAnswer">
       <label class="label-name" for="tags">
         <span class="tag-name">Tags</span>
       </label>
@@ -32,6 +32,7 @@
                 :add-tags-on-blur="true"
                 typeahead-style="badges"
                 wrapper-class="write_tags"
+                v-if="!isAnswer"
                 >
     </tags-input>  
     <button @click="postData">Submit</button>
