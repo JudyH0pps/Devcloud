@@ -32,7 +32,7 @@ public class NotificationController {
     @ApiOperation(value = "유저 아이디 기준 모든 알람을 조회한다")
     public ResponseEntity<Object> searchNotificationByUserId(@PathVariable("user_id") Long user_id) {
         List<NotificationResponse> list = new ArrayList<>();
-        for(Notification n : nr.findAllByUserId(user_id))
+        for(Notification n : nr.findAllByUserIdAndIsRead(user_id, false))
             list.add(makeResponse(n));
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
