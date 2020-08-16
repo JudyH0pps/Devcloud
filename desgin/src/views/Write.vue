@@ -17,7 +17,7 @@
         @imageAdded="handleImageAdded"
         v-model="content" :editor-toolbar="customToolbar">
     </vue-editor>
-    <div>
+    <div v-if="!isAnswer">
       <label class="label-name" for="tags">
         <span class="tag-name">Tags</span>
       </label>
@@ -32,6 +32,7 @@
                 :add-tags-on-blur="true"
                 typeahead-style="badges"
                 wrapper-class="write_tags"
+                v-if="!isAnswer"
                 >
     </tags-input>  
     <button @click="postData">Submit</button>
@@ -304,6 +305,7 @@ button {
   border: 0;
   outline: 0;
   z-index: 1;
+  margin: 20px 0;
 }
 button:hover{
   animation: animate 8s linear infinite;
@@ -331,5 +333,12 @@ button::before {
 }
 .quillWrapper >>> .ql-clean {
   display: none !important;
+}
+.quillWrapper >>> .ql-editor {
+  min-height: 250px;
+}
+.quillWrapper >>> img {
+  max-width: 300px;
+  max-height: 300px;
 }
 </style>
