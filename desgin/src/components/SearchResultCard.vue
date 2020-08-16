@@ -291,7 +291,6 @@ Vue.filter("highlights2", function(item, keyword){
         fill: #ff3187;
     }
 }
-
 /* profile-image */
 .profile-rounded {
   background: silver;
