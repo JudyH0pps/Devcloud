@@ -193,7 +193,7 @@ export default {
   mounted() {
     // 링크 버튼
     const linkBtn = document.querySelector('.ql-link')
-    const textArea = document.querySelector('.ql-editor')
+    // const textArea = document.querySelector('.ql-editor')
     linkBtn.addEventListener('click', function() {
       // 링크 생성
       var inputURL = prompt('URL을 입력해주세요.', 'https://')
@@ -201,10 +201,12 @@ export default {
       hyperLink.innerText = inputURL
       hyperLink.href = inputURL
       
-      var target = document.caretPositionFromPoint()
-      console.log(target)
-      console.log(textArea.children)
-
+      var sel = window.getSelection()
+      var range = sel.getRangeAt(0)
+      range.collapse(false)
+      range.insertNode(hyperLink)
+      sel.removeAllRanges()
+      sel.addRange(range)
     })
   }
 }
