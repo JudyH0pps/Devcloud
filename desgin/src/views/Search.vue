@@ -24,10 +24,10 @@
         </div>
 
         <SearchResultCard  v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword" />
-        <infinite-loading @infinite="infiniteHandler">
+        <infinite-loading :identifier="infiniteId" @infinite="infiniteHandler">
             <!-- <template slot="no-more">더 많은 질문을 등록해주세요 !</template> -->
-            <span slot="no-more"></span>
-            <span slot="no-results"></span>
+            <span slot="no-more">더 많은 질문을 등록해주세요 !</span>
+            <span slot="no-results">더 많은 질문을 등록해주세요 !</span>
         </infinite-loading>
         <button @click="moveToWrite">새 질문 작성</button>
     </section>
@@ -54,7 +54,8 @@ export default{
             // searchresults: [1,2,3,4,5,6,7,8,9],
             page: 2,
             isLoading: false,
-            fullPage: true
+            fullPage: true,
+            infiniteId: +new Date(),
         } 
     },
     methods:{
@@ -97,15 +98,17 @@ export default{
         }
     },
     created() {
-        // alert(this.keyword)
-        document.documentElement.scrollTop = 0;
         this.fetchQuestionsByKeyword(this.searchKeyword),
         this.doAjax()
+        document.documentElement.scrollTop = 0;
     },
     watch:{
         searchKeyword : function(){
+            //this.$router.go()
             this.fetchQuestionsByKeyword(this.searchKeyword)
-            //this.setKeyword(this.searchKeyword)
+            this.page = 2;
+            this.infiniteId += 1;
+            document.documentElement.scrollTop = 0;
         }
     }
 }

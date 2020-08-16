@@ -89,7 +89,7 @@ export default{
             var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
             var now = this.$moment('MM-DD-YYYY');
 
-            console.log(this.question.createdAt);
+            //console.log(this.question.createdAt);
 
             var diffDate = now.diff(createDate, 'days');
             if(diffDate <= 3){

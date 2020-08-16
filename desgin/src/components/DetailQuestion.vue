@@ -88,7 +88,8 @@ export default {
             // simulate AJAX
             setTimeout(() => {
                 this.isLoading = false
-            },800),
+            },800)
+        },
         moveToEdit() {
             this.$router.push({
                 name: 'Edit',
@@ -191,6 +192,7 @@ export default {
     color: Tomato;
     margin-left: 4px;
     cursor: pointer;
+}
 .like-button {
     height: 50px;
     width: 150px;
