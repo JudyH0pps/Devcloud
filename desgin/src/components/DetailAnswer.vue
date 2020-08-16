@@ -6,6 +6,7 @@
                 <div class="profile">
                     <img :src="answer.user.imageUrl" class="profile_img">
                     <p>{{ answer.user.name }}</p>
+                    <button class="answer_select" style="margin-left: 30px">채택하기</button>
                 </div>
                 <p>{{ answer.updated_at }}</p>
             </div>
@@ -76,6 +77,7 @@ export default {
             commentInput: false,
             selectedIndex: -1,
             chkClicked: false,
+            selectedAnswer: false,
         }
     },
     props: {
@@ -234,5 +236,23 @@ div > button:hover {
 .like-button:hover{
     background: #eee;
     color: #FF4500; 
+}
+.answer_select {
+    height: 30px;
+    width: 80px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    color: green;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+.answer_select:hover {
+    background-color: whitesmoke;
+    cursor: pointer;
 }
 </style>
