@@ -56,7 +56,7 @@ export default {
       content: '',
       resultedTags:[],
       tags: [],
-      isEdit: false
+      isEdit: false,
     }
   },
   computed: {
@@ -142,6 +142,24 @@ export default {
       }
     }
     this.fetchTags();
+    window.scrollTo(0, 0)
+  },
+  mounted() {
+    // 링크 버튼
+    const linkBtn = document.querySelector('.ql-link')
+    const textArea = document.querySelector('.ql-editor')
+    linkBtn.addEventListener('click', function() {
+      // 링크 생성
+      var inputURL = prompt('URL을 입력해주세요.', 'https://')
+      var hyperLink = document.createElement('a')
+      hyperLink.innerText = inputURL
+      hyperLink.href = inputURL
+      
+      var target = document.caretPositionFromPoint()
+      console.log(target)
+      console.log(textArea.children)
+
+    })
   }
 }
 </script>
@@ -262,5 +280,8 @@ button::before {
   border-radius: 40px;
   opacity: 0;
   transition: 0.5s;
+}
+.quillWrapper >>> .ql-clean {
+  display: none !important;
 }
 </style>
