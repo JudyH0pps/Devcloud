@@ -23,6 +23,27 @@
             <i class="fas fa-power-off fa-2x"></i>
             <small>login</small>
           </li>
+          <li v-if="this.$store.state.user.isLoggedIn">
+            <div class="profile-option" @click="toggleAlarmDropdown">
+              <div class="notification">
+                <i class="fa fa-bell"></i>
+                <span class="alert-message">1</span>
+              </div>
+            </div>
+          </li>
+         
+         <!-- 알림 목록 표시 -->
+          <div class="alarmdropdown" v-show="showAlarmDropdown">
+            <div class="alarm-list">
+              <p>좋아요를 눌렀습니다</p>
+              <i class="fas fa-times"></i>
+            </div>
+            <div class="alarm-list">
+              <p>댓글이 달렸습니다</p>
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+
           <div class="profile" v-if="this.$store.state.user.isLoggedIn">
             <img 
             alt="profile picture"
@@ -66,6 +87,7 @@ export default {
         loginModalOn: false,
         userImage: this.$cookie.get('user_image'),
         showDropdown: false,
+        showAlarmDropdown: false,
       }
   },
   methods: {
@@ -93,6 +115,9 @@ export default {
         let header = document.querySelector("header");
         header.classList.toggle("sticky", window.scrollY > 0);
       })
+    },
+    toggleAlarmDropdown() {
+      this.showAlarmDropdown = !this.showAlarmDropdown;
     },
     toggleModal() {
       // alert('바꾸자')
@@ -163,6 +188,25 @@ header {
   padding: 15px 80px;
   z-index: 100;
   min-width: 1024px;
+}
+.alarmdropdown {
+  position: absolute;
+  top: 70px;
+  right: 0px;
+  width: 400px;
+  /* margin-left: 10px; */
+  padding: 0 10px 0;
+  background: white;
+  border: 2px solid #eeeeee;
+  border-radius: 15px;
+}
+.alarm-list {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 0 20px;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
 .dropdown {
   position: absolute;
@@ -277,5 +321,50 @@ header.sticky ul li{
 .loginbutton:hover i{
   transform: rotate(360deg);
   transition: .5s;
+}
+.profile-option {
+  width: 40px;
+  height: 40px;
+  background: red;
+  /* position: absolute; */
+  /* right: 50px;
+  top: 50%; */
+  /* transform: translateY(-50%); */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all .5s ease-in-out;
+  outline: none;
+}
+.profile-option .notification i {
+  color: #fff;
+  font-size: 1.2rem;
+  transition: all .5s ease-in-out;
+}
+.profile-option:hover{
+  background: #fff;
+  border: 1px solid red;
+}
+.profile-option:hover .notification i {
+  color: red;
+}
+.profile-option .notification .alert-message{
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #fff;
+  color: red;
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: .8rem;
+  font-weight: bold;
 }
 </style>
