@@ -2,7 +2,7 @@
     <div class="detailquestion" v-if="this.$store.state.question.question">
         <header style="display: flex; justify-content: space-between; align-items: center">
             <h1 class="q-title">Q. {{ question.title }}</h1>
-            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answerLength < 1" class="buttons">
+            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons">
                 <span @click="moveToEdit">수정</span>
                 <span @click="deleteQuestion(parseInt($route.params.question_id))">삭제</span>
             </div>
@@ -61,9 +61,6 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
     name: 'DetailQuestion',
-    props: {
-        answerLength: Number
-    },
     data() {
         return {
             // question: {},
@@ -77,7 +74,8 @@ export default {
     },
     computed: {
         ...mapState({
-			question: state => state.question.question
+            question: state => state.question.question,
+            answers: state => state.answer.answers
 		})
     },
 	methods: {

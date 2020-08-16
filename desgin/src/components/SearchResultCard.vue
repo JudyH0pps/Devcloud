@@ -299,4 +299,8 @@ Vue.filter("highlights2", function(item, keyword){
   border-radius: 25px;
 }
 
+.description >>> iframe {
+    display: none;
+}
+
 </style>
