@@ -17,7 +17,7 @@
         @imageAdded="handleImageAdded"
         v-model="content" :editor-toolbar="customToolbar">
     </vue-editor>
-    <div></div>
+    <div>
       <label class="label-name" for="tags">
         <span class="tag-name">Tags</span>
       </label>
