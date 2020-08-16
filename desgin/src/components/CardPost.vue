@@ -5,22 +5,37 @@
         </div>
         <div class="blog-post__info">
             <div class="blog-post__date">
-                <span>목요일</span>
-                <span>2020년 7월 30일</span>
+                <span>{{ item.updatedAt }}</span>
             </div>
-            <h1 class="blog-post__title">구름</h1>
+            <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ item.title }}</h1>
             <p class="blog-post__text">
-                
+                {{ item.content }}
             </p>
-            <a href="#" class="blog-post__cta">Read more</a>
+            <div>
+                <i class="fas fa-heart" style="margin-left:auto;color:red;"></i>{{ item.likeCnt }}
+            </div>
         </div>
     </div>
 
 </template>
 
 <script>
-export default{
+export default {
     name: 'CardPost',
+    props: {
+        item: Object,
+    },
+    methods: {
+        moveTodetail(question_id) {
+            this.$router.push({
+                'name':'Detail',
+                params:{ "question_id" : question_id},
+            });
+        },
+    },
+    // created() {
+    //     console.log(this.item)
+    // }
 }
 </script>
 
@@ -84,6 +99,10 @@ img {
     margin: 1rem 0 1rem;
     text-transform: uppercase;
     color: #4facfe;
+}
+.blog-post__title:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }
 .blog-post__text{
     margin-bottom: 2rem;

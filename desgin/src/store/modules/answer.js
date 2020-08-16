@@ -35,7 +35,7 @@ export default {
 						})
 						.then(({data}) => {
 							context.commit('setAnswers',data)
-							console.log(data);
+							// console.log(data);
 						})
 						.catch((err) => {
 							console.log(err);

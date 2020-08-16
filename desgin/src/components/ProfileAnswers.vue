@@ -1,7 +1,7 @@
 <template>
   <section class="answers">
     <div class="cardlist">
-      <CardPost v-for="a in as" :key="a"/>
+      <CardPost v-for="answer in answers" :key="answer"/>
     </div>
     <button class="moreBtn">more</button>
   </section>
@@ -10,6 +10,7 @@
 
 <script>
 import CardPost from './CardPost.vue'
+import {mapState} from 'vuex';
 
 export default {
   name: 'ProfileAnswers',
@@ -18,6 +19,11 @@ export default {
       as: [1,2,3,4,5,6,7,8]
       // as: [1]
     }
+  },
+  computed:{
+      ...mapState({
+          answers : state=> state.answer.answers
+      })
   },
   components: {
     CardPost,
@@ -60,6 +66,7 @@ button {
   border: 0;
   outline: 0;
   z-index: 1;
+  margin-top: 20px;
 }
 button:hover{
   animation: animate 8s linear infinite;

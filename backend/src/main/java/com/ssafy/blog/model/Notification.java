@@ -7,27 +7,36 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import org.springframework.data.annotation.CreatedDate;
 
 import lombok.Data;
 
 @Entity
 @Data
-public class RankRecord {
+public class Notification {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private int ranking;
+    @ManyToOne
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     @Column(nullable = false)
-    private int rankPoint;
+    private String content;
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = false)
+    private Boolean isRead;
+
+    @CreatedDate
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
     private Date createdAt;
 }
