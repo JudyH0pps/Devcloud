@@ -68,7 +68,7 @@ export default{
             // like: 104,
             // user: 'Nongdamgom',
 
-            question_create: this.question.createdAt,
+            //question_create: this.question.createdAt,
         }
     },
     props: {
@@ -85,22 +85,22 @@ export default{
                 params:{ "question_id" : question_id},
             });
         },
-        questionCreate(){
-            var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
-            var now = this.$moment('MM-DD-YYYY');
+        // questionCreate(){
+        //     var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
+        //     var now = this.$moment('MM-DD-YYYY');
 
-            //console.log(this.question.createdAt);
+        //     //console.log(this.question.createdAt);
 
-            var diffDate = now.diff(createDate, 'days');
-            if(diffDate <= 3){
-                this.question_create = diffDate + "day ago";
-            } else {
-               this.question_create = createDate;
-            }
-        }
+        //     var diffDate = now.diff(createDate, 'days');
+        //     if(diffDate <= 3){
+        //         this.question_create = diffDate + "day ago";
+        //     } else {
+        //        this.question_create = createDate;
+        //     }
+        // }
     },
     created() {
-        this.questionCreate();
+        //this.questionCreate();
     },
 }
 
