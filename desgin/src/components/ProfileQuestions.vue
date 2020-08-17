@@ -1,14 +1,14 @@
 <template>
   <section class="questions">
     <div class="cardlist">
-      <CardPost v-for="question in questions" :key="question.id" :item="question"/>
+      <ProfileQuestionCard v-for="question in questions" :key="question.id" :item="question"/>
     </div>
   <button class="moreBtn">more</button>
   </section>
 </template>
 
 <script>
-import CardPost from './CardPost.vue'
+import ProfileQuestionCard from './ProfileQuestionCard.vue'
 import {mapState} from 'vuex';
 
 export default {
@@ -23,7 +23,7 @@ export default {
       })
   },
   components: {
-    CardPost,
+    ProfileQuestionCard,
   }
 }
 </script>

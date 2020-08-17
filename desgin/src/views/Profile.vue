@@ -14,12 +14,12 @@
             <span class="country">Republic of Korea</span>
           </div> -->
         </div>
-        <div class="profile-option">
+        <!-- <div class="profile-option">
           <div class="notification">
             <i class="fa fa-bell"></i>
             <span class="alert-message">1</span>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="main-bd">
         <div class="left-side">

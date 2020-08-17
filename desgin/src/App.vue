@@ -26,7 +26,9 @@ export default{
   
   methods: {
     ...mapActions('user',['fetchMyProfile']),
+    ...mapActions('notification',['fetchUserNotifications']),
     ...mapMutations('user',['setisLoggedIn']),
+    
     getParameters(paramName) { 
       // 리턴값을 위한 변수 선언 
       var returnValue; 
@@ -44,13 +46,15 @@ export default{
       }
     },
     checkNotification(){
-      alert("timer test")
-      this.$cookie.set('timerid',setTimeout(this.checkNotification,5000),'1h');
+      // alert("timer test")
+      this.$cookie.set('timerid',setTimeout(this.checkNotification,1000),'1h');
+      if(this.$cookie.get('user_id'))
+        this.fetchUserNotifications(this.$cookie.get('user_id'))
     },
     stopCheckNotification(){
       if(this.$cookie.get('timerid') != null)
         clearTimeout(this.$cookie.get('timerid'));
-    },
+    }
   },
   created() {
     let token = this.getParameters('token')
@@ -64,21 +68,20 @@ export default{
         this.fetchMyProfile(this.$cookie.get('logintoken'));
         
         //this.$cookie.set('user_id',this.user.id,'1h');
-        // this.setLoginToken();
         this.$router.push({'name':'Home'});
-        // location.reload();
     }
     if(this.$cookie.get('logintoken')){
-      //this.checkNotification()
+      this.checkNotification()
       this.setisLoggedIn(true)
       // alert(this.isLoggedIn)
     }else{
-      //this.stopCheckNotification()
+      this.stopCheckNotification()
     }
   },
   computed: {
     ...mapState({
-      isLoggedIn : state => state.user.isLoggedIn
+      isLoggedIn : state => state.user.isLoggedIn,
+      //isNotification : state => state.notification.notifications
     })
   },
 }
