@@ -7,13 +7,6 @@
       <HeadSearchBar v-show="this.$store.state.searchBarinHeadbar"/>
       <div>
         <ul>
-          <!-- <router-link :to="{ 'name':'Detail' }">
-            <li class="underline">Detail</li>
-          </router-link> -->
-          <!-- <router-link :to="{ 'name':'Search' }">
-            <li class="underline">Search</li>
-          </router-link> -->
-          <!-- <router-link :to="{ 'name':'Search' }"> -->
             <li class="underline" @click="moveQuestions">Questions</li>
           <!-- </router-link> -->
           <router-link :to="{ 'name':'Ranking' }">
@@ -23,6 +16,23 @@
             <i class="fas fa-power-off fa-2x"></i>
             <small>login</small>
           </li>
+          <li v-if="this.$store.state.user.isLoggedIn">
+            <div class="profile-option" @click="toggleAlarmDropdown">
+              <div class="notification">
+                <i class="fa fa-bell"></i>
+                <span class="alert-message" v-if="notifications.length > 0">{{notifications.length}}</span>
+              </div>
+            </div>
+          </li>
+         
+         <!-- 알림 목록 표시 -->
+          <div class="alarmdropdown" v-show="showAlarmDropdown">
+            <div class="alarm-list" v-for="(notification, index) in this.notifications.slice(0,5)" :key="notification.notification_id">
+              <p @click="moveToQuestion(notification.question_id,notification.notification_id,index)">{{notification.content}}</p>
+              <i class="fas fa-times" @click="closeNotification(notification.notification_id,index)"></i>
+            </div>
+          </div>
+
           <div class="profile" v-if="this.$store.state.user.isLoggedIn">
             <img 
             alt="profile picture"
@@ -47,6 +57,8 @@
 <script>
 import LoginModal from '@/components/LoginModal.vue'
 import HeadSearchBar from '@/components/HeadSearchBar.vue'
+import {mapState} from 'vuex'
+import http from "@/util/http-common"
 //import {mapState,mapActions} from 'vuex'
 
 export default {
@@ -55,17 +67,18 @@ export default {
       LoginModal,
       HeadSearchBar
   },
-  // computed:{
-  //       ...mapState({
-  //           //keyword : state => state.keyword,
-  //           user : state => state.user.user,
-  //       }),
-  // },
+  computed:{
+        ...mapState({
+            notifications : state => state.notification.notifications
+            // user : state => state.user.user,
+        }),
+  },
   data() {
       return {
         loginModalOn: false,
         userImage: this.$cookie.get('user_image'),
         showDropdown: false,
+        showAlarmDropdown: false,
       }
   },
   methods: {
@@ -94,6 +107,9 @@ export default {
         header.classList.toggle("sticky", window.scrollY > 0);
       })
     },
+    toggleAlarmDropdown() {
+      this.showAlarmDropdown = !this.showAlarmDropdown;
+    },
     toggleModal() {
       // alert('바꾸자')
       this.loginModalOn = !this.loginModalOn;
@@ -121,6 +137,19 @@ export default {
             this.$router.go()
             document.documentElement.scrollTop = 0;
         })
+    },
+    async moveToQuestion(question_id,notification_id,index){
+      await http.get('/api/notification/read/'+ notification_id)
+      this.notifications.splice(index,1);
+      this.$router.push({
+              'name':'Detail',
+              params:{ "question_id" : question_id},
+      });
+    },
+    async closeNotification(notification_id,index){
+      await http.get('/api/notification/read/'+ notification_id);
+      this.notifications.splice(index,1);
+      //console.log(resp.data)
     }
   },
   mounted() {
@@ -163,6 +192,25 @@ header {
   padding: 15px 80px;
   z-index: 100;
   min-width: 1024px;
+}
+.alarmdropdown {
+  position: absolute;
+  top: 70px;
+  right: 0px;
+  width: 400px;
+  /* margin-left: 10px; */
+  padding: 0 10px 0;
+  background: white;
+  border: 2px solid #eeeeee;
+  border-radius: 15px;
+}
+.alarm-list {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 0 20px;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
 }
 .dropdown {
   position: absolute;
@@ -277,5 +325,60 @@ header.sticky ul li{
 .loginbutton:hover i{
   transform: rotate(360deg);
   transition: .5s;
+}
+.profile-option {
+  width: 40px;
+  height: 40px;
+  background: red;
+  /* position: absolute; */
+  /* right: 50px;
+  top: 50%; */
+  /* transform: translateY(-50%); */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all .5s ease-in-out;
+  outline: none;
+}
+.profile-option .notification i {
+  color: #fff;
+  font-size: 1.2rem;
+  transition: all .5s ease-in-out;
+}
+.profile-option:hover{
+  background: #fff;
+  border: 1px solid red;
+}
+.profile-option:hover .notification i {
+  color: red;
+}
+.profile-option .notification .alert-message{
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #fff;
+  color: red;
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: .8rem;
+  font-weight: bold;
+}
+.alarm-list{
+  margin : 10px;
+}
+.alarm-list p:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.alarm-list i:hover{
+    cursor: pointer;
 }
 </style>
