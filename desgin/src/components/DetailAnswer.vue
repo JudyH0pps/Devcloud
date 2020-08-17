@@ -6,6 +6,10 @@
                 <div class="profile">
                     <img :src="answer.user.imageUrl" class="profile_img">
                     <p>{{ answer.user.name }}</p>
+                    <div v-if="writerChk">
+                        <button class="answer_select" style="margin-left: 30px">채택하기</button>
+                    </div>
+
                 </div>
                 <p>{{ answer.updated_at }}</p>
             </div>
@@ -65,7 +69,7 @@
 
 <script>
 import http from "@/util/http-common"
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'DetailAnswer',
@@ -76,12 +80,19 @@ export default {
             commentInput: false,
             selectedIndex: -1,
             chkClicked: false,
+            selectedAnswer: false,
+            writerId: '',
+            writerChk: false,
         }
     },
     props: {
         answer: Object,
+        questionId: Number,
     },
     computed: {
+        ...mapState({
+            question: state => state.question.question,
+        })
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
@@ -134,11 +145,33 @@ export default {
                 })
                 .catch(err => console.log(err))
         },
+        getUserId() {
+            http
+                .get('/api/question', {
+                    params: {
+                        "question_id": this.questionId
+                    }
+                })
+                .then(({data}) => {
+                    this.writerId = data.user.id;
+                    
+                    // 글 작성자 id를 가져온 후 유저 비교를 진행 
+                    this.userCheck()
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        },
+        // 현재 화면을 보는 유저가 작성자인지 아닌지
+        userCheck() {
+            if(this.writerId == this.$cookie.get('user_id')){
+                this.writerChk = true;
+            }
+            else {
+                this.writerChk = false;
+            }
+        },
         likeClick() {
-            console.log(this.answer.id);
-            console.log(parseInt(this.$cookie.get("user_id")));
-            
-
             http
                 .post('/api/liketoquestion', {
                     params: {
@@ -156,9 +189,12 @@ export default {
                 this.chkClicked = false;
             }
         }
+
+
     },
     created() {
-        this.fetchComments(this.answer.id)
+        this.fetchComments(this.answer.id);
+        this.getUserId();
     }
 }
 </script>
@@ -234,5 +270,23 @@ div > button:hover {
 .like-button:hover{
     background: #eee;
     color: #FF4500; 
+}
+.answer_select {
+    height: 30px;
+    width: 80px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    color: green;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+.answer_select:hover {
+    background-color: whitesmoke;
+    cursor: pointer;
 }
 </style>

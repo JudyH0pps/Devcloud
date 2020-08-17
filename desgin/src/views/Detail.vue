@@ -1,7 +1,7 @@
 <template>
   <section class="detail">
     <DetailQuestion />
-    <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer"/>
+    <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" :questionId="$route.params.question_id"/>
     <button @click="moveToWrite">답변달기</button>
   </section>
 </template>
@@ -40,6 +40,7 @@ export default {
 	created() {
     this.fetchAnswers(this.$route.params.question_id);    
     document.documentElement.scrollTop = 0;
+    //console.log(this.$route.params.question_id)
   },
 }
 </script>
