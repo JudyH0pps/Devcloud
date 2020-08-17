@@ -135,7 +135,7 @@ export default {
                 for(var idx = 0; idx < dataset.length; idx++){
                     if(dataset[idx].question_id == this.question.id) {
                         chk = 200;
-                        console.log(dataset[idx]);
+                        //console.log(dataset[idx]);
                     }
                 }
 
