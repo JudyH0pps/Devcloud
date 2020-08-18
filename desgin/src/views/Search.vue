@@ -30,12 +30,14 @@
             <span slot="no-results">더 많은 질문을 등록해주세요 !</span>
         </infinite-loading>
         <button @click="moveToWrite">새 질문 작성</button>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
         <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </section>
 </template>
 
 <script>
 import SearchResultCard from'../components/SearchResultCard.vue'
+import LoginCheckModal from '@/components/LoginCheckModal.vue'
 import LoginModal from '../components/LoginModal.vue'
 import {mapActions, mapState} from 'vuex'
 import http from "@/util/http-common";
@@ -51,6 +53,7 @@ export default{
         SearchResultCard,
         Loading,
         LoginModal,
+        LoginCheckModal,
     },
     data() {
         return {
@@ -60,6 +63,7 @@ export default{
             fullPage: true,
             infiniteId: +new Date(),
             loginModalOn: false,
+            loginCheck: false,
         } 
     },
     methods:{
@@ -85,7 +89,7 @@ export default{
                 this.$router.push({ 'name' : 'Write' });
             }
             else {
-                this.toggleModal()
+                this.changeModal()
             }
         },
         //loading overlay
@@ -101,6 +105,13 @@ export default{
         },
         toggleModal() {
             this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
         },
     },
     computed:{
