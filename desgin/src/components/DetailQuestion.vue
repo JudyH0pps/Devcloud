@@ -14,7 +14,9 @@
             <div class="q-info">
                 <div class='profile'>
                     <img :src="question.user.imageUrl" class="profile_img">
-                    <p>{{ question.user.name }}</p>
+                    <router-link :to="{name: 'Profile', params :{ user_id : question.user.id }}">
+                        <p>{{ question.user.name }}</p>
+                    </router-link>
                 </div>
                 <p>{{ question.updatedAt }}</p>
             </div>
