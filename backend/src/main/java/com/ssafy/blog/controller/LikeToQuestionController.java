@@ -44,29 +44,14 @@ public class LikeToQuestionController {
     @GetMapping("/api/liketoquestion")
     @ApiOperation(value = "질문에 대한 좋아요 목록 조회")
     public ResponseEntity<Object> searchLikeToQuestion(
-            @RequestParam(required = false, name = "user_id") Long user_id,
-            @RequestParam(required = false, name = "question_id") Long question_id) {
-        List<LikeToQuestionResponse> list = new ArrayList<>();
-
-        if(user_id != null && question_id != null) {
-            Optional<LikeToQuestion> optionalLikeToQuestion = likeToQuestionRepository.findByUserIdAndQuestionId(user_id, question_id);
-            if(!optionalLikeToQuestion.isPresent()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(optionalLikeToQuestion.get(), HttpStatus.OK);
-
-        } else if (user_id != null && question_id == null) {
-            for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAllByUserId(user_id)) {
-                list.add(makeResponse(likeToQuestion));
-            }
-        } else if (user_id == null && question_id != null) {
-            for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAllByQuestionId(question_id)) {
-                list.add(makeResponse(likeToQuestion));
-            }
-        } else {
-            for (LikeToQuestion likeToQuestion : likeToQuestionRepository.findAll()) {
-                list.add(makeResponse(likeToQuestion));
-            }
+            @RequestParam("question_id") Long question_id,
+            @RequestParam("user_id") Long user_id) {
+        Optional<LikeToQuestion> optionalLTQ = likeToQuestionRepository.findByUserIdAndQuestionId(user_id, question_id);
+        if(optionalLTQ.isPresent()) {
+            LikeToQuestionResponse response = makeResponse(optionalLTQ.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
 
     @PostMapping("/api/liketoquestion")
