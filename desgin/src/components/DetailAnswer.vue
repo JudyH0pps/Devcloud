@@ -33,7 +33,6 @@
         <!-- 댓글 목록 -->
         <ul v-if="comments">
 			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
-                <img src="" alt="user_profile">
                 <div style="display: flex; flex-direction: column; width: 100%">
                     <header style="display: flex; justify-content: space-between;">
                         <h5>{{ comment.user.name }}</h5>
