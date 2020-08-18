@@ -8,9 +8,9 @@
                 <span>{{ item.updatedAt }}</span>
             </div>
             <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ item.title }}</h1>
-            <p class="blog-post__text">
+            <!-- <p class="blog-post__text">
                 {{ item.content }}
-            </p>
+            </p> -->
             <div>
                 <i class="fas fa-heart" style="margin-left:auto;color:red;"></i>{{ item.likeCnt }}
             </div>
