@@ -1,8 +1,6 @@
 package com.ssafy.blog.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +10,6 @@ import com.ssafy.blog.payload.rank.RankResponse;
 import com.ssafy.blog.repository.RankRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +31,7 @@ public class RankController {
         List<Rank> rlist = rankRepository.findAll();
 
         for(Rank rank : rlist) calculateRanking(rank);
-        Collections.sort(rlist, new Comparator<Rank>(){
-            @Override
-            public int compare(Rank o1, Rank o2) {
-                return o2.getRankPoint() - o1.getRankPoint();
-            }
-        });
+        rlist.sort((r1, r2) -> r2.getRankPoint() - r1.getRankPoint());
 
         for(int i=0;i<rlist.size();i++) {
             Rank rank = rlist.get(i);

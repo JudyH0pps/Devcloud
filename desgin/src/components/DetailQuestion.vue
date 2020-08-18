@@ -3,8 +3,8 @@
         <header style="display: flex; justify-content: space-between; align-items: center">
             <h1 class="q-title">Q. {{ question.title }}</h1>
             <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons">
-                <span @click="moveToEdit">수정</span>
-                <span @click="deleteQuestion(parseInt($route.params.question_id))">삭제</span>
+                <button class="editBtn" @click="moveToEdit">수정</button>
+                <button class="delBtn" @click="deleteQuestion(parseInt($route.params.question_id))">삭제</button>
             </div>
         </header>
         <div class="leftline">
@@ -14,7 +14,9 @@
             <div class="q-info">
                 <div class='profile'>
                     <img :src="question.user.imageUrl" class="profile_img">
-                    <p>{{ question.user.name }}</p>
+                    <router-link :to="{name: 'Profile', params :{ user_id : question.user.id }}">
+                        <p>{{ question.user.name }}</p>
+                    </router-link>
                 </div>
                 <p>{{ question.updatedAt }}</p>
             </div>
@@ -49,10 +51,14 @@
             <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
             <!--<button @click.prevent="doAjax">fetch Data</button>-->
         </div>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </div>
 </template>
 
 <script>
+import LoginCheckModal from '@/components/LoginCheckModal.vue'
+import LoginModal from '../components/LoginModal.vue'
 import { mapState, mapActions } from 'vuex'
 import http from "@/util/http-common"
 // Import component
@@ -67,16 +73,23 @@ export default {
             chkClicked: false,
             isLoading: false,
             fullPage: true,
+
             chk: 100,
+
+            loginModalOn: false,
+            loginCheck: false,
         }
     },
      components: {
         Loading,
+        LoginModal,
+        LoginCheckModal,
     },
     computed: {
         ...mapState({
             question: state => state.question.question,
-            answers: state => state.answer.answers
+            answers: state => state.answer.answers,
+            isLoggedIn: state => state.user.isLoggedIn
 		})
     },
 	methods: {
@@ -114,6 +127,30 @@ export default {
             } else {
                 this.chkClicked = false;
             }
+            console.log(parseInt(this.$cookie.get("user_id")));
+            
+            if (this.isLoggedIn === true) {
+                http.post('/api/liketoquestion', {
+                    "question_id": this.question.id,
+                    "user_id": parseInt(this.$cookie.get("user_id")) 
+                })
+                .then(res => {
+                    console.log("like success")
+                    console.log(res.data)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                
+                if(this.chkClicked == false){
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            }
+            else {
+                this.changeModal()
+            }
         },
         loadLikeState() {
             console.log("요청한 질문 id : " + this.$route.params.question_id)
@@ -150,7 +187,20 @@ export default {
             .catch(err => {
                 console.log(err.data);
             })
-        }
+        },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
+        },
 	},
 	created() {
         // alert(this.$route.params.question_id)
@@ -225,5 +275,23 @@ export default {
 .q-content >>> img {
     max-width: 300px;
     max-height: 300px;
+}
+.editBtn,
+.delBtn {
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    margin: 2px; 
+    background: white;
+}
+.delBtn:hover {
+    color: #eee;
+    background: rgb(243, 138, 152);
+}
+.editBtn:hover {
+    color: #eee;
+    background: rgb(138, 243, 138);
 }
 </style>

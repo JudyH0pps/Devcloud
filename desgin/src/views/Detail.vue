@@ -3,38 +3,65 @@
     <DetailQuestion />
     <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" :questionId="$route.params.question_id"/>
     <button @click="moveToWrite">답변달기</button>
+    <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+    <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
   </section>
 </template>
 
 <script>
 import DetailQuestion from '@/components/DetailQuestion.vue'
 import DetailAnswer from '@/components/DetailAnswer.vue'
+import LoginCheckModal from '@/components/LoginCheckModal.vue'
+import LoginModal from '@/components/LoginModal.vue'
 import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Detail',
   components: {
     DetailQuestion,
-    DetailAnswer
+    DetailAnswer,
+    LoginModal,
+    LoginCheckModal,
   },
   data() {
     return {
+      loginModalOn: false,
+      loginCheck: false,
     }
   },
 	computed: {
 		...mapState({
-			answers: state => state.answer.answers,
+      answers: state => state.answer.answers,
+      isLoggedIn: state => state.user.isLoggedIn,
 		}),
 	},
   methods: {
     ...mapActions('answer',['fetchAnswers']),
     moveToWrite() {
-      this.$router.push({
-        name:'WriteAnswer',
-        params:{ 
-          "question_id" : this.$route.params.question_id
-          },
-        });
+      if (this.isLoggedIn === true) {
+        this.$router.push({
+          name:'WriteAnswer',
+          params:{ 
+            "question_id" : this.$route.params.question_id
+            },
+          });
+      }
+      else {
+        this.changeModal()
+      }
+    },
+    googleLogin() {
+      window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+    },
+    toggleModal() {
+      this.loginModalOn = !this.loginModalOn;
+    },
+    changeModal() {
+      this.loginCheck = !this.loginCheck;
+    },
+    switchModal() {
+      this.changeModal()
+      this.toggleModal()
     },
   },
 	created() {

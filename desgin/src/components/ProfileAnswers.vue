@@ -1,7 +1,7 @@
 <template>
   <section class="answers">
     <div class="cardlist">
-      <ProfileAnswerCard v-for="answer in answers" :key="answer"/>
+      <ProfileAnswerCard v-for="answer in answers" :key="answer.id" :item="answer"/>
     </div>
     <button class="moreBtn">more</button>
   </section>
@@ -42,7 +42,7 @@ export default {
 .cardlist{
   /* position: absolute; */
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
 }
 button {
   /* float: right; */

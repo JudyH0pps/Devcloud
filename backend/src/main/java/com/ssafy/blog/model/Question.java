@@ -39,6 +39,10 @@ public class Question {
     @Column(nullable = false, length = 8191)
     private String content;
 
+    @Column(nullable = false, length = 2048)
+    @JsonIgnore
+    private String contentText;
+
     @Column(nullable = false)
     private int likeCnt;
 

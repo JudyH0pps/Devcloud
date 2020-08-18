@@ -38,21 +38,20 @@
         <div class="q-footer">
             <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span>
             <div>
-                <span style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
-                <span style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
+                <span class="delBtn" style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
+                <span class="editBtn" style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
             </div>
         </div>
 
         <!-- 댓글 작성란 -->
-        <div v-show="commentInput">
-            <input @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-            <button style="cursor: pointer" @click="postComment">작성</button>
+        <div class="commentSection" v-show="commentInput">
+            <input style="padding-top: 15px;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
+            <button style="cursor: pointer;" @click="postComment">작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
-        <ul v-if="comments">
+        <ul class="commentSection" v-if="comments">
 			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
-                <img src="" alt="user_profile">
                 <div style="display: flex; flex-direction: column; width: 100%">
                     <header style="display: flex; justify-content: space-between;">
                         <h5>{{ comment.user.name }}</h5>
@@ -63,8 +62,8 @@
                         <p v-show="selectedIndex !== index">{{ comment.content }}</p>
                         <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
                         <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
-                            <button @click="getIndex(index)">수정</button>
-                            <button @click="deleteComment(comment.id)">삭제</button>
+                            <button class="editBtn" @click="getIndex(index)">수정</button>
+                            <button class="delBtn" @click="deleteComment(comment.id)">삭제</button>
                         </div>
                         <div v-show="selectedIndex === index">
                             <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
@@ -83,15 +82,23 @@
                 <span>좋아요</span>
             </div>
         </div>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </div>
 </template>
 
 <script>
+import LoginCheckModal from '../components/LoginCheckModal.vue'
+import LoginModal from '../components/LoginModal.vue'
 import http from "@/util/http-common"
 import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'DetailAnswer',
+    components: {
+        LoginModal,
+        LoginCheckModal,
+    },
     data() {
         return {
             comments: [],
@@ -110,6 +117,8 @@ export default {
 
             writerId: '',
             writerChk: false,
+            loginModalOn: false,
+            loginCheck: false,
         }
     },
     props: {
@@ -120,7 +129,7 @@ export default {
         ...mapState({
             question: state => state.question.question,
         }),
-        
+        isLoggedIn: state => state.user.isLoggedIn,
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
@@ -143,18 +152,23 @@ export default {
                 .catch(err => console.log(err))
         },
         postComment() {
-            var commentData = {
-                user_id: parseInt(this.$cookie.get('user_id')), 
-                answer_id: this.answer.id,
-                content: this.postContent
+            if (this.isLoggedIn === true) {
+                var commentData = {
+                    user_id: parseInt(this.$cookie.get('user_id')), 
+                    answer_id: this.answer.id,
+                    content: this.postContent
+                }
+                http
+                    .post('/api/comment', commentData)
+                    .then(() => {
+                        this.fetchComments()
+                        this.postContent = ''
+                    })
+                    .catch(err => console.log(err))
             }
-            http
-                .post('/api/comment', commentData)
-                .then(() => {
-                    this.fetchComments()
-                    this.postContent = ''
-                })
-                .catch(err => console.log(err))
+            else {
+                this.changeModal()
+            }
         },
         editComment(commentData) {
             http
@@ -294,6 +308,43 @@ export default {
                 .catch(err => {
                     console.log(err);
                 })
+
+
+            if (this.isLoggedIn === true) {
+                http
+                    .post('/api/liketoquestion', {
+                        params: {
+                            "answer_id": this.answer.id,
+                            "user_id": parseInt(this.$cookie.get("user_id")),
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                
+                if(this.chkClicked == false){
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            }
+            else {
+                this.changeModal()
+            }
+        },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
+
         },
     },
     created() {
@@ -369,6 +420,7 @@ div > button:hover {
     height: 50px;
     width: 150px;
     margin-left: auto;
+    margin-top: 30px;
     display: flex;
     flex-direction: row;
     color: Tomato;
@@ -417,5 +469,29 @@ div > button:hover {
 .answer_selected:hover {
     cursor: none;
     background-color: green;
+}
+.editBtn,
+.delBtn {
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    margin: 2px; 
+    background: white;
+}
+.delBtn:hover {
+    color: #eee;
+    background: rgb(243, 138, 152);
+}
+.editBtn:hover {
+    color: #eee;
+    background: rgb(138, 243, 138);
+}
+.commentSection {
+    width: 95%;
+    margin: 0 auto;
+    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
+    padding: 0 10px;
 }
 </style>

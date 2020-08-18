@@ -20,6 +20,8 @@ import com.ssafy.blog.repository.QuestionTagRepository;
 import com.ssafy.blog.repository.RankRepository;
 import com.ssafy.blog.repository.UserRepository;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,8 +56,8 @@ public class QuestionController {
 
     private ResponseEntity<Question> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
-    private final String pathPrefix = "/home/ubuntu/static/images/";
-    private final String baseImageUrl = "http://i3c202.p.ssafy.io:8080/images/";
+    private static final String PATH_PREFIX = "/home/ubuntu/static/images/";
+    private static final String BASE_IMAGE_URL = "http://i3c202.p.ssafy.io:8080/images/";
 
     @GetMapping("/api/question")
     @ApiOperation(value = "질문 검색")
@@ -67,21 +69,20 @@ public class QuestionController {
         Page<Question> pageList = null;
         if (page == null)
             page = 1;
-
         if (keyword == null && user_id == null && question_id == null) {
             pageList = questionRepository.findAll(PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
-        } else if (keyword != null) {
-            pageList = questionRepository.findByTitleContainsOrContentContains(keyword, keyword,
+        } else if (keyword != null && user_id == null && question_id == null) {
+            pageList = questionRepository.findAllByTitleContainsOrContentTextContains(keyword, keyword,
                     PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
-        } else if (user_id != null) {
+        } else if (keyword == null && user_id != null && question_id == null) {
             pageList = questionRepository.findAllByUserId(user_id, PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
-        } else if (question_id != null) {
+        } else if (keyword == null && user_id == null && question_id != null) {
             Optional<Question> optionalQuestion = questionRepository.findById(question_id);
             if (!optionalQuestion.isPresent())
-                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             // view cnt + 1
             Question question = optionalQuestion.get();
             question.setViewCnt(question.getViewCnt() + 1);
@@ -103,6 +104,10 @@ public class QuestionController {
         question.setUser(optionalUser.get());
         question.setTitle(request.getTitle());
         question.setContent(request.getContent());
+        // 검색을 위해 text영역 추출
+        Document doc = Jsoup.parseBodyFragment(request.getContent());
+        question.setContentText(doc.text());
+        //
         question.setViewCnt(1);
         question.setUpdatedAt(new Date());
         question = questionRepository.save(question);
@@ -133,6 +138,10 @@ public class QuestionController {
         Question question = optionalQuestion.get();
         question.setTitle(request.getTitle());
         question.setContent(request.getContent());
+        // 검색을 위해 text영역 추출
+        Document doc = Jsoup.parseBodyFragment(request.getContent());
+        question.setContentText(doc.text());
+        //
         question.setViewCnt(question.getViewCnt() + 1);
         question = questionRepository.save(question);
 
@@ -182,24 +191,24 @@ public class QuestionController {
         String filename = "";
         try {
             filename = now.getTime() + file.getOriginalFilename();
-            File newFile = new File(pathPrefix + filename);
+            File newFile = new File(PATH_PREFIX + filename);
             newFile.mkdirs();
             file.transferTo(newFile);
-            // file.transferTo(new File(pathPrefix + file.getOriginalFilename()));
         } catch(IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        String url = baseImageUrl + filename;
+        String url = BASE_IMAGE_URL + filename;
         Map<String, String> data = new HashMap<>();
         data.put("url", url);
-        // data.put("image_name", file.getOriginalFilename());
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     private void updateRank(Long user_id, int step) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
-        Rank rank = optionalRank.get();
-        rank.setQuestionCnt(rank.getQuestionCnt() + step);
-        rankRepository.save(rank);
+        if(optionalRank.isPresent()){
+            Rank rank = optionalRank.get();
+            rank.setQuestionCnt(rank.getQuestionCnt() + step);
+            rankRepository.save(rank);
+        }
     }
 }

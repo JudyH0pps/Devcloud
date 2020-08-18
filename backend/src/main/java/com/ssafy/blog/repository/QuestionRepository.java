@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    Page<Question> findByTitleContainsOrContentContains(String keyword1, String keyword2, Pageable pageRequest);
+    Page<Question> findAllByTitleContainsOrContentTextContains(String keyword1, String keyword2, Pageable pageRequest);
 
     Page<Question> findAllByUserId(Long userId, Pageable pageRequest);
 

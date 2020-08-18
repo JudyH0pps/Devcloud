@@ -97,7 +97,7 @@ public class UserController {
         for(UserTech userTech : before) {
             boolean flag = false;
             for(Tech tech : after) {
-                if(userTech.getTech().getId() == tech.getId()){
+                if(userTech.getTech().getId().equals(tech.getId())){
                     flag = true;
                     break;
                 }
