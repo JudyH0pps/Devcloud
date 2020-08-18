@@ -49,10 +49,14 @@
             <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
             <!--<button @click.prevent="doAjax">fetch Data</button>-->
         </div>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </div>
 </template>
 
 <script>
+import LoginCheckModal from '@/components/LoginCheckModal.vue'
+import LoginModal from '../components/LoginModal.vue'
 import { mapState, mapActions } from 'vuex'
 import http from "@/util/http-common"
 // Import component
@@ -67,15 +71,20 @@ export default {
             chkClicked: false,
             isLoading: false,
             fullPage: true,
+            loginModalOn: false,
+            loginCheck: false,
         }
     },
      components: {
         Loading,
+        LoginModal,
+        LoginCheckModal,
     },
     computed: {
         ...mapState({
             question: state => state.question.question,
-            answers: state => state.answer.answers
+            answers: state => state.answer.answers,
+            isLoggedIn: state => state.user.isLoggedIn
 		})
     },
 	methods: {
@@ -97,25 +106,29 @@ export default {
             })
         },
         likeClick() {
-            //console.log(this.question.id);
             console.log(parseInt(this.$cookie.get("user_id")));
             
-            http.post('/api/liketoquestion', {
-                "question_id": this.question.id,
-                "user_id": parseInt(this.$cookie.get("user_id")) 
-            })
-            .then(res => {
-                console.log("like success")
-                console.log(res.data)
-            })
-            .catch(err => {
-                console.log(err);
-            })
-            
-            if(this.chkClicked == false){
-                this.chkClicked = true;
-            } else {
-                this.chkClicked = false;
+            if (this.isLoggedIn === true) {
+                http.post('/api/liketoquestion', {
+                    "question_id": this.question.id,
+                    "user_id": parseInt(this.$cookie.get("user_id")) 
+                })
+                .then(res => {
+                    console.log("like success")
+                    console.log(res.data)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+                
+                if(this.chkClicked == false){
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            }
+            else {
+                this.changeModal()
             }
         },
         loadLikeState() {
@@ -148,7 +161,20 @@ export default {
             .catch(err => {
                 console.log(err.data);
             })
-        }
+        },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
+        },
 	},
 	created() {
         // alert(this.$route.params.question_id)
