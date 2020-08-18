@@ -189,7 +189,7 @@ public class AnswerController {
         return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
 
-    @GetMapping("/api/answer/cnt")
+    @GetMapping("/api/answer/today")
     @ApiOperation(value = "오늘 작성된 답변 리턴")
     public ResponseEntity<Object> searchAnswerByDate() throws ParseException {
         Calendar calendar = Calendar.getInstance();
@@ -203,6 +203,13 @@ public class AnswerController {
         Date end = calendar.getTime();
 
         Long count = answerRepository.countByUpdatedAtBetween(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/answer/all")
+    @ApiOperation(value = "작성된 모든 답변 리턴")
+    public ResponseEntity<Object> searchAllAnswerCnt() {
+        Long count = answerRepository.count();
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 

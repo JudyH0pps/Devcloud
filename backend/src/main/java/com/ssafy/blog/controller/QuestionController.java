@@ -174,11 +174,11 @@ public class QuestionController {
         Optional<Question> optionalQuestion = questionRepository.findById(question_id);
         if (!optionalQuestion.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
-            
+
         Optional<Answer> optionalAnswer = answerRepository.findFirstByQuestionId(question_id);
-        if(optionalAnswer.isPresent())
+        if (optionalAnswer.isPresent())
             return new ResponseEntity<>("already answer is exist", HttpStatus.OK);
-            
+
         Long user_id = optionalQuestion.get().getUser().getId();
         questionRepository.deleteById(question_id);
 
@@ -194,12 +194,13 @@ public class QuestionController {
         if (page == null)
             page = 1;
 
-        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id, PageRequest.of(page - 1, 10));
+        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id,
+                PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/api/question/cnt")
+    @GetMapping("/api/question/today")
     @ApiOperation(value = "오늘 작성된 질문 리턴")
     public ResponseEntity<Object> searchQuestionByDate() throws ParseException {
         Calendar calendar = Calendar.getInstance();
@@ -216,6 +217,13 @@ public class QuestionController {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
+    @GetMapping("/api/question/all")
+    @ApiOperation(value = "작성된 모든 질문 리턴")
+    public ResponseEntity<Object> searchAllQuestionCnt() {
+        Long count = questionRepository.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
     @PostMapping("/api/question/upload")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file) {
         Date now = new Date();
@@ -225,7 +233,7 @@ public class QuestionController {
             File newFile = new File(PATH_PREFIX + filename);
             newFile.mkdirs();
             file.transferTo(newFile);
-        } catch(IllegalStateException | IOException e) {
+        } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
         String url = BASE_IMAGE_URL + filename;
@@ -236,7 +244,7 @@ public class QuestionController {
 
     private void updateRank(Long user_id, int step) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
-        if(optionalRank.isPresent()){
+        if (optionalRank.isPresent()) {
             Rank rank = optionalRank.get();
             rank.setQuestionCnt(rank.getQuestionCnt() + step);
             rankRepository.save(rank);
