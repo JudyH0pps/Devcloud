@@ -3,8 +3,8 @@
         <header style="display: flex; justify-content: space-between; align-items: center">
             <h1 class="q-title">Q. {{ question.title }}</h1>
             <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons">
-                <span @click="moveToEdit">수정</span>
-                <span @click="deleteQuestion(parseInt($route.params.question_id))">삭제</span>
+                <button class="editBtn" @click="moveToEdit">수정</button>
+                <button class="delBtn" @click="deleteQuestion(parseInt($route.params.question_id))">삭제</button>
             </div>
         </header>
         <div class="leftline">
@@ -251,5 +251,23 @@ export default {
 .q-content >>> img {
     max-width: 300px;
     max-height: 300px;
+}
+.editBtn,
+.delBtn {
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    margin: 2px; 
+    background: white;
+}
+.delBtn:hover {
+    color: #eee;
+    background: rgb(243, 138, 152);
+}
+.editBtn:hover {
+    color: #eee;
+    background: rgb(138, 243, 138);
 }
 </style>
