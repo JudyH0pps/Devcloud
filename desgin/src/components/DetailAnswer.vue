@@ -6,10 +6,29 @@
                 <div class="profile">
                     <img :src="answer.user.imageUrl" class="profile_img">
                     <p>{{ answer.user.name }}</p>
-                    <div v-if="writerChk">
-                        <button class="answer_select" style="margin-left: 30px">채택하기</button>
-                    </div>
+                    <!-- current user is writer -->
+                    <template v-if="writerChk">
+                        <!-- 해당 포스트에 채택된 답변이 있을 때 -->
+                        <template v-if="selectedAnswer">
+                            <!-- 채택된 컴포넌트에는 채택완료 표시-->
+                            <template v-if="isSelectedAnswer">
+                                <button class="answer_selected" style="margin-left: 30px">채택완료</button>
+                            </template>
+                            <!-- 채택되지 않은 컴포넌트는 아무 표시도 하지 않는다.-->
 
+                        </template>
+                        <!-- 해당 포스트에 채택된 답변이 없을 때-->
+                        <template v-else>
+                            <button class="answer_select" style="margin-left: 30px" @click="selectBtn">채택하기</button>
+                        </template>
+                    </template>
+                    <!-- current user is not writer-->
+                    <template v-else>
+                        <!-- if this answer is selected from writer -->
+                        <template v-if="selectedAnswer">
+                            <button class="answer_selected" style="margin-left: 30px">채택완료</button>
+                        </template>
+                    </template>
                 </div>
                 <p>{{ answer.updated_at }}</p>
             </div>
@@ -80,7 +99,15 @@ export default {
             commentInput: false,
             selectedIndex: -1,
             chkClicked: false,
+            chk: 100,
+            
+            //채택 관련
+            selectedAnswerId: "",
+            // 채택된 답변의 유무 확인
             selectedAnswer: false,
+            // 현재 컴포넌트가 채택된 답변인지 아닌지
+            isSelectedAnswer: true,
+
             writerId: '',
             writerChk: false,
         }
@@ -92,7 +119,8 @@ export default {
     computed: {
         ...mapState({
             question: state => state.question.question,
-        })
+        }),
+        
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
@@ -145,7 +173,9 @@ export default {
                 })
                 .catch(err => console.log(err))
         },
+        // 이 요청시 채택된 답변이 있는지까지 조회
         getUserId() {
+            //console.log("현재 답변아이디는 : " + this.answer.id)
             http
                 .get('/api/question', {
                     params: {
@@ -154,7 +184,8 @@ export default {
                 })
                 .then(({data}) => {
                     this.writerId = data.user.id;
-                    
+                    // 채택된 답변값 가져오기
+                    this.selectedAnswerId = data.selectedAnswerId;
                     // 글 작성자 id를 가져온 후 유저 비교를 진행 
                     this.userCheck()
                 })
@@ -173,11 +204,9 @@ export default {
         },
         likeClick() {
             http
-                .post('/api/liketoquestion', {
-                    params: {
-                        "answer_id": this.answer.id,
-                        "user_id": parseInt(this.$cookie.get("user_id")),
-                    }
+                .post('/api/liketoanswer', {
+                    "answer_id": this.answer.id,
+                    "user_id": parseInt(this.$cookie.get("user_id"))     
                 })
                 .catch(err => {
                     console.log(err);
@@ -188,13 +217,95 @@ export default {
             } else {
                 this.chkClicked = false;
             }
-        }
+        },
+        loadLikeState() {
+            http.get('/api/liketoanswer', {
+                "answer_id": this.answer.id,
+                "user_id": parseInt(this.$cookie.get("user_id"))
+            })
+            .then(res => {
+                var dataset = res.data;
 
+                //console.log(res.data)
+                //console.log(dataset)
 
+                //해당 데이터에서 현재 question_id가 있는지 찾는다.
+                for(var idx = 0; idx < dataset.length; idx++){
+                    if(dataset[idx].answer_id == this.answer.id) {
+                        this.chk = 200;
+                        //console.log(dataset[idx]);
+                    }
+                }
+
+                if(this.chk == 200) {
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            })
+            .catch(err => {
+                console.log(err.data);
+            })
+        },
+        selectBtn() {
+            if(confirm("현재글을 채택 하시겠습니까?") == true){
+                http
+                    .get('/api/answer/select', {
+                        params: {
+                            answer_id: this.answer.id
+                        }
+                    })
+                    .then(({data}) => {
+                        console.log(data)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+
+                this.$router.go();
+            }
+            // 현 재글에 selectBtn을 true로 변경하여 채택버튼을 안보이게
+            
+        },
+        getSelectedAnswer() {
+            //console.log("현재 질문아이디는 : " + this.questionId)
+            http
+                // [1] 먼저 해당 포스트에 채택된 답변이 있는지 조회
+                .get('/api/answer/selected', {
+                    params: {
+                        "question_id": this.questionId
+                    }
+                })
+                .then(({data}) => {
+                    console.log("채택유무 : " + data);
+
+                    // data is not "Resource not bound"
+                    if(data != "Resource not bound"){
+                        // 채택이 완료됬다면 채택완료 버튼 보여지기
+                        this.selectedAnswer = true;
+                    }
+                   
+                    // 채택된 해당 컴포넌트만 보여지기
+                    if(this.answer.id != data.id){
+                        //채택된 답변이 아니라면 false로 데이터 변경
+                        this.isSelectedAnswer = false
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        },
     },
     created() {
         this.fetchComments(this.answer.id);
+        // 글 작성자 id
         this.getUserId();
+        // 좋아요 상태
+        this.loadLikeState()
+        // 채택 유무
+        this.getSelectedAnswer()
+
+        
     }
 }
 </script>
@@ -288,5 +399,23 @@ div > button:hover {
 .answer_select:hover {
     background-color: whitesmoke;
     cursor: pointer;
+}
+.answer_selected {
+    height: 30px;
+    width: 80px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    color: white;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+}
+.answer_selected:hover {
+    cursor: none;
+    background-color: green;
 }
 </style>
