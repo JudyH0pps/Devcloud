@@ -63,15 +63,23 @@
                 <span>좋아요</span>
             </div>
         </div>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </div>
 </template>
 
 <script>
+import LoginCheckModal from '../components/LoginCheckModal.vue'
+import LoginModal from '../components/LoginModal.vue'
 import http from "@/util/http-common"
 import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'DetailAnswer',
+    components: {
+        LoginModal,
+        LoginCheckModal,
+    },
     data() {
         return {
             comments: [],
@@ -82,6 +90,8 @@ export default {
             selectedAnswer: false,
             writerId: '',
             writerChk: false,
+            loginModalOn: false,
+            loginCheck: false,
         }
     },
     props: {
@@ -91,6 +101,7 @@ export default {
     computed: {
         ...mapState({
             question: state => state.question.question,
+            isLoggedIn: state => state.user.isLoggedIn,
         })
 	},
     methods: {
@@ -114,18 +125,23 @@ export default {
                 .catch(err => console.log(err))
         },
         postComment() {
-            var commentData = {
-                user_id: parseInt(this.$cookie.get('user_id')), 
-                answer_id: this.answer.id,
-                content: this.postContent
+            if (this.isLoggedIn === true) {
+                var commentData = {
+                    user_id: parseInt(this.$cookie.get('user_id')), 
+                    answer_id: this.answer.id,
+                    content: this.postContent
+                }
+                http
+                    .post('/api/comment', commentData)
+                    .then(() => {
+                        this.fetchComments()
+                        this.postContent = ''
+                    })
+                    .catch(err => console.log(err))
             }
-            http
-                .post('/api/comment', commentData)
-                .then(() => {
-                    this.fetchComments()
-                    this.postContent = ''
-                })
-                .catch(err => console.log(err))
+            else {
+                this.changeModal()
+            }
         },
         editComment(commentData) {
             http
@@ -171,25 +187,41 @@ export default {
             }
         },
         likeClick() {
-            http
-                .post('/api/liketoquestion', {
-                    params: {
-                        "answer_id": this.answer.id,
-                        "user_id": parseInt(this.$cookie.get("user_id")),
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-            
-            if(this.chkClicked == false){
-                this.chkClicked = true;
-            } else {
-                this.chkClicked = false;
+            if (this.isLoggedIn === true) {
+                http
+                    .post('/api/liketoquestion', {
+                        params: {
+                            "answer_id": this.answer.id,
+                            "user_id": parseInt(this.$cookie.get("user_id")),
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                
+                if(this.chkClicked == false){
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
             }
-        }
-
-
+            else {
+                this.changeModal()
+            }
+        },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
+        },
     },
     created() {
         this.fetchComments(this.answer.id);
