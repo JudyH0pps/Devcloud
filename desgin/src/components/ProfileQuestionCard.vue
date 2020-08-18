@@ -1,8 +1,8 @@
 <template>
     <div class="blog-post">
-        <div class="blog-post__img">
+        <!-- <div class="blog-post__img">
             <img src="../assets/cloud.png" alt="">
-        </div>
+        </div> -->
         <div class="blog-post__info">
             <div class="blog-post__date">
                 <span>{{ item.updatedAt }}</span>

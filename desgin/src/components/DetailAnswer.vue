@@ -19,19 +19,19 @@
         <div class="q-footer">
             <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span>
             <div>
-                <span style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
-                <span style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
+                <span class="delBtn" style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
+                <span class="editBtn" style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
             </div>
         </div>
 
         <!-- 댓글 작성란 -->
-        <div v-show="commentInput">
-            <input @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-            <button style="cursor: pointer" @click="postComment">작성</button>
+        <div class="commentSection" v-show="commentInput">
+            <input style="padding-top: 15px;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
+            <button style="cursor: pointer;" @click="postComment">작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
-        <ul v-if="comments">
+        <ul class="commentSection" v-if="comments">
 			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
                 <div style="display: flex; flex-direction: column; width: 100%">
                     <header style="display: flex; justify-content: space-between;">
@@ -43,8 +43,8 @@
                         <p v-show="selectedIndex !== index">{{ comment.content }}</p>
                         <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
                         <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
-                            <button @click="getIndex(index)">수정</button>
-                            <button @click="deleteComment(comment.id)">삭제</button>
+                            <button class="editBtn" @click="getIndex(index)">수정</button>
+                            <button class="delBtn" @click="deleteComment(comment.id)">삭제</button>
                         </div>
                         <div v-show="selectedIndex === index">
                             <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
@@ -289,6 +289,7 @@ div > button:hover {
     height: 50px;
     width: 150px;
     margin-left: auto;
+    margin-top: 30px;
     display: flex;
     flex-direction: row;
     color: Tomato;
@@ -319,5 +320,29 @@ div > button:hover {
 .answer_select:hover {
     background-color: whitesmoke;
     cursor: pointer;
+}
+.editBtn,
+.delBtn {
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    margin: 2px; 
+    background: white;
+}
+.delBtn:hover {
+    color: #eee;
+    background: rgb(243, 138, 152);
+}
+.editBtn:hover {
+    color: #eee;
+    background: rgb(138, 243, 138);
+}
+.commentSection {
+    width: 95%;
+    margin: 0 auto;
+    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
+    padding: 0 10px;
 }
 </style>
