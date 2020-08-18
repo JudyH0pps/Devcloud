@@ -20,6 +20,7 @@ import com.ssafy.blog.repository.RankRepository;
 import com.ssafy.blog.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -59,7 +59,7 @@ public class AnswerController {
         List<AnswerResponse> list = new ArrayList<>();
 
         if (user_id == null && question_id == null) {
-            for (Answer answer : answerRepository.findAll())
+            for (Answer answer : answerRepository.findAll(Sort.by("selected")))
                 list.add(makeAnswerResponse(answer));
 
         } else if (user_id != null) {
@@ -67,7 +67,7 @@ public class AnswerController {
                 list.add(makeAnswerResponse(answer));
 
         } else if (question_id != null) {
-            for (Answer answer : answerRepository.findAllByQuestionId(question_id))
+            for (Answer answer : answerRepository.findAllByQuestionId(question_id, Sort.by("selected")))
                 list.add(makeAnswerResponse(answer));
         }
 
@@ -150,6 +150,12 @@ public class AnswerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Answer answer = optionalAnswer.get();
+
+        // 해당 댓글이 달린 질문에 이미 채택된 답변이 있는지 검사
+        Optional<Answer> optionalSelectedAnswer = answerRepository.findByQuestionIdAndSelected(answer.getQuestion().getId(), true);
+        if(optionalSelectedAnswer.isPresent())
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        //
         answer.setSelected(true);
         answer = answerRepository.save(answer);
 
@@ -169,7 +175,7 @@ public class AnswerController {
             Answer answer = optionalAnswer.get();
             return new ResponseEntity<>(answer, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Resource not bound", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
 
     private void updateRank(Long user_id, int step) {

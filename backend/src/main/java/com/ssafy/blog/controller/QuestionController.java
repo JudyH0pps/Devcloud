@@ -138,6 +138,10 @@ public class QuestionController {
         Question question = optionalQuestion.get();
         question.setTitle(request.getTitle());
         question.setContent(request.getContent());
+        // 검색을 위해 text영역 추출
+        Document doc = Jsoup.parseBodyFragment(request.getContent());
+        question.setContentText(doc.text());
+        //
         question.setViewCnt(question.getViewCnt() + 1);
         question = questionRepository.save(question);
 
