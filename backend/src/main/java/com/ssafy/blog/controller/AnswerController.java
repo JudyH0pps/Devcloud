@@ -67,7 +67,7 @@ public class AnswerController {
                 list.add(makeAnswerResponse(answer));
 
         } else if (question_id != null) {
-            for (Answer answer : answerRepository.findAllByQuestionId(question_id, Sort.by("selected")))
+            for (Answer answer : answerRepository.findAllByQuestionId(question_id, Sort.by("selected").descending()))
                 list.add(makeAnswerResponse(answer));
         }
 
