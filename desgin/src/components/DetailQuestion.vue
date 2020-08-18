@@ -111,74 +111,44 @@ export default {
             })
         },
         likeClick() {
-            //console.log(this.question.id);
-            //console.log(parseInt(this.$cookie.get("user_id")));
-            
-            http.post('/api/liketoquestion', {
-                "question_id": this.question.id,
-                "user_id": parseInt(this.$cookie.get("user_id")) 
-            })
-            .catch(err => {
-                console.log(err);
-            })
-            
-            if(this.chkClicked == false){
-                this.chkClicked = true;
-            } else {
-                this.chkClicked = false;
-            }
-            console.log(parseInt(this.$cookie.get("user_id")));
-            
             if (this.isLoggedIn === true) {
-                http.post('/api/liketoquestion', {
-                    "question_id": this.question.id,
-                    "user_id": parseInt(this.$cookie.get("user_id")) 
-                })
-                .then(res => {
-                    console.log("like success")
-                    console.log(res.data)
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-                
-                if(this.chkClicked == false){
-                    this.chkClicked = true;
-                } else {
-                    this.chkClicked = false;
-                }
+                http
+                    .post('/api/liketoquestion', {
+                        
+                        "question_id": this.$route.params.question_id,
+                        "user_id": parseInt(this.$cookie.get("user_id")) 
+                        
+                    })
+                    .then(res => {
+                        console.log("like success")
+                        console.log(res.data)
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                    
+                    if(this.chkClicked == false){
+                        this.chkClicked = true;
+                    } else {
+                        this.chkClicked = false;
+                    }
             }
             else {
                 this.changeModal()
             }
         },
         loadLikeState() {
-            console.log("요청한 질문 id : " + this.$route.params.question_id)
             http.get('/api/liketoquestion', {
-                "question_id": this.$route.params.question_id,
-                "user_id": parseInt(this.$cookie.get("user_id"))
-            })
-            .then(res => {
-                // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
-
-                // console.log(this.question.id)
-                // console.log(parseInt(this.$cookie.get("user_id")))
-
-                var dataset = res.data;
-                
-                //console.log(dataset);
-
-                //해당 데이터에서 현재 question_id가 있는지 찾는다.
-                for(var idx = 0; idx < dataset.length; idx++){
-                    if(dataset[idx].question_id == this.$route.params.question_id && dataset[idx].user_id == parseInt(this.$cookie.get("user_id"))) {
-                        this.chk = 200;
-                        //console.log(dataset[idx]);
-                    }
+                params: { 
+                    "question_id": this.$route.params.question_id,
+                    "user_id": parseInt(this.$cookie.get("user_id"))
                 }
-                console.log("question_id : " + this.$route.params.question_id)
-                console.log("체크 값 : " + this.chk)
-
-                if(this.chk == 200) {
+            })
+            .then(({data}) => {
+                // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
+                //console.log(data);
+                //해당 데이터에서 현재 question_id가 있는지 찾는다.
+                if(data != "Resource not bound"){
                     this.chkClicked = true;
                 } else {
                     this.chkClicked = false;
