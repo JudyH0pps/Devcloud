@@ -13,10 +13,10 @@
             <div style="text-align: right;">
                 <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
             </div>          
-            <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
-            </div>
+            <!-- <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
+            </div> -->
             <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
-                <div style="font-size: 25px; color: Tomato; margin-left: auto;">
+                <div style="font-size: 15px; color: Tomato; margin-left: auto; margin-right: 5px; margin-top: 5px;">
                     <i class="fas fa-heart"></i>
                 </div>
                 <p style="font-size: 15px;">{{question.likeCnt}}</p>
@@ -26,7 +26,7 @@
                     alt="profile picture"
                     class="profile-rounded"
                     :src="question.user.imageUrl"
-                    style="margin-left: auto;width: 30px; height: 30px; display: inline; padding: 0px;"
+                    style="margin-left: auto;width: 25px; height: 25px; display: inline; padding: 0px; margin-right: 5px;"
                     align: right>
                 <p style="font-size: 15px; color: black; font-weight: bold">
                     {{question.user.name}}
