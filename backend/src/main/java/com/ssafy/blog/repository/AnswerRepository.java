@@ -1,5 +1,6 @@
 package com.ssafy.blog.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Optional<Answer> findById(Long id);
 
     Optional<Answer> findByQuestionIdAndSelected(Long quesiton_id, Boolean selected);
+
+    Long countByUpdatedAtBetween(Date start, Date end);
+
+    Optional<Answer> findFirstByQuestionId(Long question_id);
 }

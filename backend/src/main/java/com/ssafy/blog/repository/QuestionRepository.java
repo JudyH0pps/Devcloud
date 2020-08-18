@@ -1,5 +1,6 @@
 package com.ssafy.blog.repository;
 
+import java.util.Date;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Question;
@@ -19,4 +20,6 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Optional<Question> findById(Long id);
 
     Page<Question> findAllByQuestionTags_TagId(Long tag_id, Pageable pageRequest);
+
+    Long countByUpdatedAtBetween(Date start, Date end);
 }
