@@ -1,6 +1,7 @@
 <template>
     <div class="modal-bg" v-if="loginModalOn">
         <div id="login-box" class="modal" >
+            <p>Devcloud의 서비스는 구글 계정으로 편리하게 이용하실 수 있습니다.</p>
             <img @click="googleLogin" class="social google g-logo" src="../assets/btn_google_signin_dark_normal_web@2x.png" alt="g-logo">
             <button class="social close" @click="closeModal">Close</button>
         </div>
@@ -43,14 +44,18 @@ export default{
     z-index: 999;
 }
 .modal {
+    /* box-shadow: 0px 3px 5px rgba(0,0,0,.5); */
     background: white;
-    width: 50%;
-    height: 50%;
+    width: 35%;
+    height: 25%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
     z-index: 1000;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    padding: 10px;
 }
 button.social {
     margin-bottom: 20px;
