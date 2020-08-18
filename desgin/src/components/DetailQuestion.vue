@@ -67,6 +67,7 @@ export default {
             chkClicked: false,
             isLoading: false,
             fullPage: true,
+            chk: 100,
         }
     },
      components: {
@@ -98,15 +99,11 @@ export default {
         },
         likeClick() {
             //console.log(this.question.id);
-            console.log(parseInt(this.$cookie.get("user_id")));
+            //console.log(parseInt(this.$cookie.get("user_id")));
             
             http.post('/api/liketoquestion', {
                 "question_id": this.question.id,
                 "user_id": parseInt(this.$cookie.get("user_id")) 
-            })
-            .then(res => {
-                console.log("like success")
-                console.log(res.data)
             })
             .catch(err => {
                 console.log(err);
@@ -119,6 +116,7 @@ export default {
             }
         },
         loadLikeState() {
+            console.log("요청한 질문 id : " + this.$route.params.question_id)
             http.get('/api/liketoquestion', {
                 "question_id": this.$route.params.question_id,
                 "user_id": parseInt(this.$cookie.get("user_id"))
@@ -130,16 +128,20 @@ export default {
                 // console.log(parseInt(this.$cookie.get("user_id")))
 
                 var dataset = res.data;
-                var chk = 100;
+                
+                //console.log(dataset);
+
                 //해당 데이터에서 현재 question_id가 있는지 찾는다.
                 for(var idx = 0; idx < dataset.length; idx++){
-                    if(dataset[idx].question_id == this.question.id) {
-                        chk = 200;
+                    if(dataset[idx].question_id == this.$route.params.question_id && dataset[idx].user_id == parseInt(this.$cookie.get("user_id"))) {
+                        this.chk = 200;
                         //console.log(dataset[idx]);
                     }
                 }
+                console.log("question_id : " + this.$route.params.question_id)
+                console.log("체크 값 : " + this.chk)
 
-                if(chk == 200) {
+                if(this.chk == 200) {
                     this.chkClicked = true;
                 } else {
                     this.chkClicked = false;
