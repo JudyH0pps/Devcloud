@@ -22,4 +22,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Page<Question> findAllByQuestionTags_TagId(Long tag_id, Pageable pageRequest);
 
     Long countByUpdatedAtBetween(Date start, Date end);
+
 }

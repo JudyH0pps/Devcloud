@@ -200,7 +200,7 @@ public class QuestionController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping("/api/question/cnt")
+    @GetMapping("/api/question/today")
     @ApiOperation(value = "오늘 작성된 질문 리턴")
     public ResponseEntity<Object> searchQuestionByDate() throws ParseException {
         Calendar calendar = Calendar.getInstance();
@@ -214,6 +214,13 @@ public class QuestionController {
         Date end = calendar.getTime();
 
         Long count = questionRepository.countByUpdatedAtBetween(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/question/all")
+    @ApiOperation(value = "작성된 모든 질문 리턴")
+    public ResponseEntity<Object> searchAllQuestionCnt() {
+        Long count = questionRepository.count();
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
