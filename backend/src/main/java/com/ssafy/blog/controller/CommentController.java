@@ -11,7 +11,6 @@ import com.ssafy.blog.model.Question;
 import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.comment.AddCommentRequest;
 import com.ssafy.blog.payload.comment.ModifyCommentRequest;
-import com.ssafy.blog.payload.notification.NotificationResponse;
 import com.ssafy.blog.repository.AnswerRepository;
 import com.ssafy.blog.repository.CommentRepository;
 import com.ssafy.blog.repository.NotificationRepository;
@@ -45,14 +44,12 @@ public class CommentController {
     @Autowired
     private NotificationRepository nr;
 
-    private ResponseEntity<Comment> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
     @GetMapping("/api/comment")
     @ApiOperation(value = "댓글 조회하기")
-    public ResponseEntity<List<Comment>> searchComment(@RequestParam("answer_id") Long answer_id) {
+    public ResponseEntity<Object> searchComment(@RequestParam("answer_id") Long answer_id) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
         if (!optionalAnswer.isPresent())
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Comment> list = commentRepository.findAllByAnswerId(answer_id);
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -60,14 +57,14 @@ public class CommentController {
 
     @PostMapping("/api/comment")
     @ApiOperation(value = "댓글 작성하기")
-    public ResponseEntity<Comment> addComment(@RequestBody AddCommentRequest request) {
+    public ResponseEntity<Object> addComment(@RequestBody AddCommentRequest request) {
         Optional<User> optionalUser = userRepository.findById(request.getUser_id());
         if (!optionalUser.isPresent())
-            return badResponse;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswer_id());
         if (!optionalAnswer.isPresent())
-            return badResponse;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         User user = optionalUser.get();
         Answer answer = optionalAnswer.get();
@@ -88,10 +85,10 @@ public class CommentController {
 
     @PutMapping("/api/comment")
     @ApiOperation(value = "댓글 수정하기")
-    public ResponseEntity<Comment> modifyComment(@RequestBody ModifyCommentRequest request) {
+    public ResponseEntity<Object> modifyComment(@RequestBody ModifyCommentRequest request) {
         Optional<Comment> optionalComment = commentRepository.findById(request.getComment_id());
         if (!optionalComment.isPresent())
-            return badResponse;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Comment comment = optionalComment.get();
         comment.setContent(request.getContent());
