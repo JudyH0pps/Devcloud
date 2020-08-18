@@ -30,11 +30,13 @@
             <span slot="no-results">더 많은 질문을 등록해주세요 !</span>
         </infinite-loading>
         <button @click="moveToWrite">새 질문 작성</button>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </section>
 </template>
 
 <script>
 import SearchResultCard from'../components/SearchResultCard.vue'
+import LoginModal from '../components/LoginModal.vue'
 import {mapActions, mapState} from 'vuex'
 import http from "@/util/http-common";
 // Import component
@@ -48,6 +50,7 @@ export default{
         InfiniteLoading,
         SearchResultCard,
         Loading,
+        LoginModal,
     },
     data() {
         return {
@@ -56,6 +59,7 @@ export default{
             isLoading: false,
             fullPage: true,
             infiniteId: +new Date(),
+            loginModalOn: false,
         } 
     },
     methods:{
@@ -77,9 +81,13 @@ export default{
             });
         },
         moveToWrite() {
-            this.$router.push({ 'name' : 'Write' });
+            if (this.isLoggedIn === true) {
+                this.$router.push({ 'name' : 'Write' });
+            }
+            else {
+                this.toggleModal()
+            }
         },
-
         //loading overlay
         doAjax() {
             this.isLoading = true;
@@ -88,10 +96,17 @@ export default{
                 this.isLoading = false
             },800)
         },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
     },
     computed:{
         ...mapState({
-            questions : state => state.question.questions
+            questions : state => state.question.questions,
+            isLoggedIn : state => state.user.isLoggedIn
         }),
         searchKeyword(){
 			return this.$route.params.search_keyword
