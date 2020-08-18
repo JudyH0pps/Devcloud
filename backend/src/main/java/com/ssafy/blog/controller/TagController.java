@@ -8,8 +8,6 @@ import com.ssafy.blog.payload.tag.AddTagRequest;
 import com.ssafy.blog.repository.TagRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,17 +27,9 @@ public class TagController {
 
     @GetMapping("/api/tag")
     @ApiOperation(value = "태그 조회")
-    public ResponseEntity<Object> searchTag(@RequestParam(required = false, name = "page") Integer page) {
-        List<Tag> tagList = null;
-        Page<Tag> pageList = null;
-
-        if (page == null) {
-            tagList = tagRepository.findAll();
-            return new ResponseEntity<>(tagList, HttpStatus.OK);
-        } else {
-            pageList = tagRepository.findAll(PageRequest.of(page - 1, 30));
-            return new ResponseEntity<>(pageList, HttpStatus.OK);
-        }
+    public ResponseEntity<Object> searchTag() {
+        List<Tag> tagList = tagRepository.findAll();
+        return new ResponseEntity<>(tagList, HttpStatus.OK);
     }
 
     @PostMapping("/api/tag")
