@@ -125,7 +125,7 @@ export default {
                 .catch(err => console.log(err))
         },
         postComment() {
-            if (this.isLoggedIn === true) {
+            if (this.isLoggedIn === true && this.postContent !== '') {
                 var commentData = {
                     user_id: parseInt(this.$cookie.get('user_id')), 
                     answer_id: this.answer.id,
@@ -134,10 +134,14 @@ export default {
                 http
                     .post('/api/comment', commentData)
                     .then(() => {
-                        this.fetchComments()
-                        this.postContent = ''
+                        this.fetchComments();
+                        this.postContent = '';
+                        this.changeCommentInput();
                     })
                     .catch(err => console.log(err))
+            }
+            else if (this.postContent === ''){
+                alert('댓글 내용을 작성해주세요!')
             }
             else {
                 this.changeModal()
@@ -149,6 +153,7 @@ export default {
                 .then(() => {
                     this.fetchComments()
                     this.selectedIndex = -1
+                    this.changeCommentInput();
                 })
                 .catch(err => console.log(err))
         },
@@ -330,6 +335,8 @@ div > button:hover {
     text-align: center;
     margin: 2px; 
     background: white;
+    vertical-align: center;
+    padding: 0;
 }
 .delBtn:hover {
     color: #eee;
