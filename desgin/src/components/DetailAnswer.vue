@@ -128,8 +128,8 @@ export default {
     computed: {
         ...mapState({
             question: state => state.question.question,
+            isLoggedIn: state => state.user.isLoggedIn,
         }),
-        isLoggedIn: state => state.user.isLoggedIn,
 	},
     methods: {
         ...mapActions('answer', ['deleteAnswer']),
@@ -217,41 +217,44 @@ export default {
             }
         },
         likeClick() {
-            http
-                .post('/api/liketoanswer', {
-                    "answer_id": this.answer.id,
-                    "user_id": parseInt(this.$cookie.get("user_id"))     
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-            
-            if(this.chkClicked == false){
-                this.chkClicked = true;
-            } else {
-                this.chkClicked = false;
+            if (this.isLoggedIn === true) {
+                http
+                    .post('/api/liketoanswer', {
+                        
+                        "answer_id": this.answer.id,
+                        "user_id": parseInt(this.$cookie.get("user_id")),
+                        
+                    })
+                    .then(res => {
+                        console.log("like success")
+                        console.log(res.data)
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                
+                if(this.chkClicked == false){
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            }
+            else {
+                this.changeModal()
             }
         },
         loadLikeState() {
             http.get('/api/liketoanswer', {
-                "answer_id": this.answer.id,
-                "user_id": parseInt(this.$cookie.get("user_id"))
+                params: {
+                    "answer_id": this.answer.id,
+                    "user_id": parseInt(this.$cookie.get("user_id"))
+                }   
             })
-            .then(res => {
-                var dataset = res.data;
-
-                //console.log(res.data)
-                //console.log(dataset)
-
+            .then(({data}) => {
+                // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
+                //console.log(data);
                 //해당 데이터에서 현재 question_id가 있는지 찾는다.
-                for(var idx = 0; idx < dataset.length; idx++){
-                    if(dataset[idx].answer_id == this.answer.id) {
-                        this.chk = 200;
-                        //console.log(dataset[idx]);
-                    }
-                }
-
-                if(this.chk == 200) {
+                if(data != "Resource not bound"){
                     this.chkClicked = true;
                 } else {
                     this.chkClicked = false;
@@ -308,29 +311,6 @@ export default {
                 .catch(err => {
                     console.log(err);
                 })
-
-
-            if (this.isLoggedIn === true) {
-                http
-                    .post('/api/liketoquestion', {
-                        params: {
-                            "answer_id": this.answer.id,
-                            "user_id": parseInt(this.$cookie.get("user_id")),
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-                
-                if(this.chkClicked == false){
-                    this.chkClicked = true;
-                } else {
-                    this.chkClicked = false;
-                }
-            }
-            else {
-                this.changeModal()
-            }
         },
         googleLogin() {
             window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
