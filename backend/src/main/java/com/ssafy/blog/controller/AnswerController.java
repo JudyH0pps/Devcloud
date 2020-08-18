@@ -1,6 +1,10 @@
 package com.ssafy.blog.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -133,6 +137,9 @@ public class AnswerController {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
         if (!optionalAnswer.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
+        Answer answer = optionalAnswer.get();
+        if(answer.getSelected())
+            return new ResponseEntity<>("selected", HttpStatus.OK);
 
         Long user_id = optionalAnswer.get().getUser().getId();
         answerRepository.deleteById(answer_id);
@@ -181,6 +188,24 @@ public class AnswerController {
         }
         return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
+
+    @GetMapping("/api/answer/cnt")
+    @ApiOperation(value = "오늘 작성된 답변 리턴")
+    public ResponseEntity<Object> searchAnswerByDate() throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String nowString = df.format(new Date());
+        Date start = df.parse(nowString);
+
+        calendar.setTime(start);
+        calendar.add(Calendar.DATE, 1);
+        Date end = calendar.getTime();
+
+        Long count = answerRepository.countByUpdatedAtBetween(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
 
     private void updateRank(Long user_id, int step, int type) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
