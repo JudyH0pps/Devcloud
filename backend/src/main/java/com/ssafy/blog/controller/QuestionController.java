@@ -180,7 +180,7 @@ public class QuestionController {
         if (page == null)
             page = 1;
 
-        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id, PageRequest.of(page - 1, 10));
+        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id, PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
