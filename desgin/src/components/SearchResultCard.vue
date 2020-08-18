@@ -108,7 +108,7 @@ export default{
 //title
 Vue.filter("highlights1", function(item, keyword){
     if(keyword == undefined) {
-        return item;
+        return 'Q. ' + item;
     }
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
@@ -206,7 +206,7 @@ Vue.filter("highlights2", function(item, keyword){
 }
 .post-data {
     background-color: #fff;
-    padding: 10px 20px;
+    margin: 0 10px;
     position: relative;
     width: 100%;
 }
