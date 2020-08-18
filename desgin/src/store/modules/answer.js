@@ -26,21 +26,22 @@ export default {
 						})
 						.catch(err => console.log(err))
 		},
-		fetchAnswersById(context,payload){
-					http
+		async fetchAnswersById(context,payload){
+					const resp = await http
 						.get('/api/answer',{
 							params:{
 								user_id : payload
 							}
 						})
-						.then(({data}) => {
-							context.commit('setAnswers',data)
-							// console.log(data);
-						})
-						.catch((err) => {
-							console.log(err);
-							alert('유저ID로 답변 조회중 오류 발생');
-						})
+						// .then(({data}) => {
+						// 	context.commit('setAnswers',data)
+						// 	// console.log(data);
+						// })
+						// .catch((err) => {
+						// 	console.log(err);
+						// 	alert('유저ID로 답변 조회중 오류 발생');
+						// })
+					context.commit('setAnswers',resp.data)
 		},
 		postAnswer(context, answerData) {
 			http

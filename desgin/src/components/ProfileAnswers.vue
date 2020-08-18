@@ -1,7 +1,7 @@
 <template>
   <section class="answers">
     <div class="cardlist">
-      <ProfileAnswerCard v-for="answer in answers" :key="answer"/>
+      <ProfileAnswerCard v-for="answer in answers" :key="answer.id" :item="answer"/>
     </div>
     <button class="moreBtn">more</button>
   </section>
