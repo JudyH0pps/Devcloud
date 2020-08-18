@@ -353,15 +353,14 @@ export default {
         },
     },
     created() {
+        // alert(this.isLoggedIn)
         this.fetchComments(this.answer.id);
         // 글 작성자 id
         this.getUserId();
         // 좋아요 상태
         this.loadLikeState()
         // 채택 유무
-        this.getSelectedAnswer()
-
-        
+        this.getSelectedAnswer() 
     }
 }
 </script>
