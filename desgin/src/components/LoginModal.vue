@@ -47,14 +47,15 @@ export default{
     /* box-shadow: 0px 3px 5px rgba(0,0,0,.5); */
     background: white;
     width: 35%;
-    height: 50%;
+    height: 25%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
     z-index: 1000;
-    border-radius: 15px;
+    border-radius: 4px;
     border: 1px solid #ccc;
+    padding: 10px;
 }
 button.social {
     margin-bottom: 20px;
