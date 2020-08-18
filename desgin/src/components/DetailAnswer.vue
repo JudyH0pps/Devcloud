@@ -36,17 +36,15 @@
         <!-- <p class="q-content">{{ answer.content }}</p> -->
         <div v-html="answer.content" class="q-content"></div>
         <div class="q-footer">
-            <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span>
-            <div>
-                <span class="delBtn" style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
-                <span class="editBtn" style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
-            </div>
+            <!-- <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span> -->
+            <button class="editBtn" style="margin: 0 2px; cursor: pointer; margin-left:auto;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</button>
+            <button class="delBtn" style="margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</button>
         </div>
 
         <!-- 댓글 작성란 -->
-        <div class="commentSection" v-show="commentInput">
-            <input style="padding-top: 15px;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-            <button style="cursor: pointer;" @click="postComment">작성</button>
+        <div class="commentSection">
+            <input style="outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="댓글을 작성해주세요">
+            <button class="writeBtn" style="cursor: pointer;" @click="postComment">댓글작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
@@ -390,16 +388,6 @@ export default {
     display: flex; 
     justify-content: space-between;
 }
-div > button {
-    cursor: pointer;
-    background-color: #78acff;
-    padding: 5px;
-    border-radius: 10px;
-    margin: 2px 2px
-}
-div > button:hover {
-    background-color: #4879c7;
-}
 .like-button {
     height: 50px;
     width: 150px;
@@ -457,7 +445,7 @@ div > button:hover {
 .editBtn,
 .delBtn {
     border: 1px solid #ccc;
-    border-radius: 35px;
+    border-radius: 5px;
     width: 50px;
     height: 25px;
     text-align: center;
@@ -475,9 +463,21 @@ div > button:hover {
     background: rgb(138, 243, 138);
 }
 .commentSection {
-    width: 95%;
-    margin: 0 auto;
-    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
-    padding: 0 10px;
+    width: 98%;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: row;
+    
+    /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
+    /* padding: 0 10px; */
+}
+.writeBtn {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 70px;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+
 }
 </style>
