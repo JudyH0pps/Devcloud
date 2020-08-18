@@ -86,6 +86,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
+        user.setUnReadNotificationCnt(0);
         user = userRepository.save(user);
 
         Rank rank = new Rank();
