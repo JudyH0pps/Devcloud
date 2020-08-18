@@ -34,8 +34,8 @@
         <div class="right-side">
           <div class="nav">
             <ul>
-              <li class="user-post tab" :class="{ 'active': selectedMenu===1 }" @click="selectedMenu=1">Questions</li>
-              <li class="user-post tab" :class="{ 'active': selectedMenu===2 }" @click="selectedMenu=2">Answers</li>
+              <li class="user-post tab" :class="{ 'active': selectedMenu===1 }" @click="selectedMenu=1">Questions({{this.questions.length}})</li>
+              <li class="user-post tab" :class="{ 'active': selectedMenu===2 }" @click="selectedMenu=2">Answers({{this.answers.length}})</li>
               <li v-if="myProfile" class="user-post tab" :class="{ 'active': selectedMenu===3 }" @click="selectedMenu=3">Profile</li>
             </ul>
           </div>
