@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -160,6 +161,17 @@ public class AnswerController {
         return new ResponseEntity<>(answer, HttpStatus.OK);
     }
 
+    @GetMapping("/api/answer/selected")
+    @ApiOperation(value = "질문에 대한 채택답변을 리턴")
+    public ResponseEntity<Object> searchSelectedAnswer(@RequestParam("question_id") Long quesiton_id) {
+        Optional<Answer> optionalAnswer = answerRepository.findByQuestionIdAndSelected(quesiton_id, true);
+        if(optionalAnswer.isPresent()) {
+            Answer answer = optionalAnswer.get();
+            return new ResponseEntity<>(answer, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Resource not bound", HttpStatus.BAD_REQUEST);
+    }
+
     private void updateRank(Long user_id, int step) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
         Rank rank = optionalRank.get();
@@ -175,7 +187,7 @@ public class AnswerController {
         response.setQuestion_title(answer.getQuestion().getTitle());
         response.setContent(answer.getContent());
         response.setLike_cnt(answer.getLikeCnt());
-        response.setSelected(answer.isSelected());
+        response.setSelected(answer.getSelected());
         response.setUpdated_at(answer.getUpdatedAt());
         return response;
     }

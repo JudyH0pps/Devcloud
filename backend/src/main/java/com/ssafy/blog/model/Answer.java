@@ -44,7 +44,7 @@ public class Answer {
     private int likeCnt;
 
     @Column(nullable = false)
-    private boolean selected;
+    private Boolean selected;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date updatedAt;
