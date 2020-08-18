@@ -26,7 +26,7 @@ export default {
         switchModal() {
             this.$emit('switchModal')
         },
-    }
+    },
 }
 </script>
 
@@ -63,7 +63,21 @@ export default {
 .modal-buttons {
     width: 50%;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+}
+.modal-buttons > button {
+    cursor: pointer;
+    width: 100px;
+    height: 50px;
+    border: 2px solid #99fdff;
+    border-radius: 30px;
+    background-color: white;
+}
+.modal-buttons > button:hover {
+    background-color: #99fdff;
+}
+.modal-buttons > button:focus {
+    outline: none;
 }
 </style>
