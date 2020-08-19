@@ -2,6 +2,8 @@ package com.ssafy.blog.payload.notification;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +11,19 @@ import lombok.Setter;
 @Setter
 public class NotificationResponse {
     
-    private Long notification_id;
-    private Long user_id;
-    private Long question_id;
+    @JsonProperty("notification_id")
+    private Long notificationId;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
+    @JsonProperty("question_id")
+    private Long questionId;
     private String content;
-    private Boolean is_read;
-    private Date created_at;
+
+    @JsonProperty("is_read")
+    private Boolean isRead;
+
+    @JsonProperty("created_at")
+    private Date createdAt;
 }

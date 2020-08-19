@@ -30,17 +30,17 @@ public class NotificationController {
 
     @GetMapping("/api/notification/{user_id}")
     @ApiOperation(value = "유저 아이디 기준 모든 알람을 조회한다")
-    public ResponseEntity<Object> searchNotificationByUserId(@PathVariable("user_id") Long user_id) {
+    public ResponseEntity<Object> searchNotificationByUserId(@PathVariable("user_id") Long userId) {
         List<NotificationResponse> list = new ArrayList<>();
-        for(Notification n : nr.findAllByUserIdAndIsRead(user_id, false))
+        for(Notification n : nr.findAllByUserIdAndIsRead(userId, false))
             list.add(makeResponse(n));
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/api/notification/read/{notification_id}")
     @ApiOperation(value = "알림 아이디로 알림을 조회한다")
-    public ResponseEntity<Object> readNotification(@PathVariable("notification_id") Long notification_id) {
-        Optional<Notification> optionalNotification = nr.findById(notification_id);
+    public ResponseEntity<Object> readNotification(@PathVariable("notification_id") Long notificationId) {
+        Optional<Notification> optionalNotification = nr.findById(notificationId);
         if(!optionalNotification.isPresent()) 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -63,12 +63,12 @@ public class NotificationController {
 
     private NotificationResponse makeResponse(Notification n) {
         NotificationResponse res = new NotificationResponse();
-        res.setNotification_id(n.getId());
-        res.setUser_id(n.getUser().getId());
-        res.setQuestion_id(n.getQuestion().getId());
+        res.setNotificationId(n.getId());
+        res.setUserId(n.getUser().getId());
+        res.setQuestionId(n.getQuestion().getId());
         res.setContent(n.getContent());
-        res.setIs_read(n.getIsRead());
-        res.setCreated_at(n.getCreatedAt());
+        res.setIsRead(n.getIsRead());
+        res.setCreatedAt(n.getCreatedAt());
         return res;
     }
 }

@@ -46,8 +46,8 @@ public class RankController {
 
     @GetMapping("/api/rank/{user_id}")
     @ApiOperation(value = "유저 아이디로 랭크 조회")
-    public ResponseEntity<RankResponse> searchRankByUserId(@PathVariable("user_id") Long user_id) {
-        Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
+    public ResponseEntity<RankResponse> searchRankByUserId(@PathVariable("user_id") Long userId) {
+        Optional<Rank> optionalRank = rankRepository.findByUserId(userId);
         if (!optionalRank.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         RankResponse response = makeResponse(optionalRank.get());
@@ -66,15 +66,15 @@ public class RankController {
 
     private RankResponse makeResponse(Rank rank) {
         RankResponse res = new RankResponse();
-        res.setRank_id(rank.getId());
-        res.setUser_id(rank.getUser().getId());
-        res.setRank_point(rank.getRankPoint());
+        res.setRankId(rank.getId());
+        res.setUserId(rank.getUser().getId());
+        res.setRankPoint(rank.getRankPoint());
         res.setRanking(rank.getRanking());
-        res.setQuestion_cnt(rank.getQuestionCnt());
-        res.setAnswer_cnt(rank.getAnswerCnt());
-        res.setLike_cnt(rank.getLikeCnt());
-        res.setSelect_cnt(rank.getSelectCnt());
-        res.setUpdated_at(rank.getUpdatedAt());
+        res.setQuestionCnt(rank.getQuestionCnt());
+        res.setAnswerCnt(rank.getAnswerCnt());
+        res.setLikeCnt(rank.getLikeCnt());
+        res.setSelectCnt(rank.getSelectCnt());
+        res.setUpdatedAt(rank.getUpdatedAt());
         return res;
     }
 }
