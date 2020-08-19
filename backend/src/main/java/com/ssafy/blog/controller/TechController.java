@@ -28,20 +28,23 @@ public class TechController {
 
     @GetMapping("/api/tech")
     @ApiOperation(value = "기술스택 검색")
-    public ResponseEntity<List<Tech>> searchTech(@RequestParam(required = false, name = "tech_id") Long tech_id,
+    public ResponseEntity<List<Tech>> searchTech(@RequestParam(required = false, name = "tech_id") Long techId,
             @RequestParam(required = false, name = "name") String name) {
         List<Tech> list = new ArrayList<>();
 
-        if (tech_id == null && name == null) {
+        if (techId == null && name == null) {
             list = techRepository.findAll();
 
-        } else if (tech_id != null) {
-            Optional<Tech> optionalTech = techRepository.findById(tech_id);
-            list.add(optionalTech.get());
+        } else if (techId != null) {
+            Optional<Tech> optionalTech = techRepository.findById(techId);
+            if(optionalTech.isPresent()) {
+                list.add(optionalTech.get());
+            }
 
         } else if (name != null) {
             Optional<Tech> optionalTech = techRepository.findByName(name);
-            list.add(optionalTech.get());
+            if(optionalTech.isPresent())
+                list.add(optionalTech.get());
         }
 
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -59,9 +62,9 @@ public class TechController {
 
     @DeleteMapping("/api/tech")
     @ApiOperation(value = "기술스택 삭제")
-    public ResponseEntity<String> deleteTech(@RequestParam Long tech_id) {
+    public ResponseEntity<String> deleteTech(@RequestParam Long techId) {
         // 존재하지 않는 id의 기술스택을 삭제할 때 에러처리
-        techRepository.deleteById(tech_id);
+        techRepository.deleteById(techId);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }

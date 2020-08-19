@@ -1,5 +1,7 @@
 package com.ssafy.blog.payload.comment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,10 @@ import lombok.Setter;
 @Setter
 public class AddCommentRequest {
     
-    private Long user_id;
-    private Long answer_id;
+    @JsonProperty("user_id")
+    private Long userId;
+    
+    @JsonProperty("answer_id")
+    private Long answerId;
     private String content;
 }

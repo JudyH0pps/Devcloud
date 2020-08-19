@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LikeToQuestionRepository extends JpaRepository<LikeToQuestion, Long> {
 
-    List<LikeToQuestion> findAllByUserId(Long user_id);
+    List<LikeToQuestion> findAllByUserId(Long userId);
 
-    List<LikeToQuestion> findAllByQuestionId(Long question_id);
+    List<LikeToQuestion> findAllByQuestionId(Long questionId);
 
-    Optional<LikeToQuestion> findByUserIdAndQuestionId(Long user_id, Long question_id);
+    Optional<LikeToQuestion> findByUserIdAndQuestionId(Long userId, Long questionId);
 }

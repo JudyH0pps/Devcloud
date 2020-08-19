@@ -46,23 +46,23 @@ public class CommentController {
 
     @GetMapping("/api/comment")
     @ApiOperation(value = "댓글 조회하기")
-    public ResponseEntity<Object> searchComment(@RequestParam("answer_id") Long answer_id) {
-        Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
+    public ResponseEntity<Object> searchComment(@RequestParam("answer_id") Long answerId) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
         if (!optionalAnswer.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        List<Comment> list = commentRepository.findAllByAnswerId(answer_id);
+        List<Comment> list = commentRepository.findAllByAnswerId(answerId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/api/comment")
     @ApiOperation(value = "댓글 작성하기")
     public ResponseEntity<Object> addComment(@RequestBody AddCommentRequest request) {
-        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        Optional<User> optionalUser = userRepository.findById(request.getUserId());
         if (!optionalUser.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswer_id());
+        Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswerId());
         if (!optionalAnswer.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -86,7 +86,7 @@ public class CommentController {
     @PutMapping("/api/comment")
     @ApiOperation(value = "댓글 수정하기")
     public ResponseEntity<Object> modifyComment(@RequestBody ModifyCommentRequest request) {
-        Optional<Comment> optionalComment = commentRepository.findById(request.getComment_id());
+        Optional<Comment> optionalComment = commentRepository.findById(request.getCommentId());
         if (!optionalComment.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -100,12 +100,12 @@ public class CommentController {
 
     @DeleteMapping("/api/comment")
     @ApiOperation(value = "댓글 삭제하기")
-    public ResponseEntity<String> deleteComment(@RequestParam("comment_id") Long comment_id) {
-        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+    public ResponseEntity<String> deleteComment(@RequestParam("comment_id") Long commentId) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if (!optionalComment.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
 
-        commentRepository.deleteById(comment_id);
+        commentRepository.deleteById(commentId);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }

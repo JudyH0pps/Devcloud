@@ -1,5 +1,7 @@
 package com.ssafy.blog.payload.answer;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,8 @@ import lombok.Setter;
 @Setter
 public class UpdateAnswerRequest {
 
-    private Long answer_id;
+    @JsonProperty("answer_id")
+    private Long answerId;
     private String content;
 
 }

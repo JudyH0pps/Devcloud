@@ -2,6 +2,7 @@ package com.ssafy.blog.payload.answer;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.blog.model.User;
 
 import lombok.Getter;
@@ -13,10 +14,18 @@ public class AnswerResponse {
 
     private Long id;
     private User user;
-    private Long question_id;
-    private String question_title;
+
+    @JsonProperty("question_id")
+    private Long questionId;
+
+    @JsonProperty("question_title")
+    private String questionTitle;
     private String content;
-    private int like_cnt;
+    
+    @JsonProperty("like_cnt")
+    private int likeCnt;
     private boolean selected;
-    private Date updated_at;
+
+    @JsonProperty("updated_at")
+    private Date updatedAt;
 }
