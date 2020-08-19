@@ -36,7 +36,9 @@
                         :typeahead-hide-discard="true"
                         :only-existing-tags="true"
                         :add-tags-on-blur="true"
-                        typeahead-style="badges"
+                        typeahead-max-results=15
+                        limit=4
+                        typeahead-style="dropdown"
                         wrapper-class="test"
                         >
                         

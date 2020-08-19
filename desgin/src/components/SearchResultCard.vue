@@ -15,7 +15,7 @@
                 <span style="font-size:16px; font-weight:bold;"> 채택완료</span>
             </div>
             <div style="text-align: right;">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
+                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name" @click="searchTag(tag.tag.id)">{{ tag.tag.name }}</span>
             </div>          
             <!-- <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
             </div> -->
@@ -62,6 +62,8 @@
 <script>
 import http from "@/util/http-common"
 import Vue from 'vue';
+import {mapActions} from 'vuex';
+
 export default{
     name: 'SearchResultCard',
     data() {
@@ -82,6 +84,7 @@ export default{
         keyword: String,
     },
     methods: {
+        ...mapActions('question',['fetchQuestionsByTag']),
         getImages(name) {
             return require('../assets/' + name);
         },
@@ -91,6 +94,20 @@ export default{
                 params:{ "question_id" : question_id},
             });
         },
+        searchTag(tag_id){
+            this.$router.push({
+                    name:'Search',
+                    params:{
+                        tag_id : tag_id
+                    }
+                }).catch(()=>{
+                    // this.$router.go()
+                    // this.fetchQuestionsByTag(tag_id)
+                })
+            // console.log(tag_id)
+            // this.fetchQuestionsByTag(tag_id)
+            // document.documentElement.scrollTop = 0;
+        }
         // questionCreate(){
         //     var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
         //     var now = this.$moment('MM-DD-YYYY');

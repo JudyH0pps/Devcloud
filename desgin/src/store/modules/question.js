@@ -101,6 +101,20 @@ export default {
                     alert("검색중 오류발생")
                 });
         },
+        fetchQuestionsByTag(context,tag_id){
+            http.get('/api/question/tag',{
+                params:{
+                    tag_id : tag_id
+                }
+            })
+            .then(({data}) => {
+                context.commit('setQuestions',data.content)
+            })
+            .catch((err)=>{
+                console.log(err);
+                alert("태그검색중 오류발생")
+            });
+        },
         deleteQuestion(context, qid) {
             http
                 .delete('/api/question', {
