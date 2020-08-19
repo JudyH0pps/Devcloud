@@ -35,9 +35,10 @@ Vue.use(VueRouter)
     //component: () => import('../views/Profile.vue')
   },
   {
-    path: '/search/:search_keyword?',
+    path: '/search/:search_keyword?/tag/:tag_id',
     name: 'Search',
-    component: () => import('../views/Search.vue')
+    component: () => import('../views/Search.vue'),
+    props: { isTagSearch : false}
   },
   {
     path: '/ranking',

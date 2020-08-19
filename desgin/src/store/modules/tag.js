@@ -9,7 +9,7 @@ export default {
         // 받아와서 형식 바꿀 태그 
         tagsIn:[],
         // 리스트 받아왔는지 체크
-        isTags : false,
+        isTagSearch : false,
         tags : {
                 key : "",
                 value : "",
@@ -20,7 +20,6 @@ export default {
         //스테이트 태그 변경 
         setTags(state, payload){
           state.tagss = payload;
-          state.isTags = true;
         },
         setTechsIn(state,payload){
             state.tagsIn = payload

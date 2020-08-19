@@ -56,25 +56,44 @@ export default{
             isLoading: false,
             fullPage: true,
             infiniteId: +new Date(),
+            isTag : false,
         } 
     },
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
+        ...mapActions('question',['fetchQuestionsByTag']),
         infiniteHandler($state) {
-            http.get('/api/question', {
-                params: {
-                    keyword : this.searchKeyword,
-                    page: this.page,
-                },
-            }).then(({ data }) => {
-                if (data.content.length) {
-                this.page += 1;
-                this.questions.push(...data.content);
-                $state.loaded();
-                } else {
-                $state.complete();
-                }
-            });
+            if(this.$route.params.tag_id == undefined){
+                http.get('/api/question', {
+                    params: {
+                        keyword : this.searchKeyword,
+                        page: this.page,
+                    },
+                }).then(({ data }) => {
+                    if (data.content.length) {
+                    this.page += 1;
+                    this.questions.push(...data.content);
+                    $state.loaded();
+                    } else {
+                    $state.complete();
+                    }
+                });
+            }else{
+                http.get('/api/question/tag', {
+                    params: {
+                        tag_id : this.$route.params.tag_id,
+                        page: this.page,
+                    },
+                }).then(({ data }) => {
+                    if (data.content.length) {
+                    this.page += 1;
+                    this.questions.push(...data.content);
+                    $state.loaded();
+                    } else {
+                    $state.complete();
+                    }
+                });  
+            }
         },
         moveToWrite() {
             this.$router.push({ 'name' : 'Write' });
@@ -95,7 +114,10 @@ export default{
         }),
         searchKeyword(){
 			return this.$route.params.search_keyword
-        }
+        },
+        searchTag(){
+            return this.$route.params.tag_id  
+        },
     },
     created() {
         this.fetchQuestionsByKeyword(this.searchKeyword),
@@ -109,6 +131,17 @@ export default{
             this.page = 2;
             this.infiniteId += 1;
             document.documentElement.scrollTop = 0;
+        },
+        searchTag : function(){
+            if(this.searchTag != undefined){
+                this.fetchQuestionsByTag(this.searchTag)
+                this.page = 2;
+                this.infiniteId += 1;
+                document.documentElement.scrollTop = 0;
+            }else{
+                // 태그검색상태에서 모든질문으로갈경우
+                this.$router.go()
+            }
         }
     }
 }
