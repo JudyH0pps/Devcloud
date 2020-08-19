@@ -94,7 +94,7 @@ export default {
       formData.append('file', file)
 
       axios({
-        url: 'http://i3c202.p.ssafy.io:8080/api/question/upload',
+        url: 'http://i3c202.p.ssafy.io/api/question/upload',
         method: 'POST',
         // headers:{'Authorization': 'Bearer ' +  + token},
         data: formData
