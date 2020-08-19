@@ -6,7 +6,7 @@ spring:
         password: mariadb
     # jpa config
     jpa:
-        show-sql: true
+        show-sql: false
         hibernate:
             ddl-auto: update
             naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -39,5 +39,7 @@ app:
   # 생성된 JWT token을 response할 uri
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
+      - http://i3c202.p.ssafy.io:3000/oauth/redirect
+      - http://i3c202.p.ssafy.io/oauth/redirect
       # - myandroidapp://oauth2/redirect
       # - myiosapp://oauth2/redirect 

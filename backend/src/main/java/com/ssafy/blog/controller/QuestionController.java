@@ -66,7 +66,7 @@ public class QuestionController {
     private ResponseEntity<Question> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
     private static final String PATH_PREFIX = "/home/ubuntu/static/images/";
-    private static final String BASE_IMAGE_URL = "http://i3c202.p.ssafy.io:8080/images/";
+    private static final String BASE_IMAGE_URL = "http://i3c202.p.ssafy.io/api/images/";
 
     @GetMapping("/api/question")
     @ApiOperation(value = "질문 검색")
