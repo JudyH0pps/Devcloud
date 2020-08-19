@@ -101,7 +101,7 @@ export default {
     googleLogin() {
         // alert('asdfsad21312f');
         // alert('asdfsadf');
-        window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://i3c202.p.ssafy.io:3000/"'
         // alert("구글로그인 창으로 이동합니다.");
     },
     navbarSpan() {

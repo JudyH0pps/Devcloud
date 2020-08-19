@@ -39,5 +39,6 @@ app:
   # 생성된 JWT token을 response할 uri
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
+      - http://i3c202.p.ssafy.io:3000/oauth/redirect
       # - myandroidapp://oauth2/redirect
       # - myiosapp://oauth2/redirect 
