@@ -1,14 +1,14 @@
 <template>
     <div class="blog-post">
-        <div class="blog-post__img">
+        <!-- <div class="blog-post__img">
             <img src="../assets/cloud.png" alt="">
-        </div>
+        </div> -->
         <div class="blog-post__info">
             <div class="blog-post__date">
                 <span>{{ item.updated_at }}</span>
             </div>
             <h1 class="blog-post__title" @click="moveTodetail(item.question_id)">
-                {{ item.question_title }}
+                {{ item.question_title }} <span style="color: black;">에 대한 답변</span>
             </h1>
             <!-- <p class="blog-post__text">
                 {{ item.content }}

@@ -2,6 +2,8 @@ package com.ssafy.blog.payload.rank;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,13 +11,29 @@ import lombok.Setter;
 @Setter
 public class RankResponse {
     
-    private Long rank_id;
-    private Long user_id;
-    private int rank_point;
+    @JsonProperty("rank_id")
+    private Long rankId;
+
+    @JsonProperty("user_id")
+    private Long userId;
+    
+    @JsonProperty("rank_point")
+    private int rankPoint;
+
     private int ranking;
-    private int question_cnt;
-    private int answer_cnt;
-    private int like_cnt;
-    private int select_cnt;
-    private Date updated_at;
+    
+    @JsonProperty("question_cnt")
+    private int questionCnt;
+    
+    @JsonProperty("answer_cnt")
+    private int answerCnt;
+
+    @JsonProperty("like_cnt")
+    private int likeCnt;
+    
+    @JsonProperty("select_cnt")
+    private int selectCnt;
+    
+    @JsonProperty("updated_at")
+    private Date updatedAt;
 }

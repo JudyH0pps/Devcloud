@@ -13,5 +13,5 @@ public interface UserTechRepository extends JpaRepository<UserTech, Long> {
 
     List<UserTech> findByUserId(Long user_id);
 
-    Optional<UserTech> findByUserIdAndTechId(Long user_id, Long tech_id);
+    Optional<UserTech> findByUserIdAndTechId(Long userId, Long techId);
 }

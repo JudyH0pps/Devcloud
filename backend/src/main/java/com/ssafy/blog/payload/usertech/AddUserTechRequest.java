@@ -1,5 +1,7 @@
 package com.ssafy.blog.payload.usertech;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,10 @@ import lombok.Setter;
 @Setter
 public class AddUserTechRequest {
     
-    private Long user_id;
-    private Long tech_id;
+    @JsonProperty("user_id")
+    private Long userId;
+
+    
+    @JsonProperty("tech_id")
+    private Long techId;
 }

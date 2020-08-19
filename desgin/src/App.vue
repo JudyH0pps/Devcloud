@@ -8,12 +8,15 @@
       <router-link to="/about">About</router-link>
     </div> -->
     <router-view class="botmargin400px"/>
+
+ 
     <Footer/>
   </div>
 </template>
 
 <script>
 import HeadBar from '@/components/HeadBar.vue'
+
 import Footer from '@/components/Footer.vue'
 import {mapState,mapActions,mapMutations} from 'vuex'
 
@@ -21,7 +24,8 @@ export default{
   name: 'App',
   components: {
     HeadBar,
-    Footer
+    Footer,
+    
   },
   
   methods: {

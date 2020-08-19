@@ -1,5 +1,7 @@
 package com.ssafy.blog.payload.questiontag;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,9 @@ import lombok.Setter;
 @Setter
 public class AddQuestionTagRequest {
     
-    private Long question_id;
-    private Long tag_id;
+    @JsonProperty("question_id")
+    private Long questionId;
+
+    @JsonProperty("tag_id")
+    private Long tagId;
 }

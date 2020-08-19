@@ -27,6 +27,9 @@
          
          <!-- 알림 목록 표시 -->
           <div class="alarmdropdown" v-show="showAlarmDropdown">
+            <div class="alarm-list" v-if="!this.notifications.length">
+              <p> 아직 알림이 없습니다. </p>
+            </div>
             <div class="alarm-list" v-for="(notification, index) in this.notifications.slice(0,5)" :key="notification.notification_id">
               <p @click="moveToQuestion(notification.question_id,notification.notification_id,index)">{{notification.content}}</p>
               <i class="fas fa-times" @click="closeNotification(notification.notification_id,index)"></i>

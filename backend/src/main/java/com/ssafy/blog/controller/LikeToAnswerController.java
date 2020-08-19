@@ -1,7 +1,5 @@
 package com.ssafy.blog.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Answer;
@@ -44,47 +42,29 @@ public class LikeToAnswerController {
     @GetMapping("/api/liketoanswer")
     @ApiOperation(value = "답변에 대한 좋아요 목록 조회")
     public ResponseEntity<Object> searchLikeToAnswer(
-            @RequestParam(required = false, name = "user_id") Long user_id,
-            @RequestParam(required = false, name = "answer_id") Long answer_id) {
-        List<LikeToAnswerResponse> list = new ArrayList<>();
-        
-        if(user_id != null && answer_id != null) {
-            Optional<LikeToAnswer> optionalLikeToAnswer = likeToAnswerRepository.findByUserIdAndAnswerId(user_id, answer_id);
-            if(!optionalLikeToAnswer.isPresent()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(optionalLikeToAnswer.get(), HttpStatus.OK);
+            @RequestParam("user_id") Long userId,
+            @RequestParam("answer_id") Long answerId) {
+        Optional<LikeToAnswer> optionalLTA = likeToAnswerRepository.findByUserIdAndAnswerId(userId, answerId);
+        if(optionalLTA.isPresent()) {
+            LikeToAnswerResponse response = makeResponse(optionalLTA.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        if (user_id != null && answer_id == null) {
-            for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAllByUserId(user_id)) {
-                list.add(makeResponse(likeToAnswer));
-            }
-
-        } else if (user_id == null && answer_id != null) {
-            for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAllByAnswerId(answer_id)) {
-                list.add(makeResponse(likeToAnswer));
-            }
-
-        } else {
-            for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAll()) {
-                list.add(makeResponse(likeToAnswer));
-            }
-        }
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
 
     @PostMapping("/api/liketoanswer")
     @ApiOperation(value = "답변에 대한 좋아요: 없으면 추가, 있으면 삭제(toggle)")
     public ResponseEntity<String> addLikeToAnswer(@RequestBody AddLikeToAnswerRequest request) {
-        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        Optional<User> optionalUser = userRepository.findById(request.getUserId());
         if (!optionalUser.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswer_id());
+        Optional<Answer> optionalAnswer = answerRepository.findById(request.getAnswerId());
         if (!optionalAnswer.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         LikeToAnswer likeToAnswer = null;
         Optional<LikeToAnswer> optionalLikeToAnswer = likeToAnswerRepository
-                .findByUserIdAndAnswerId(request.getUser_id(), request.getAnswer_id());
+                .findByUserIdAndAnswerId(request.getUserId(), request.getAnswerId());
         if (optionalLikeToAnswer.isPresent()) {
             likeToAnswer = optionalLikeToAnswer.get();
             likeToAnswerRepository.delete(likeToAnswer);
@@ -101,7 +81,7 @@ public class LikeToAnswerController {
             likeToAnswer = new LikeToAnswer();
             likeToAnswer.setUser(optionalUser.get());
             likeToAnswer.setAnswer(optionalAnswer.get());
-            likeToAnswer = likeToAnswerRepository.save(likeToAnswer);
+            likeToAnswerRepository.save(likeToAnswer);
 
             // 좋아요 숫자 반영
             Answer answer = optionalAnswer.get();
@@ -114,18 +94,20 @@ public class LikeToAnswerController {
         }
     }
 
-    private void updateRank(Long user_id, int step) {
-        Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
-        Rank rank = optionalRank.get();
-        rank.setLikeCnt(rank.getLikeCnt() + step);
-        rankRepository.save(rank);
+    private void updateRank(Long userId, int step) {
+        Optional<Rank> optionalRank = rankRepository.findByUserId(userId);
+        if(optionalRank.isPresent()) {
+            Rank rank = optionalRank.get();
+            rank.setLikeCnt(rank.getLikeCnt() + step);
+            rankRepository.save(rank);
+        }
     }
 
     private LikeToAnswerResponse makeResponse(LikeToAnswer likeToAnswer) {
         LikeToAnswerResponse response = new LikeToAnswerResponse();
         response.setId(likeToAnswer.getId());
-        response.setUser_id(likeToAnswer.getUser().getId());
-        response.setAnswer_id(likeToAnswer.getAnswer().getId());
+        response.setUserId(likeToAnswer.getUser().getId());
+        response.setAnswerId(likeToAnswer.getAnswer().getId());
         return response;
     }
 }

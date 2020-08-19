@@ -1,37 +1,45 @@
 <template>
-    <div class="modal-bg" v-if="loginModalOn">
+    <div class="modal-bg" v-if="loginCheck">
         <div id="login-box" class="modal" >
             <div style="width:100%; height:20%; background:skyblue; border-radius:4px 4px 0 0;display:flex; align-items:center; justify-content: center;">
                 <p style="text-align:center; color:white; font-weight:bold;">LOGIN</p>
             </div>
-            <img @click="googleLogin" class="social google g-logo" src="../assets/btn_google_signin_dark_normal_web@2x.png" alt="g-logo">
-            <p style="font-size:14px;">Devcloud의 서비스는 구글 계정으로 편리하게 이용하실 수 있습니다.</p>
+            <p>로그인이 필요한 서비스입니다.</p>
+            <p>로그인 하시겠습니까?</p>
+            <button class="yes" @click="switchModal">Yes</button>
             <div style="width:100%; height:25%; background:skyblue; border-radius: 0 0 4px 4px;display:flex; align-items:center; justify-content: center;">
                 <button class="social close" @click="closeModal">Close</button>
             </div>
             
         </div>
     </div>
+  <!-- <div class="modal-bg" v-if="loginCheck">
+      <div class="modal">
+        <div class="modal-header">
+            <h3>로그인이 필요한 기능입니다.</h3>
+            <h3>로그인하시겠습니까?</h3>
+        </div>
+        <div class="modal-buttons">
+            <button @click="switchModal">예</button>
+            <button @click="closeModal">아니오</button>
+        </div>
+      </div>
+  </div> -->
 </template>
 
 <script>
-export default{
-    name: 'LoginModal',
-    data() {
-        return {
-        
-        }
-    },
+export default {
+    name: 'LoginCheckModal',
     props: {
-        loginModalOn: Boolean,
+        loginCheck: Boolean,
     },
     methods: {
         closeModal() {
-            this.$emit('toggleModal');
+            this.$emit('closeModal')
         },
-        googleLogin() {
-            this.$emit('googleLogin');
-        }
+        switchModal() {
+            this.$emit('switchModal')
+        },
     },
 }
 </script>
@@ -63,7 +71,22 @@ export default{
     /* border: 1px solid #ccc; */
     /* padding: 10px; */
 }
-button.social {
+.modal-header {
+    text-align: center;
+}
+.modal-header > h3 {
+    margin: 10px 0;
+}
+.modal-buttons {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-buttons > button:focus {
+    outline: none;
+}
+button {
     /* margin-bottom: 20px; */
     width: 180px;
     height: 36px;
@@ -75,18 +98,9 @@ button.social {
     transition: 0.2s ease;
     cursor: pointer;
     z-index: 1000;
-}
-img.social,
-.google {
-    width: 180px;
-}
-.social{
-    cursor: pointer;
-}
-.close {
     background: #000;
 }
-/* .g-logo {
-    height: 100%;
-} */
+.yes {
+    background: rgb(71, 187, 67)
+}
 </style>

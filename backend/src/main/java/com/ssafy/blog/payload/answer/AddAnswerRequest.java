@@ -1,5 +1,7 @@
 package com.ssafy.blog.payload.answer;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +9,12 @@ import lombok.Setter;
 @Setter
 public class AddAnswerRequest {
 
-    private Long user_id;
-    private Long question_id;
+    @JsonProperty("user_id")
+    private Long userId;
+
+    @JsonProperty("question_id")
+    private Long questionId;
+    
     private String content;
 
 }

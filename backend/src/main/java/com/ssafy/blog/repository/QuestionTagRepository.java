@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface QuestionTagRepository extends JpaRepository<QuestionTag, Long> {
 
-    List<QuestionTag> findAllByQuestionId(Long question_id);
+    List<QuestionTag> findAllByQuestionId(Long questionId);
 
     @Transactional
-    void deleteAllByQuestionId(Long user_id);
+    void deleteAllByQuestionId(Long userId);
 }

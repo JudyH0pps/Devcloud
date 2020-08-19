@@ -2,6 +2,7 @@ package com.ssafy.blog.payload.question;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.blog.model.Tag;
 
 import lombok.Getter;
@@ -11,7 +12,8 @@ import lombok.Setter;
 @Setter
 public class UpdateQuestionRequest {
 
-    private Long question_id;
+    @JsonProperty("question_id")
+    private Long questionId;
     private String title;
     private String content;
     private List<Tag> tagList;

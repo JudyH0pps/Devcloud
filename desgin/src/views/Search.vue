@@ -30,11 +30,15 @@
             <span slot="no-results">더 많은 질문을 등록해주세요 !</span>
         </infinite-loading>
         <button @click="moveToWrite">새 질문 작성</button>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </section>
 </template>
 
 <script>
 import SearchResultCard from'../components/SearchResultCard.vue'
+import LoginCheckModal from '@/components/LoginCheckModal.vue'
+import LoginModal from '../components/LoginModal.vue'
 import {mapActions, mapState} from 'vuex'
 import http from "@/util/http-common";
 // Import component
@@ -48,6 +52,8 @@ export default{
         InfiniteLoading,
         SearchResultCard,
         Loading,
+        LoginModal,
+        LoginCheckModal,
     },
     data() {
         return {
@@ -57,6 +63,8 @@ export default{
             fullPage: true,
             infiniteId: +new Date(),
             isTag : false,
+            loginModalOn: false,
+            loginCheck: false,
         } 
     },
     methods:{
@@ -96,9 +104,13 @@ export default{
             }
         },
         moveToWrite() {
-            this.$router.push({ 'name' : 'Write' });
+            if (this.isLoggedIn === true) {
+                this.$router.push({ 'name' : 'Write' });
+            }
+            else {
+                this.changeModal()
+            }
         },
-
         //loading overlay
         doAjax() {
             this.isLoading = true;
@@ -107,10 +119,24 @@ export default{
                 this.isLoading = false
             },800)
         },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
+        },
     },
     computed:{
         ...mapState({
-            questions : state => state.question.questions
+            questions : state => state.question.questions,
+            isLoggedIn : state => state.user.isLoggedIn
         }),
         searchKeyword(){
 			return this.$route.params.search_keyword
@@ -123,6 +149,7 @@ export default{
         this.fetchQuestionsByKeyword(this.searchKeyword),
         this.doAjax()
         document.documentElement.scrollTop = 0;
+        // console.log(this.questions)
     },
     watch:{
         searchKeyword : function(){
