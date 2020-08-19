@@ -23,7 +23,7 @@
             <h2 style="margin: 30px 0 50px;">All Questions</h2>
         </div>
 
-        <SearchResultCard  v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword" />
+        <SearchResultCard  @searchTag="updateScroll" v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword"/>
         <infinite-loading :identifier="infiniteId" @infinite="infiniteHandler">
             <!-- <template slot="no-more">더 많은 질문을 등록해주세요 !</template> -->
             <span slot="no-more">더 많은 질문을 등록해주세요 !</span>
@@ -39,7 +39,7 @@
 import SearchResultCard from'../components/SearchResultCard.vue'
 import LoginCheckModal from '@/components/LoginCheckModal.vue'
 import LoginModal from '../components/LoginModal.vue'
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapState,mapMutations} from 'vuex'
 import http from "@/util/http-common";
 // Import component
 import InfiniteLoading from 'vue-infinite-loading';
@@ -62,7 +62,7 @@ export default{
             isLoading: false,
             fullPage: true,
             infiniteId: +new Date(),
-            isTag : false,
+            // isTag : false,
             loginModalOn: false,
             loginCheck: false,
         } 
@@ -70,8 +70,11 @@ export default{
     methods:{
         ...mapActions('question',['fetchQuestionsByKeyword']),
         ...mapActions('question',['fetchQuestionsByTag']),
+        ...mapMutations('question',['resetQuestions']),
+        ...mapMutations('tag',['setTagId']),
         infiniteHandler($state) {
-            if(this.$route.params.tag_id == undefined){
+            //alert("무한스크롤")
+            if(this.tagId == -1){
                 http.get('/api/question', {
                     params: {
                         keyword : this.searchKeyword,
@@ -89,7 +92,7 @@ export default{
             }else{
                 http.get('/api/question/tag', {
                     params: {
-                        tag_id : this.$route.params.tag_id,
+                        tag_id : this.tagId,
                         page: this.page,
                     },
                 }).then(({ data }) => {
@@ -99,6 +102,7 @@ export default{
                     $state.loaded();
                     } else {
                     $state.complete();
+                    this.setTagId(-1);
                     }
                 });  
             }
@@ -132,18 +136,26 @@ export default{
             this.changeModal()
             this.toggleModal()
         },
+        updateScroll(){
+            document.documentElement.scrollTop = 0;
+            this.infiniteId += 1;
+            this.resetQuestions();
+            this.page = 1;
+        }
     },
     computed:{
         ...mapState({
             questions : state => state.question.questions,
-            isLoggedIn : state => state.user.isLoggedIn
+            isLoggedIn : state => state.user.isLoggedIn,
+            tagId : state => state.tag.tagId,
         }),
         searchKeyword(){
 			return this.$route.params.search_keyword
         },
-        searchTag(){
-            return this.$route.params.tag_id  
-        },
+        // searchTag(){
+        //     alert(this.$route.params.tag_id)    
+        //     return this.$route.params.tag_id  
+        // },
     },
     created() {
         this.fetchQuestionsByKeyword(this.searchKeyword),
@@ -159,17 +171,17 @@ export default{
             this.infiniteId += 1;
             document.documentElement.scrollTop = 0;
         },
-        searchTag : function(){
-            if(this.searchTag != undefined){
-                this.fetchQuestionsByTag(this.searchTag)
-                this.page = 2;
-                this.infiniteId += 1;
-                document.documentElement.scrollTop = 0;
-            }else{
-                // 태그검색상태에서 모든질문으로갈경우
-                this.$router.go()
-            }
-        }
+        // searchTag : function(){
+        //     if(this.searchTag != undefined){
+        //         this.fetchQuestionsByTag(this.searchTag)
+        //         this.page = 2;
+        //         this.infiniteId += 1;
+        //         document.documentElement.scrollTop = 0;
+        //     }else{
+        //         // 태그검색상태에서 모든질문으로갈경우
+        //         this.$router.go()
+        //     }
+        // }
     }
 }
 

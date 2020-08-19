@@ -62,22 +62,19 @@
 <script>
 import http from "@/util/http-common"
 import Vue from 'vue';
-import {mapActions} from 'vuex';
+import {mapState,mapMutations,mapActions} from 'vuex';
 
-export default{
+export default {
     name: 'SearchResultCard',
     data() {
         return {
-            // title: '이거 어떻게해요?',
-            // content: '이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요. 이거 어떻게하는지 궁금합니다. 알려주세요',
-            // tags: ['Java','Python','Django'],
-            // date: '2020년 07월 20일',
-            // like: 104,
-            // user: 'Nongdamgom',
-
-            //question_create: this.question.createdAt,
             questionHasSelected: false,
         }
+    },
+    computed :{
+        ...mapState({
+            tagId : state => state.tag.tagId
+        })
     },
     props: {
         question: Object,
@@ -85,6 +82,7 @@ export default{
     },
     methods: {
         ...mapActions('question',['fetchQuestionsByTag']),
+        ...mapMutations('tag',['setTagId']),
         getImages(name) {
             return require('../assets/' + name);
         },
@@ -95,19 +93,9 @@ export default{
             });
         },
         searchTag(tag_id){
-            this.$router.push({
-                    name:'Search',
-                    params:{
-                        tag_id : tag_id
-                    }
-                }).catch(()=>{
-                    // this.$router.go()
-                    // this.fetchQuestionsByTag(tag_id)
-                })
-            // console.log(tag_id)
-            // this.fetchQuestionsByTag(tag_id)
-            // document.documentElement.scrollTop = 0;
-        }
+            this.setTagId(tag_id)
+            this.$emit('searchTag')
+        },
         // questionCreate(){
         //     var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
         //     var now = this.$moment('MM-DD-YYYY');
@@ -212,7 +200,6 @@ Vue.filter("highlights2", function(item, keyword){
     cursor: pointer;
     text-decoration: underline;
 }
-
 /* .image-data {
     height: 250px;
     width: 10px;

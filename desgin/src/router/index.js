@@ -35,7 +35,7 @@ Vue.use(VueRouter)
     //component: () => import('../views/Profile.vue')
   },
   {
-    path: '/search/:search_keyword?/tag/:tag_id',
+    path: '/search/:search_keyword?',
     name: 'Search',
     component: () => import('../views/Search.vue'),
     props: { isTagSearch : false}

@@ -12,9 +12,13 @@ export default {
         setQuestions(state, payload){
             state.questions= payload;
         },
+        resetQuestions(state){
+            state.questions = [];
+        },
         setQuestion(state,payload){
             state.question = payload;
         },
+        
     },
 	actions: {
         fetchUserQuestions(context,payload){
