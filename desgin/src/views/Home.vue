@@ -8,16 +8,19 @@
     <div class="wave wave2"></div>
     <div class="wave wave3"></div>
     <div class="wave wave4"></div>
+    <MainBottom/>
   </section>
 </template>
 
 <script>
 import SearchBar from '@/components/SearchBar.vue'
+import MainBottom from '@/components/MainBottom.vue'
 
 export default {
   name: 'Home',
   components: {
     SearchBar,
+    MainBottom,
   },
   created() {
     this.$store.state.searchBarinHeadbar = false;

@@ -42,30 +42,28 @@
         </div>
 
         <!-- 댓글 작성란 -->
-        <div class="commentSection">
-            <input style="outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="댓글을 작성해주세요">
-            <button class="writeBtn" style="cursor: pointer;" @click="postComment">댓글작성</button>
+        <div class="commentSection" style="margin-top: 10px;">
+            <input style="outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="해당 답변에 대한 댓글을 작성해주세요">
+            <button class="writeBtn" style="cursor: pointer; margin-left:auto;" @click="postComment">댓글작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
         <ul class="commentSection" v-if="comments">
-			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
-                <div style="display: flex; flex-direction: column; width: 100%">
-                    <header style="display: flex; justify-content: space-between;">
-                        <h5>{{ comment.user.name }}</h5>
-                        <span>{{ comment.updatedAt }}</span>
-                    </header>
+			<li style="list-style: none; width: 100%; display: flex; flex-direction: column; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
+                <div style="display: flex; justify-content: space-between;">
+                    <h5 style="font-size: 12px;">{{ comment.user.name }}</h5>
+                    <span style="font-size: 12px;">{{ comment.updatedAt }}</span>
+                </div>
                     
-                    <div style="display: flex; justify-content: space-between;">
-                        <p v-show="selectedIndex !== index">{{ comment.content }}</p>
-                        <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
-                        <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
-                            <button class="editBtn" @click="getIndex(index)">수정</button>
-                            <button class="delBtn" @click="deleteComment(comment.id)">삭제</button>
-                        </div>
-                        <div v-show="selectedIndex === index">
-                            <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
-                        </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <p style="margin-left: 10px;" v-show="selectedIndex !== index">{{ comment.content }}</p>
+                    <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
+                    <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
+                        <button class="editBtn" @click="getIndex(index)">수정</button>
+                        <button class="delBtn" @click="deleteComment(comment.id)">삭제</button>
+                    </div>
+                    <div v-show="selectedIndex === index">
+                        <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
                     </div>
                 </div>
 			</li>
@@ -464,9 +462,9 @@ export default {
 }
 .commentSection {
     width: 98%;
-    margin: 10px auto;
+    margin: 0 auto 0;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     
     /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
     /* padding: 0 10px; */
