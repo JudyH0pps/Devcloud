@@ -59,7 +59,7 @@ public class UserController {
 
         List<Tech> after = request.getTechList();
 
-        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        Optional<User> optionalUser = userRepository.findById(request.getUserId());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
@@ -71,12 +71,11 @@ public class UserController {
             user = userRepository.save(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     private void updateTechStack(User user, List<Tech> after) {
         List<UserTech> before = user.getUserTechs();
-        System.out.println("####" + before.size());
 
         for(Tech tech : after) {
             Optional<UserTech> optionalUserTech = 
@@ -91,7 +90,6 @@ public class UserController {
         }
 
         before = user.getUserTechs();
-        System.out.println("####" + before.size());
 
         List<UserTech> deleteList = new ArrayList<>();
         for(UserTech userTech : before) {

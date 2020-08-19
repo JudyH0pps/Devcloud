@@ -72,25 +72,25 @@ public class QuestionController {
     @ApiOperation(value = "질문 검색")
     // paging 기법 적용하기
     public ResponseEntity<Object> searchQuestion(@RequestParam(required = false, name = "keyword") String keyword,
-            @RequestParam(required = false, name = "user_id") Long user_id,
-            @RequestParam(required = false, name = "question_id") Long question_id,
+            @RequestParam(required = false, name = "user_id") Long userId,
+            @RequestParam(required = false, name = "question_id") Long questionId,
             @RequestParam(required = false, name = "page") Integer page) {
         Page<Question> pageList = null;
         if (page == null)
             page = 1;
-        if (keyword == null && user_id == null && question_id == null) {
+        if (keyword == null && userId == null && questionId == null) {
             pageList = questionRepository.findAll(PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
-        } else if (keyword != null && user_id == null && question_id == null) {
+        } else if (keyword != null && userId == null && questionId == null) {
             pageList = questionRepository.findAllByTitleContainsOrContentTextContains(keyword, keyword,
                     PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
-        } else if (keyword == null && user_id != null && question_id == null) {
-            pageList = questionRepository.findAllByUserId(user_id,
+        } else if (keyword == null && userId != null && questionId == null) {
+            pageList = questionRepository.findAllByUserId(userId,
                     PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
-        } else if (keyword == null && user_id == null && question_id != null) {
-            Optional<Question> optionalQuestion = questionRepository.findById(question_id);
+        } else if (keyword == null && userId == null && questionId != null) {
+            Optional<Question> optionalQuestion = questionRepository.findById(questionId);
             if (!optionalQuestion.isPresent())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             // view cnt + 1
@@ -108,7 +108,7 @@ public class QuestionController {
     public ResponseEntity<Question> addQuestion(@RequestBody AddQuestionRequest request) {
         Question question = new Question();
 
-        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        Optional<User> optionalUser = userRepository.findById(request.getUserId());
         if (!optionalUser.isPresent())
             return badResponse;
         question.setUser(optionalUser.get());
@@ -133,7 +133,7 @@ public class QuestionController {
             }
         }
 
-        updateRank(request.getUser_id(), 1);
+        updateRank(request.getUserId(), 1);
 
         return new ResponseEntity<>(question, HttpStatus.OK);
     }
@@ -141,7 +141,7 @@ public class QuestionController {
     @PutMapping("/api/question")
     @ApiOperation(value = "질문 수정")
     public ResponseEntity<Question> modifyQuestion(@RequestBody UpdateQuestionRequest request) {
-        Optional<Question> optionalQuestion = questionRepository.findById(request.getQuestion_id());
+        Optional<Question> optionalQuestion = questionRepository.findById(request.getQuestionId());
         if (!optionalQuestion.isPresent())
             return badResponse;
 
@@ -156,7 +156,7 @@ public class QuestionController {
         question = questionRepository.save(question);
 
         // tag 수정
-        questionTagRepository.deleteAllByQuestionId(request.getQuestion_id());
+        questionTagRepository.deleteAllByQuestionId(request.getQuestionId());
         List<Tag> tagList = request.getTagList();
         for (Tag tag : tagList) {
             QuestionTag questionTag = new QuestionTag();
@@ -170,31 +170,31 @@ public class QuestionController {
 
     @DeleteMapping("/api/question")
     @ApiOperation(value = "질문 삭제")
-    public ResponseEntity<String> deleteQuestion(@RequestParam("question_id") Long question_id) {
-        Optional<Question> optionalQuestion = questionRepository.findById(question_id);
+    public ResponseEntity<String> deleteQuestion(@RequestParam("question_id") Long questionId) {
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (!optionalQuestion.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
 
-        Optional<Answer> optionalAnswer = answerRepository.findFirstByQuestionId(question_id);
+        Optional<Answer> optionalAnswer = answerRepository.findFirstByQuestionId(questionId);
         if (optionalAnswer.isPresent())
             return new ResponseEntity<>("already answer is exist", HttpStatus.OK);
 
-        Long user_id = optionalQuestion.get().getUser().getId();
-        questionRepository.deleteById(question_id);
+        Long userId = optionalQuestion.get().getUser().getId();
+        questionRepository.deleteById(questionId);
 
-        updateRank(user_id, -1);
+        updateRank(userId, -1);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @GetMapping("/api/question/tag")
     @ApiOperation(value = "질문 태그로 검색")
-    public ResponseEntity<Object> searchQuestionByTag(@RequestParam(required = true, name = "tag_id") Long tag_id,
+    public ResponseEntity<Object> searchQuestionByTag(@RequestParam(required = true, name = "tag_id") Long tagId,
             @RequestParam(required = false, name = "page") Integer page) {
         if (page == null)
             page = 1;
 
-        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id,
+        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tagId,
                 PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
@@ -242,8 +242,8 @@ public class QuestionController {
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    private void updateRank(Long user_id, int step) {
-        Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
+    private void updateRank(Long userId, int step) {
+        Optional<Rank> optionalRank = rankRepository.findByUserId(userId);
         if (optionalRank.isPresent()) {
             Rank rank = optionalRank.get();
             rank.setQuestionCnt(rank.getQuestionCnt() + step);

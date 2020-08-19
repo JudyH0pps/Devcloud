@@ -13,15 +13,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
-    List<Answer>findAllByQuestionId(Long question_id, Sort sort);
+    List<Answer>findAllByQuestionId(Long questionId, Sort sort);
 
-    List<Answer> findAllByUserId(Long user_id);
+    List<Answer> findAllByUserId(Long userId);
 
     Optional<Answer> findById(Long id);
 
-    Optional<Answer> findByQuestionIdAndSelected(Long quesiton_id, Boolean selected);
+    Optional<Answer> findByQuestionIdAndSelected(Long quesitonId, Boolean selected);
 
     Long countByUpdatedAtBetween(Date start, Date end);
 
-    Optional<Answer> findFirstByQuestionId(Long question_id);
+    Optional<Answer> findFirstByQuestionId(Long questionId);
 }

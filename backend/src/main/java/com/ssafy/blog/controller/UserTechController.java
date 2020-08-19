@@ -37,30 +37,30 @@ public class UserTechController {
 
     @GetMapping("/api/user/techstack")
     @ApiOperation(value = "사용자 기술스택 검색")
-    public ResponseEntity<List<UserTech>> searchUserTech(@RequestParam("user_id") Long user_id) {
-        List<UserTech> list = userTechRepository.findByUserId(user_id);
+    public ResponseEntity<List<UserTech>> searchUserTech(@RequestParam("user_id") Long userId) {
+        List<UserTech> list = userTechRepository.findByUserId(userId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/api/user/techstack")
     @ApiOperation(value = "사용자 기술스택 추가")
     public ResponseEntity<String> addUserTech(@RequestBody AddUserTechRequest request) {
-        Optional<UserTech> optionalUserTech = userTechRepository.findByUserIdAndTechId(request.getUser_id(),
-                request.getTech_id());
+        Optional<UserTech> optionalUserTech = userTechRepository.findByUserIdAndTechId(request.getUserId(),
+                request.getTechId());
         if (optionalUserTech.isPresent()) {
             return new ResponseEntity<>("already exist", HttpStatus.OK);
         }
 
         UserTech userTech = new UserTech();
 
-        Optional<User> optionalUser = userRepository.findById(request.getUser_id());
+        Optional<User> optionalUser = userRepository.findById(request.getUserId());
         User user = null;
         if (optionalUser.isPresent()) {
             user = optionalUser.get();
         } else
             return new ResponseEntity<>("user_id is not valid", HttpStatus.OK);
 
-        Optional<Tech> optionalTech = techRepository.findById(request.getTech_id());
+        Optional<Tech> optionalTech = techRepository.findById(request.getTechId());
         Tech tech = null;
         if (optionalTech.isPresent()) {
             tech = optionalTech.get();
@@ -76,8 +76,8 @@ public class UserTechController {
 
     @DeleteMapping("/api/user/techstack")
     @ApiOperation(value = "사용자 기술스택 삭제")
-    public ResponseEntity<String> deleteUserTech(@RequestParam("user_tech_id") Long user_tech_id) {
-        Optional<UserTech> optionalUserTech = userTechRepository.findById(user_tech_id);
+    public ResponseEntity<String> deleteUserTech(@RequestParam("user_tech_id") Long userTechId) {
+        Optional<UserTech> optionalUserTech = userTechRepository.findById(userTechId);
         if (optionalUserTech.isPresent()) {
             userTechRepository.delete(optionalUserTech.get());
             return new ResponseEntity<>("success", HttpStatus.OK);

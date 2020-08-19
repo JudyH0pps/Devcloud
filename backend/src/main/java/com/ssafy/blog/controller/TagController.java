@@ -48,8 +48,8 @@ public class TagController {
 
     @DeleteMapping("/api/tag")
     @ApiOperation(value = "태그 삭제")
-    public ResponseEntity<String> deleteTag(@RequestParam("tag_id") Long tag_id) {
-        Optional<Tag> optionalTag = tagRepository.findById(tag_id);
+    public ResponseEntity<String> deleteTag(@RequestParam("tag_id") Long tagId) {
+        Optional<Tag> optionalTag = tagRepository.findById(tagId);
         if (!optionalTag.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
 
