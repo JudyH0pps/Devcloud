@@ -36,38 +36,34 @@
         <!-- <p class="q-content">{{ answer.content }}</p> -->
         <div v-html="answer.content" class="q-content"></div>
         <div class="q-footer">
-            <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span>
-            <div>
-                <span class="delBtn" style="float: right; margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</span>
-                <span class="editBtn" style="float: right; margin: 0 2px; cursor: pointer;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</span>
-            </div>
+            <!-- <span style="cursor: pointer" @click="changeCommentInput">댓글 달기</span> -->
+            <button class="editBtn" style="margin: 0 2px; cursor: pointer; margin-left:auto;" @click="$router.push({ name : 'EditAnswer', params : { question_id : $route.params.question_id, answer_id: answer.id } })" v-if="parseInt($cookie.get('user_id')) === answer.user.id">수정</button>
+            <button class="delBtn" style="margin: 0 2px; cursor: pointer" v-if="parseInt($cookie.get('user_id')) === answer.user.id" @click="deleteAnswer({ answer_id: answer.id, question_id: $route.params.question_id })">삭제</button>
         </div>
 
         <!-- 댓글 작성란 -->
-        <div class="commentSection" v-show="commentInput">
-            <input style="padding-top: 15px;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="악의가 담긴 댓글은 누군가를 상처입힐 수 있습니다.">
-            <button style="cursor: pointer;" @click="postComment">작성</button>
+        <div class="commentSection" style="margin-top: 10px;">
+            <input style="outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="해당 답변에 대한 댓글을 작성해주세요">
+            <button class="writeBtn" style="cursor: pointer; margin-left:auto;" @click="postComment">댓글작성</button>
 		</div>
 
         <!-- 댓글 목록 -->
         <ul class="commentSection" v-if="comments">
-			<li style="list-style: none; display: flex; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
-                <div style="display: flex; flex-direction: column; width: 100%">
-                    <header style="display: flex; justify-content: space-between;">
-                        <h5>{{ comment.user.name }}</h5>
-                        <span>{{ comment.updatedAt }}</span>
-                    </header>
+			<li style="list-style: none; width: 100%; display: flex; flex-direction: column; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
+                <div style="display: flex; justify-content: space-between;">
+                    <h5 style="font-size: 12px;">{{ comment.user.name }}</h5>
+                    <span style="font-size: 12px;">{{ comment.updatedAt }}</span>
+                </div>
                     
-                    <div style="display: flex; justify-content: space-between;">
-                        <p v-show="selectedIndex !== index">{{ comment.content }}</p>
-                        <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
-                        <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
-                            <button class="editBtn" @click="getIndex(index)">수정</button>
-                            <button class="delBtn" @click="deleteComment(comment.id)">삭제</button>
-                        </div>
-                        <div v-show="selectedIndex === index">
-                            <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
-                        </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <p style="margin-left: 10px;" v-show="selectedIndex !== index">{{ comment.content }}</p>
+                    <input @keyup.enter="editComment({ content: comment.content, comment_id: comment.id })" v-show="selectedIndex === index" type="text" v-model="comment.content">
+                    <div v-show="selectedIndex !== index && comment.user.id === parseInt($cookie.get('user_id'))">
+                        <button class="editBtn" @click="getIndex(index)">수정</button>
+                        <button class="delBtn" @click="deleteComment(comment.id)">삭제</button>
+                    </div>
+                    <div v-show="selectedIndex === index">
+                        <button @click="editComment({ content: comment.content, comment_id: comment.id })">수정</button>
                     </div>
                 </div>
 			</li>
@@ -152,7 +148,7 @@ export default {
                 .catch(err => console.log(err))
         },
         postComment() {
-            if (this.isLoggedIn === true) {
+            if (this.isLoggedIn === true && this.postContent !== '') {
                 var commentData = {
                     user_id: parseInt(this.$cookie.get('user_id')), 
                     answer_id: this.answer.id,
@@ -161,10 +157,14 @@ export default {
                 http
                     .post('/api/comment', commentData)
                     .then(() => {
-                        this.fetchComments()
-                        this.postContent = ''
+                        this.fetchComments();
+                        this.postContent = '';
+                        this.changeCommentInput();
                     })
                     .catch(err => console.log(err))
+            }
+            else if (this.postContent === ''){
+                alert('댓글 내용을 작성해주세요!')
             }
             else {
                 this.changeModal()
@@ -176,6 +176,7 @@ export default {
                 .then(() => {
                     this.fetchComments()
                     this.selectedIndex = -1
+                    this.changeCommentInput();
                 })
                 .catch(err => console.log(err))
         },
@@ -328,15 +329,14 @@ export default {
         },
     },
     created() {
+        // alert(this.isLoggedIn)
         this.fetchComments(this.answer.id);
         // 글 작성자 id
         this.getUserId();
         // 좋아요 상태
         this.loadLikeState()
         // 채택 유무
-        this.getSelectedAnswer()
-
-        
+        this.getSelectedAnswer() 
     }
 }
 </script>
@@ -385,16 +385,6 @@ export default {
 .q-footer {
     display: flex; 
     justify-content: space-between;
-}
-div > button {
-    cursor: pointer;
-    background-color: #78acff;
-    padding: 5px;
-    border-radius: 10px;
-    margin: 2px 2px
-}
-div > button:hover {
-    background-color: #4879c7;
 }
 .like-button {
     height: 50px;
@@ -453,12 +443,14 @@ div > button:hover {
 .editBtn,
 .delBtn {
     border: 1px solid #ccc;
-    border-radius: 35px;
+    border-radius: 5px;
     width: 50px;
     height: 25px;
     text-align: center;
     margin: 2px; 
     background: white;
+    vertical-align: center;
+    padding: 0;
 }
 .delBtn:hover {
     color: #eee;
@@ -469,9 +461,21 @@ div > button:hover {
     background: rgb(138, 243, 138);
 }
 .commentSection {
-    width: 95%;
-    margin: 0 auto;
-    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
-    padding: 0 10px;
+    width: 98%;
+    margin: 0 auto 0;
+    display: flex;
+    flex-direction: column;
+    
+    /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
+    /* padding: 0 10px; */
+}
+.writeBtn {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 70px;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+
 }
 </style>
