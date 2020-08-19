@@ -89,7 +89,7 @@ export default {
   width: 100%; 
   height: 30vh;
   /* background-image: url("../assets/dark-sky-background.jpg"); */
-  background: #fff;
+  background: rgba(17, 11, 6, 0.822);
 }
 .container-jay {
     width: 100%;
@@ -102,17 +102,17 @@ export default {
     width: 20%;
     height: 150px;
     margin-top: 75px;
-    border: 1.5px solid rgb(124, 121, 121);
+    border: 1.5px solid white;
     text-align: center;
     border-radius: 5px;
 }
 span {
     font-size: 48px;
-    color: rgb(124, 121, 121);
+    color: white;
     padding-top: 20px;
 }
 h3 {
     padding-top: 10px;
-    color: rgb(124, 121, 121);
+    color: white;
 }
 </style>

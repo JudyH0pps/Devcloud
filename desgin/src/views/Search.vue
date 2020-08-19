@@ -17,10 +17,10 @@
         <hr style="border: 1px solid #D3D3D3; margin-top: 20px;">
         
         <div v-if="this.searchKeyword">
-            <h2>Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
+            <h2 style="margin: 30px 0 50px;">Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
         </div>
         <div v-else>
-            <h2>All Questions</h2>
+            <h2 style="margin: 30px 0 50px;">All Questions</h2>
         </div>
 
         <SearchResultCard  v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword" />

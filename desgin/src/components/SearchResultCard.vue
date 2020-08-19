@@ -10,6 +10,10 @@
         
         <div class="post-data">
             <div class="title" @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)"></div>
+            <div v-if="questionHasSelected">
+                <i class="fas fa-check-circle" style="color: green; font-size: 16px"></i>
+                <span style="font-size:16px; font-weight:bold;"> 채택완료</span>
+            </div>
             <div style="text-align: right;">
                 <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name">{{ tag.tag.name }}</span>
             </div>          
@@ -56,6 +60,7 @@
 </template>
 
 <script>
+import http from "@/util/http-common"
 import Vue from 'vue';
 export default{
     name: 'SearchResultCard',
@@ -69,6 +74,7 @@ export default{
             // user: 'Nongdamgom',
 
             //question_create: this.question.createdAt,
+            questionHasSelected: false,
         }
     },
     props: {
@@ -98,9 +104,32 @@ export default{
         //        this.question_create = createDate;
         //     }
         // }
+        getSelectedAnswer() {
+            //console.log("현재 질문아이디는 : " + this.questionId)
+            http
+                // [1] 먼저 해당 포스트에 채택된 답변이 있는지 조회
+                .get('/api/answer/selected', {
+                    params: {
+                        "question_id": this.question.id
+                    }
+                })
+                .then(({data}) => {
+                    console.log("채택유무 : " + data);
+
+                    // data is not "Resource not bound"
+                    if(data != "Resource not bound"){
+                        // 채택이 완료됬다면 채택완료 버튼 보여지기
+                        this.questionHasSelected = true;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        },
     },
     created() {
         //this.questionCreate();
+        this.getSelectedAnswer()
     },
 }
 
@@ -108,12 +137,12 @@ export default{
 //title
 Vue.filter("highlights1", function(item, keyword){
     if(keyword == undefined) {
-        return 'Q. ' + item;
+        return '[ Q ] ' + item;
     }
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
     // 해당 키워드 하이라이트
-    return 'Q. ' + item.toString().replace(iQuery, matchedTxt => {
+    return '[ Q ] ' + item.toString().replace(iQuery, matchedTxt => {
         return "<span class='highlight'>" + matchedTxt + "</span>";
     });
 });
@@ -154,6 +183,9 @@ Vue.filter("highlights2", function(item, keyword){
     overflow: hidden;
     flex-direction: row;
     /* height: 200px; */
+    padding-bottom: 25px;
+    padding-top: 25px;
+    border-bottom: 1px solid #eee;
 }
 .card .title {
     color: rgb(26, 13, 171);;
@@ -215,7 +247,6 @@ Vue.filter("highlights2", function(item, keyword){
     line-height: 1;
     font-weight: bold;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
     margin-bottom: 10px;
 }
 .subtitle {
