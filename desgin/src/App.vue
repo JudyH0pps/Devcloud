@@ -16,7 +16,7 @@
 
 <script>
 import HeadBar from '@/components/HeadBar.vue'
-import MainBottom from '@/components/MainBottom.vue'
+
 import Footer from '@/components/Footer.vue'
 import {mapState,mapActions,mapMutations} from 'vuex'
 
@@ -25,7 +25,7 @@ export default{
   components: {
     HeadBar,
     Footer,
-    MainBottom,
+    
   },
   
   methods: {
