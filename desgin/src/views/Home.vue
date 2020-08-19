@@ -1,21 +1,22 @@
 <template>
-  <section class="Home">
-    <!-- <div class="title-wrapper">
-      <h1 contenteditable data-heading="DevCloud">DevCloud</h1>
-    </div> -->
-    <SearchBar/>
-    <div class="wave wave1"></div>
-    <div class="wave wave2"></div>
-    <div class="wave wave3"></div>
-    <div class="wave wave4"></div>
+  <div>
+    <section class="Home">
+      <!-- <div class="title-wrapper">
+        <h1 contenteditable data-heading="DevCloud">DevCloud</h1>
+      </div> -->
+      <SearchBar/>
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+      <div class="wave wave4"></div>
+    </section>
     <MainBottom/>
-  </section>
+  </div>
 </template>
 
 <script>
 import SearchBar from '@/components/SearchBar.vue'
 import MainBottom from '@/components/MainBottom.vue'
-
 export default {
   name: 'Home',
   components: {
