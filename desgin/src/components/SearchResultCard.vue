@@ -121,6 +121,7 @@ export default{
         //        this.question_create = createDate;
         //     }
         // }
+        ,
         getSelectedAnswer() {
             //console.log("현재 질문아이디는 : " + this.questionId)
             http
