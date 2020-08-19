@@ -127,6 +127,7 @@ export default{
         this.fetchQuestionsByKeyword(this.searchKeyword),
         this.doAjax()
         document.documentElement.scrollTop = 0;
+        // console.log(this.questions)
     },
     watch:{
         searchKeyword : function(){

@@ -1,21 +1,21 @@
 <template>
     <div class="backImg-jay">
         <div class="container-jay">
-            <div>
-                <span>{{questionAllCnt}}</span>
-                <h3>전체 질문</h3>
+            <div style="display:flex; flex-direction:column; justify-content:space-around;">
+                <span style="padding:0;">{{questionAllCnt}}</span>
+                <h3 style="padding:0;">전체 질문</h3>
             </div>
-            <div>
-                <span>{{answerAllCnt}}</span>
-                <h3>전체 답변</h3>
+            <div style="display:flex; flex-direction:column; justify-content:space-around;">
+                <span style="padding:0;">{{answerAllCnt}}</span>
+                <h3 style="padding:0;">전체 답변</h3>
             </div>
-            <div>
-                <span>{{questionCnt}}</span>
-                <h3>오늘의 질문</h3>
+            <div style="display:flex; flex-direction:column; justify-content:space-around;">
+                <span style="padding:0;">{{questionCnt}}</span>
+                <h3 style="padding:0;">오늘의 질문</h3>
             </div>
-            <div>
-                <span>{{answerCnt}}</span>
-                <h3>오늘의 답변</h3>
+            <div style="display:flex; flex-direction:column; justify-content:space-around;">
+                <span style="padding:0;">{{answerCnt}}</span>
+                <h3 style="padding:0;">오늘의 답변</h3>
             </div>
         </div>
     </div>
@@ -87,30 +87,32 @@ export default {
 <style scoped>
 .backImg-jay {
   width: 100%; 
-  height: 300px;
-  background-image: url("../assets/dark-sky-background.jpg");
-  /*background: #2E2E2E;*/
+  height: 30vh;
+  /* background-image: url("../assets/dark-sky-background.jpg"); */
+  background: #fff;
 }
 .container-jay {
     width: 100%;
     height: 150px;
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 .container-jay div {
     width: 20%;
     height: 150px;
     margin-top: 75px;
-    border: 1.5px solid whitesmoke;
+    border: 1.5px solid rgb(124, 121, 121);
     text-align: center;
+    border-radius: 5px;
 }
 span {
     font-size: 48px;
-    color: whitesmoke;
+    color: rgb(124, 121, 121);
     padding-top: 20px;
 }
 h3 {
     padding-top: 10px;
-    color: whitesmoke
+    color: rgb(124, 121, 121);
 }
 </style>

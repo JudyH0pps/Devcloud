@@ -9,7 +9,7 @@
     </div> -->
     <router-view class="botmargin400px"/>
 
-    <MainBottom/>
+ 
     <Footer/>
   </div>
 </template>

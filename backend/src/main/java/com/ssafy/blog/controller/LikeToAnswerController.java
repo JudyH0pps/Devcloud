@@ -44,32 +44,14 @@ public class LikeToAnswerController {
     @GetMapping("/api/liketoanswer")
     @ApiOperation(value = "답변에 대한 좋아요 목록 조회")
     public ResponseEntity<Object> searchLikeToAnswer(
-            @RequestParam(required = false, name = "user_id") Long user_id,
-            @RequestParam(required = false, name = "answer_id") Long answer_id) {
-        List<LikeToAnswerResponse> list = new ArrayList<>();
-        
-        if(user_id != null && answer_id != null) {
-            Optional<LikeToAnswer> optionalLikeToAnswer = likeToAnswerRepository.findByUserIdAndAnswerId(user_id, answer_id);
-            if(!optionalLikeToAnswer.isPresent()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(optionalLikeToAnswer.get(), HttpStatus.OK);
+            @RequestParam("user_id") Long user_id,
+            @RequestParam("answer_id") Long answer_id) {
+        Optional<LikeToAnswer> optionalLTA = likeToAnswerRepository.findByUserIdAndAnswerId(user_id, answer_id);
+        if(optionalLTA.isPresent()) {
+            LikeToAnswerResponse response = makeResponse(optionalLTA.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        if (user_id != null && answer_id == null) {
-            for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAllByUserId(user_id)) {
-                list.add(makeResponse(likeToAnswer));
-            }
-
-        } else if (user_id == null && answer_id != null) {
-            for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAllByAnswerId(answer_id)) {
-                list.add(makeResponse(likeToAnswer));
-            }
-
-        } else {
-            for (LikeToAnswer likeToAnswer : likeToAnswerRepository.findAll()) {
-                list.add(makeResponse(likeToAnswer));
-            }
-        }
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
 
     @PostMapping("/api/liketoanswer")

@@ -2,12 +2,17 @@ package com.ssafy.blog.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.ssafy.blog.model.Answer;
 import com.ssafy.blog.model.Question;
 import com.ssafy.blog.model.QuestionTag;
 import com.ssafy.blog.model.Rank;
@@ -15,6 +20,7 @@ import com.ssafy.blog.model.Tag;
 import com.ssafy.blog.model.User;
 import com.ssafy.blog.payload.question.AddQuestionRequest;
 import com.ssafy.blog.payload.question.UpdateQuestionRequest;
+import com.ssafy.blog.repository.AnswerRepository;
 import com.ssafy.blog.repository.QuestionRepository;
 import com.ssafy.blog.repository.QuestionTagRepository;
 import com.ssafy.blog.repository.RankRepository;
@@ -54,6 +60,9 @@ public class QuestionController {
     @Autowired
     private QuestionTagRepository questionTagRepository;
 
+    @Autowired
+    private AnswerRepository answerRepository;
+
     private ResponseEntity<Question> badResponse = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
     private static final String PATH_PREFIX = "/home/ubuntu/static/images/";
@@ -77,7 +86,8 @@ public class QuestionController {
                     PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         } else if (keyword == null && user_id != null && question_id == null) {
-            pageList = questionRepository.findAllByUserId(user_id, PageRequest.of(page - 1, 10, Sort.by("id").descending()));
+            pageList = questionRepository.findAllByUserId(user_id,
+                    PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         } else if (keyword == null && user_id == null && question_id != null) {
             Optional<Question> optionalQuestion = questionRepository.findById(question_id);
@@ -165,6 +175,10 @@ public class QuestionController {
         if (!optionalQuestion.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
 
+        Optional<Answer> optionalAnswer = answerRepository.findFirstByQuestionId(question_id);
+        if (optionalAnswer.isPresent())
+            return new ResponseEntity<>("already answer is exist", HttpStatus.OK);
+
         Long user_id = optionalQuestion.get().getUser().getId();
         questionRepository.deleteById(question_id);
 
@@ -180,9 +194,34 @@ public class QuestionController {
         if (page == null)
             page = 1;
 
-        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id, PageRequest.of(page - 1, 10));
+        Page<Question> list = questionRepository.findAllByQuestionTags_TagId(tag_id,
+                PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/question/today")
+    @ApiOperation(value = "오늘 작성된 질문 리턴")
+    public ResponseEntity<Object> searchQuestionByDate() throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String nowString = df.format(new Date());
+        Date start = df.parse(nowString);
+
+        calendar.setTime(start);
+        calendar.add(Calendar.DATE, 1);
+        Date end = calendar.getTime();
+
+        Long count = questionRepository.countByUpdatedAtBetween(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/question/all")
+    @ApiOperation(value = "작성된 모든 질문 리턴")
+    public ResponseEntity<Object> searchAllQuestionCnt() {
+        Long count = questionRepository.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
     @PostMapping("/api/question/upload")
@@ -194,7 +233,7 @@ public class QuestionController {
             File newFile = new File(PATH_PREFIX + filename);
             newFile.mkdirs();
             file.transferTo(newFile);
-        } catch(IllegalStateException | IOException e) {
+        } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
         String url = BASE_IMAGE_URL + filename;
@@ -205,7 +244,7 @@ public class QuestionController {
 
     private void updateRank(Long user_id, int step) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
-        if(optionalRank.isPresent()){
+        if (optionalRank.isPresent()) {
             Rank rank = optionalRank.get();
             rank.setQuestionCnt(rank.getQuestionCnt() + step);
             rankRepository.save(rank);

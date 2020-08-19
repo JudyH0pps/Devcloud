@@ -1,6 +1,10 @@
 package com.ssafy.blog.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -80,12 +84,12 @@ public class AnswerController {
         // 1. 유저 있는지 찾기
         Optional<User> optionalUser = userRepository.findById(request.getUser_id());
         if (!optionalUser.isPresent())
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         // 2. 질문 있는지 찾기
         Optional<Question> optionalQuestion = questionRepository.findById(request.getQuestion_id());
         if (!optionalQuestion.isPresent())
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         User user = optionalUser.get();
         Question question = optionalQuestion.get();
@@ -101,7 +105,7 @@ public class AnswerController {
         answer = answerRepository.save(answer);
 
         // 4. rank cnt
-        updateRank(request.getUser_id(), 1);
+        updateRank(request.getUser_id(), 1, 1);
 
         // 5. 알림 푸쉬
         String message = user.getName() + "님이 질문: " + question.getTitle() + " 에 답변을 달았습니다.";
@@ -133,11 +137,14 @@ public class AnswerController {
         Optional<Answer> optionalAnswer = answerRepository.findById(answer_id);
         if (!optionalAnswer.isPresent())
             return new ResponseEntity<>("not exist", HttpStatus.OK);
+        Answer answer = optionalAnswer.get();
+        if(answer.getSelected())
+            return new ResponseEntity<>("selected", HttpStatus.OK);
 
         Long user_id = optionalAnswer.get().getUser().getId();
         answerRepository.deleteById(answer_id);
 
-        updateRank(user_id, -1);
+        updateRank(user_id, -1, 1);
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
@@ -152,16 +159,20 @@ public class AnswerController {
         Answer answer = optionalAnswer.get();
 
         // 해당 댓글이 달린 질문에 이미 채택된 답변이 있는지 검사
-        Optional<Answer> optionalSelectedAnswer = answerRepository.findByQuestionIdAndSelected(answer.getQuestion().getId(), true);
-        if(optionalSelectedAnswer.isPresent())
+        Optional<Answer> optionalSelectedAnswer = answerRepository
+                .findByQuestionIdAndSelected(answer.getQuestion().getId(), true);
+        if (optionalSelectedAnswer.isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         //
         answer.setSelected(true);
         answer = answerRepository.save(answer);
 
+        // rank 반영
+        updateRank(answer.getQuestion().getUser().getId(), 1, 2);
+
         // 알림 생성
         Question question = answer.getQuestion();
-        String message = question.getUser().getName() +"님이 답변을 채택했습니다.";
+        String message = question.getUser().getName() + "님이 답변을 채택했습니다.";
         sendNotification(question.getUser(), answer.getUser(), question, message);
 
         return new ResponseEntity<>(answer, HttpStatus.OK);
@@ -171,18 +182,48 @@ public class AnswerController {
     @ApiOperation(value = "질문에 대한 채택답변을 리턴")
     public ResponseEntity<Object> searchSelectedAnswer(@RequestParam("question_id") Long quesiton_id) {
         Optional<Answer> optionalAnswer = answerRepository.findByQuestionIdAndSelected(quesiton_id, true);
-        if(optionalAnswer.isPresent()) {
+        if (optionalAnswer.isPresent()) {
             Answer answer = optionalAnswer.get();
             return new ResponseEntity<>(answer, HttpStatus.OK);
         }
         return new ResponseEntity<>("Resource not bound", HttpStatus.OK);
     }
 
-    private void updateRank(Long user_id, int step) {
+    @GetMapping("/api/answer/today")
+    @ApiOperation(value = "오늘 작성된 답변 리턴")
+    public ResponseEntity<Object> searchAnswerByDate() throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String nowString = df.format(new Date());
+        Date start = df.parse(nowString);
+
+        calendar.setTime(start);
+        calendar.add(Calendar.DATE, 1);
+        Date end = calendar.getTime();
+
+        Long count = answerRepository.countByUpdatedAtBetween(start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/answer/all")
+    @ApiOperation(value = "작성된 모든 답변 리턴")
+    public ResponseEntity<Object> searchAllAnswerCnt() {
+        Long count = answerRepository.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
+
+    private void updateRank(Long user_id, int step, int type) {
         Optional<Rank> optionalRank = rankRepository.findByUserId(user_id);
-        Rank rank = optionalRank.get();
-        rank.setAnswerCnt(rank.getAnswerCnt() + step);
-        rankRepository.save(rank);
+        if (optionalRank.isPresent()) {
+            Rank rank = optionalRank.get();
+            if (type == 1)
+                rank.setAnswerCnt(rank.getAnswerCnt() + step);
+            else if (type == 2)
+                rank.setSelectCnt(rank.getSelectCnt() + step);
+            rankRepository.save(rank);
+        }
     }
 
     private AnswerResponse makeAnswerResponse(Answer answer) {
@@ -206,7 +247,7 @@ public class AnswerController {
         n.setIsRead(false);
         n.setCreatedAt(new Date());
         nr.save(n);
-        
+
         receiver.setUnReadNotificationCnt(receiver.getUnReadNotificationCnt() + 1);
         userRepository.save(receiver);
     }

@@ -13,9 +13,9 @@
             <!-- <p class="blog-post__text">
                 {{ item.content }}
             </p> -->
-            <!-- <div>
+            <div>
                 <i class="fas fa-heart" style="margin-left:auto;color:red;"></i>{{ item.likeCnt }}
-            </div> -->
+            </div>
         </div>
     </div>
 

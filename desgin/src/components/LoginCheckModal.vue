@@ -1,5 +1,19 @@
 <template>
-  <div class="modal-bg" v-if="loginCheck">
+    <div class="modal-bg" v-if="loginCheck">
+        <div id="login-box" class="modal" >
+            <div style="width:100%; height:20%; background:skyblue; border-radius:4px 4px 0 0;display:flex; align-items:center; justify-content: center;">
+                <p style="text-align:center; color:white; font-weight:bold;">LOGIN</p>
+            </div>
+            <p>로그인이 필요한 서비스입니다.</p>
+            <p>로그인 하시겠습니까?</p>
+            <button class="yes" @click="switchModal">Yes</button>
+            <div style="width:100%; height:25%; background:skyblue; border-radius: 0 0 4px 4px;display:flex; align-items:center; justify-content: center;">
+                <button class="social close" @click="closeModal">Close</button>
+            </div>
+            
+        </div>
+    </div>
+  <!-- <div class="modal-bg" v-if="loginCheck">
       <div class="modal">
         <div class="modal-header">
             <h3>로그인이 필요한 기능입니다.</h3>
@@ -10,7 +24,7 @@
             <button @click="closeModal">아니오</button>
         </div>
       </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -39,20 +53,23 @@ export default {
     height: 100vh;
     background: rgba(0,0,0,0.5);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 999;
 }
 .modal {
+    /* box-shadow: 0px 3px 5px rgba(0,0,0,.5); */
     background: white;
-    width: 50%;
-    height: 50%;
+    width: 550px;
+    height: 300px;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+    flex-direction: column;
     z-index: 1000;
+    border-radius: 4px;
+    /* border: 1px solid #ccc; */
+    /* padding: 10px; */
 }
 .modal-header {
     text-align: center;
@@ -66,18 +83,24 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
-.modal-buttons > button {
-    cursor: pointer;
-    width: 100px;
-    height: 50px;
-    border: 2px solid #99fdff;
-    border-radius: 30px;
-    background-color: white;
-}
-.modal-buttons > button:hover {
-    background-color: #99fdff;
-}
 .modal-buttons > button:focus {
     outline: none;
+}
+button {
+    /* margin-bottom: 20px; */
+    width: 180px;
+    height: 36px;
+    border: none;
+    border-radius: 2px;
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: 500;
+    transition: 0.2s ease;
+    cursor: pointer;
+    z-index: 1000;
+    background: #000;
+}
+.yes {
+    background: rgb(71, 187, 67)
 }
 </style>
