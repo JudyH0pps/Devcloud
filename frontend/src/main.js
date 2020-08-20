@@ -1,16 +1,12 @@
-import '@babel/polyfill'
-import 'mutationobserver-shim'
 import Vue from 'vue'
-import VueCookie from 'vue-cookie'
-import './plugins/bootstrap-vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import VueCookie from 'vue-cookie'
+import vueMoment from 'vue-moment'
+import moment from 'moment'
 
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-
-Vue.use(BootstrapVue)
-Vue.use(BootstrapVueIcons)
+Vue.use(vueMoment, moment) 
 Vue.use(VueCookie)
 
 Vue.config.productionTip = false

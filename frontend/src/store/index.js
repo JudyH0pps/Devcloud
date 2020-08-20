@@ -8,15 +8,18 @@ import question from "@/store/modules/question.js";
 import answer from "@/store/modules/answer.js";
 import notification from "@/store/modules/notification.js";
 import tech from "@/store/modules/tech.js"
+import tag from "@/store/modules/tag.js"
+
 
 export default new Vuex.Store({
   state: {
-    testValid : true
+    testValid : true, //프로필 변경할수있는 상태인지 체크할 변수
+    searchBarinHeadbar: true,
   },
   mutations: {
-      settestValid(state,payload){
-        state.testValid = payload
-      }
+    settestValid(state,payload){
+      state.testValid = payload
+    }
   },
   actions: {
   },
@@ -26,5 +29,6 @@ export default new Vuex.Store({
     answer,
     notification,
     tech,
+    tag,
   },
 })

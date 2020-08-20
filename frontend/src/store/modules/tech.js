@@ -22,11 +22,6 @@ export default {
         setTechsIn(state,payload){
             state.techsIn = payload
         },
-        setTech(state,payload){
-            state.tech.key = payload.name;
-            state.tech.value = payload.name;
-            state.tech.id = payload.id;
-        }
     },
 	actions: {
         // 태그리스트 조회

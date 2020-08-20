@@ -1,131 +1,267 @@
 <template>
-  <div>
-		<!-- 질문 타이틀 -->
-		<header>
-			<h1 v-if="question" class="mb-3">
-				{{ question.title }}
-			</h1>
-		</header>
-		
-		<aside v-if="question.user" class="d-flex justify-content-between">
-			<div>
-				질문자 :
-				<router-link :to= "{ name : 'Profile' , params : {'user_id' : question.user.id}}">
-					{{question.user.name}}
-				</router-link>
-				<!-- <a class="text-decoration-none text-reset">{{ question.user.name }}</a> -->
-			</div>
-			<!-- like test part -->
-			<div>
-				https://stackoverrun.com/ko/q/11171393
-			</div>
-			<ul class="d-flex">
-				<!-- suggestion button part -->
-				<!-- 
-					1. 추천 클릭 버튼을 클릭시 해당유저의 정보를 확인해 해당 포스트에 좋아요 버튼을 입력했는지
-					아닌지 확인한다.
+    <div class="detailquestion" v-if="this.$store.state.question.question">
+        <header style="display: flex; justify-content: space-between; align-items: center">
+            <h1 class="q-title">Q. {{ question.title }}</h1>
+            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons">
+                <button class="editBtn" @click="moveToEdit">수정</button>
+                <button class="delBtn" @click="deleteQuestion(parseInt($route.params.question_id))">삭제</button>
+            </div>
+        </header>
+        <div class="leftline">
+            <div class="tags">
+                <span class="tag" v-for="data in question.questionTags" :key="data.id">{{ data.tag.name }}</span>
+            </div>
+            <div class="q-info">
+                <div class='profile'>
+                    <img :src="question.user.imageUrl" class="profile_img">
+                    <router-link :to="{name: 'Profile', params :{ user_id : question.user.id }}">
+                        <p>{{ question.user.name }}</p>
+                    </router-link>
+                </div>
+                <p>{{ question.updatedAt }}</p>
+            </div>
+        </div>
+        <p v-html="question.content" class="q-content">{{ question.content }}</p>
 
-					2. 추천 버튼이 눌러져 있는 상태라면 추천 취소 아니라면 추천값을 올린다.
 
-					[like table]
-					id
-					post_id
-					user_id
+        <!-- current user가 like button clicked 상태면 x -->
+        <div @click="likeClick" class="like-button">
+            <div v-if="chkClicked">
+                <i class="fas fa-heart"></i>
+                <span>좋아요 취소</span>
+            </div>
+            <div v-else>
+                <i class="far fa-heart"></i>
+                <span>좋아요</span>
+            </div>
+        </div>
 
-				-->
-				<li><i class="fas fa-sign-language" @click="clickLike(likeData)"></i></li>
-				
-				<li v-if="question.user.id===parseInt($cookie.get('user_id'))"><i @click="goEditQuestion" class="fas fa-edit"></i></li>
-				<li v-if="question.user.id===parseInt($cookie.get('user_id'))"><i @click="deleteQuestion(qid)" class="far fa-trash-alt"></i></li>
-			</ul>
-		</aside>
 
-		<hr>
+        <div class="vld-parent">
+            <loading :active.sync="isLoading" 
+            :can-cancel="true" 
+            :is-full-page="fullPage"
+            color=#5ABEFF
+            :width="128"
+            :height="128"
+            >
+            </loading>
+            
 
-		<!-- 질문 본론 -->
-		<article>				
-			<!-- 질문 컨텐츠 -->
-			<div>
-				<p v-if="question">{{ question.content }}</p>
-			</div>
-
-		</article>
-		
-		<!-- 태그 -->
-		<div class="mt-3">
-			<!-- <button class="btn btn-primary mx-1" v-for="(tag, index) in questionData.tags" :key="index">#{{ tag }}</button> -->
-			<button v-if="isDetailPage" class="btn btn-outline-secondary float-right" @click="onClickWriteAnswer">답변 작성</button>
-		</div>
-  </div>
+            <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
+            <!--<button @click.prevent="doAjax">fetch Data</button>-->
+        </div>
+        <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
+        <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
+    </div>
 </template>
 
 <script>
+import LoginCheckModal from '@/components/LoginCheckModal.vue'
+import LoginModal from '../components/LoginModal.vue'
 import { mapState, mapActions } from 'vuex'
-
+import http from "@/util/http-common"
+// Import component
+import Loading from 'vue-loading-overlay';
+// Import stylesheet
+import 'vue-loading-overlay/dist/vue-loading.css';
 export default {
-	name: "DetailQuestion",
-	data() {
-		return{
-			likeData: {
-				"question_id": "",
-				"user_id": this.$cookie.get('user_id')
-			},
-		}
+    name: 'DetailQuestion',
+    data() {
+        return {
+            // question: {},
+            chkClicked: false,
+            isLoading: false,
+            fullPage: true,
+
+            chk: 100,
+
+            loginModalOn: false,
+            loginCheck: false,
+        }
     },
-	computed: {
-		...mapState({
-			question: state => state.question.question,
-		}),
-
-		questionId() {
-			return parseInt(this.$route.params.question_id)
-		}
-	},
+     components: {
+        Loading,
+        LoginModal,
+        LoginCheckModal,
+    },
+    computed: {
+        ...mapState({
+            question: state => state.question.question,
+            answers: state => state.answer.answers,
+            isLoggedIn: state => state.user.isLoggedIn
+		})
+    },
 	methods: {
-		onClickWriteAnswer() {
-			this.$router.push({ name: 'WriteAnswer', params: { question_id: this.qid }})
-		},
-		...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
-		
-		// like store modules action 호출
-		...mapActions('like', ['postQuestionLike']),
-
-		// click event
-		// 
-		clickLike(likeData) {
-			if(likeData.user_id === undefined){
-				alert("you need login");
-				// 로그인페이지나 메인페이지로 이동이 필요
-			} else{
-				// likeData에 데이터 추가
-				likeData.question_id = this.questionId;
-				alert("현재 질문번호 : " + likeData.question_id + " " + "현재 유저 번호 : " + likeData.user_id);
-				// postQuestionLike 함수 실행
-				this.postQuestionLike(likeData);
-			}
-		}
+        ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
+        //loading overlay
+        doAjax() {
+            this.isLoading = true;
+            // simulate AJAX
+            setTimeout(() => {
+                this.isLoading = false
+            },800)
+        },
+        moveToEdit() {
+            this.$router.push({
+                name: 'Edit',
+                params: {
+                    question_id: parseInt(this.$route.params.question_id)
+                }
+            })
+        },
+        likeClick() {
+            if (this.isLoggedIn === true) {
+                http
+                    .post('/api/liketoquestion', {
+                        
+                        "question_id": this.$route.params.question_id,
+                        "user_id": parseInt(this.$cookie.get("user_id")) 
+                        
+                    })
+                    .then(res => {
+                        console.log("like success")
+                        console.log(res.data)
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                    
+                    if(this.chkClicked == false){
+                        this.chkClicked = true;
+                    } else {
+                        this.chkClicked = false;
+                    }
+            }
+            else {
+                this.changeModal()
+            }
+        },
+        loadLikeState() {
+            http.get('/api/liketoquestion', {
+                params: { 
+                    "question_id": this.$route.params.question_id,
+                    "user_id": parseInt(this.$cookie.get("user_id"))
+                }
+            })
+            .then(({data}) => {
+                // 가져온 유저 데이터 값과 현재 로그인 된 유저 값 비교
+                //console.log(data);
+                //해당 데이터에서 현재 question_id가 있는지 찾는다.
+                if(data != "Resource not bound"){
+                    this.chkClicked = true;
+                } else {
+                    this.chkClicked = false;
+                }
+            })
+            .catch(err => {
+                console.log(err.data);
+            })
+        },
+        googleLogin() {
+            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        },
+        toggleModal() {
+            this.loginModalOn = !this.loginModalOn;
+        },
+        changeModal() {
+            this.loginCheck = !this.loginCheck;
+        },
+        switchModal() {
+            this.changeModal()
+            this.toggleModal()
+        },
 	},
 	created() {
-		this.fetchQuestion(this.qid)
-	},
-	props: {
-		isDetailPage: Boolean,
-		qid : Number,
-	}
+        // alert(this.$route.params.question_id)
+        this.fetchQuestion(this.$route.params.question_id),
+        this.loadLikeState(),
+        this.doAjax()
+        
+    }
 }
+
 </script>
 
 <style scoped>
-ul {
-	list-style-type: none;
+.q-title {
+  padding: 10px 0;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 10px;
 }
-
-li {
-	margin: 0 5px;
+.tags {
+    text-align: right;
 }
-
-li i:hover {
-	cursor: pointer;
-	border-style: inset;
+.leftline{
+    border-left: 4px solid #eeeeee;
+    padding-left: 15px;
+}
+.q-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+.q-content {
+    padding: 10px 0;
+}
+.q-info p {
+    font-size: 14px;
+    color: gray;
+}
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.profile_img {
+    border-radius: 50%;
+    height: 40px;
+    margin-right: 10px;
+}
+.like-button span {
+    font-size: 1em;
+    color: Tomato;
+    margin-left: 4px;
+    cursor: pointer;
+}
+.like-button {
+    height: 50px;
+    width: 150px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    color: Tomato;
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+.like-button:hover{
+    background: #eee;
+    color: #FF4500; 
+}
+.q-content >>> img {
+    max-width: 300px;
+    max-height: 300px;
+}
+.editBtn,
+.delBtn {
+    border: 1px solid #ccc;
+    border-radius: 35px;
+    width: 50px;
+    height: 25px;
+    text-align: center;
+    margin: 2px; 
+    background: white;
+}
+.delBtn:hover {
+    color: #eee;
+    background: rgb(243, 138, 152);
+}
+.editBtn:hover {
+    color: #eee;
+    background: rgb(138, 243, 138);
 }
 </style>

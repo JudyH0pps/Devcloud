@@ -1,72 +1,76 @@
 <template>
-  <div class="container p-0">
-    <div class="p-0 row profile-header rounded-lg">
-      <div class="m-0 my-3 p-0 col-5">
-        <img alt="profile picture" class="border rounded-circle profile-picture" :src="user.imageUrl">
+  <section class="profile">
+    <div class="container">
+      <div class="profile-header">
+        <div class="profile-img">
+          <img :src="user.imageUrl" width="200" alt="profile">
+        </div>
+        <div class="profile-nav-info">
+          <h3 class="user-name">{{user.name }}</h3>
+          <!-- <div class="address">
+            <p class="state">
+              Gwanju,
+            </p>
+            <span class="country">Republic of Korea</span>
+          </div> -->
+        </div>
+        <!-- <div class="profile-option">
+          <div class="notification">
+            <i class="fa fa-bell"></i>
+            <span class="alert-message">1</span>
+          </div>
+        </div> -->
       </div>
-      <div class="col-7 m-0 p-0 mt-3">
-        <div class="col-12 m-0 p-0 my-3">
-          <h2 class="p-0 text-left">{{user.name }}</h2>
-          <!-- <p class="text-left">{{ user.introduction }}</p> -->
-          <p class="text-left">
-            <textarea v-if="this.valid == true" v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: none ; width:100%; height:100%"
-            readonly></textarea>
-            <textarea v-else v-model="user.introduction" placeholder="자기소개를 입력해주세요" style="resize: none; border: Solid ; width:100%; height:100%"
-            ></textarea>
-          <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
-          <i class="fas fa-layer-group"></i><span v-if="user.userTechs.length != 0">{{user.userTechs[0].tech.name}}</span>
-          </p>
+      <div class="main-bd">
+        <div class="left-side">
+          <div class="profile-side">
+            <div class="user-bio">
+              <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
+              <i class="fas fa-layer-group"></i><span v-if="user.userTechs.length != 0">{{user.userTechs[0].tech.name}}</span>
+              <p class="bio">{{ user.introduction }}</p>
+            </div>
+          </div>
         </div>
-        <div class="col-3 m-0 p-0 my-3">
+        <div class="right-side">
+          <div class="nav">
+            <ul>
+              <li class="user-post tab" :class="{ 'active': selectedMenu===1 }" @click="selectedMenu=1">Questions({{this.questions.length}})</li>
+              <li class="user-post tab" :class="{ 'active': selectedMenu===2 }" @click="selectedMenu=2">Answers({{this.answers.length}})</li>
+              <li v-if="myProfile" class="user-post tab" :class="{ 'active': selectedMenu===3 }" @click="selectedMenu=3">Profile</li>
+            </ul>
+          </div>
+          <ProfileQuestions v-show="selectedMenu == 1"/>
+          <ProfileAnswers v-show="selectedMenu == 2"/>
+          <ProfileAccount v-if="myProfile && selectedMenu == 3"/>
         </div>
-        <ul class="text-center list-group list-group-horizontal col-12 p-0">
-          <li class="list-group-item" @click="click1">
-            <h4>{{ answers.length}}</h4>
-            <p>answers</p>
-          </li>
-          <li class="list-group-item" @click="click2">
-            <h4>{{ questions.length }}</h4>
-            <p>questions</p>
-          </li>
-          <li class="list-group-item" @click="click3" v-if="myProfile">
-            <h4> + </h4>
-            <p>account</p>
-          </li>
-        </ul>
       </div>
     </div>
-    <ProfileAnswerlist :myA="myA" v-show="showmenu1"/>
-    <ProfileQuestionlist v-show="showmenu2"/>
-    <ProfileAccount v-if="myProfile && showmenu3"/>
-  </div>
+  </section>
 </template>
 
 <script>
-import ProfileAnswerlist from '@/components/ProfileAnswerlist.vue'
-import ProfileQuestionlist from '@/components/ProfileQuestionlist.vue'
+import ProfileAnswers from '@/components/ProfileAnswers.vue'
+import ProfileQuestions from '@/components/ProfileQuestions.vue'
 import ProfileAccount from '@/components/ProfileAccount.vue'
 
 import { mapState, mapActions ,mapMutations} from 'vuex';
 
 export default {
   name: 'Profile',
-  components: {
-    ProfileAnswerlist,
-    ProfileQuestionlist,
-    ProfileAccount
-  },
-  data: () => {
+  data() {
     return {
       myProfile : false,
-      showmenu1: true,
-      showmenu2: false,
-      showmenu3: false,
+      selectedMenu: 2,
+      // 선택된 기술스택들
       selectedTags:[],
-      myQ: [],
-      myA: [],
     }
   },
-  computed:{
+  components: {
+    ProfileAnswers,
+    ProfileQuestions,
+    ProfileAccount
+  },
+  computed: {
     ...mapState({
       techs : state => state.tech.techs,
       isTechs : state => state.tech.isTechs,
@@ -75,12 +79,9 @@ export default {
       answers : state => state.answer.answers,
       valid : state => state.testValid
     }),
-    // ...mapGetters('tech',['isTechs']),
     changeUser(){
       return this.$route.params.user_id
     },
-    
-
   },
   watch :{
     changeUser: function(){
@@ -88,9 +89,9 @@ export default {
     },
     isTechs : function(){
       if(this.isTechs){
-        alert(this.techs.length)
+        // alert(this.techs.length)
         this.inputChange(this.techs)
-        console.log(this.selectedTags)
+        // console.log(this.selectedTags)
         this.setTechsIn(this.selectedTags)
       }
     }
@@ -105,15 +106,15 @@ export default {
     checkAuth(){
       if(this.$cookie.get('user_id') == this.$route.params.user_id){
         this.myProfile = true;
-        alert(this.myProfile);
+        // alert(this.myProfile);
         this.fetchTechs();
-        alert(this.techs.length)
-        this.inputChange(this.techs)
-        console.log(this.selectedTags)
-        this.setTechsIn(this.selectedTags)
+        // alert(this.techs.length)
+        //this.inputChange(this.techs)
+        // console.log(this.selectedTags)
+        //this.setTechsIn(this.selectedTags)
       }else{
-        this.myProfile = false,
-        alert(this.myProfile)
+        this.myProfile = false;
+        // alert(this.myProfile)
       }
     },
     // 불러온 태그리스트를 자동완성 리스트 형식으로 변경
@@ -126,28 +127,6 @@ export default {
             singleTag.id = arr[i].id;
             this.selectedTags.push(singleTag)
           } 
-    },
-    getProfile() {
-      // this.user.id = 'JudyHopps'
-      // this.user.introduction = '안녕하세요 자기소개'
-      // this.user.profileImage = '/img/Judy.3ec0622d.png'
-      this.myQ = ['이거 어떻게해요?1','이거 어떻게해요?2','이거 어떻3게해요?','이4거 어떻게해요?','이거5 어떻게해요?','이거 어6떻게해요?']
-      this.myA = ['이렇게하면된다1','이렇게하면된다2','이렇게하면된다3','이렇게하면된다4','이렇게하면된다5','이렇게하6면된다','이렇게하5면된다','이렇게하면2된다','이렇게1하면된다']
-    },
-    click1() {
-      this.showmenu1 = true;
-      this.showmenu2 = false;
-      this.showmenu3 = false;
-    },
-    click2() {
-      this.showmenu1 = false;
-      this.showmenu2 = true;
-      this.showmenu3 = false;
-    },
-    click3() {
-      this.showmenu1 = false;
-      this.showmenu2 = false;
-      this.showmenu3 = true;
     }
   },
   mounted (){
@@ -165,6 +144,7 @@ export default {
     //   alert("다른사람의 프로필로 접근")
     // }
     // 프로필페이지에서 정보변경을 제외하고는 조회방식이 동일함
+    document.documentElement.scrollTop = 0;
     this.fetchUserProfile(this.$route.params.user_id)
     //작성한 답변 조회 
     this.fetchAnswersById(this.$route.params.user_id);
@@ -175,42 +155,155 @@ export default {
     
   },
 }
-
 </script>
 
 <style scoped>
-/* div{
-  border: 1px dashed;
-} */
 
-p, h4{
+*{
+  padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
-.profile-header{
-  background: white;
-  border: 1px solid #eeeeee;
+.profile {
+  /* background: #e9e9e9; */
+  /* overflow: hidden; */
+  /* padding-top: 20vh; */
+  font-family: "Poppins", sans-serif;
+  margin: 80px 50px 0;
+  padding: 10px;
 }
-
-.list-group-horizontal{
-  width: 90vw;
+.profile-header {
+  background: #fff;
+  width: 100%;
+  display: flex;
+  height: 190px;
+  position: relative;
+  box-shadow: 0px 3px 4px rgba(0,0,0,.2);
 }
-
-.profile-picture{
+.profile-img {
+  float: left;
+  width: 340px;
   height: 200px;
-  background: white;
 }
-
-.list-group{
-  margin-top: 80px;
+.profile-img img {
+  border-radius: 50%;
+  height: 230px;
+  width: 230px;
+  border: 4px solid #fff;
+  box-shadow: 0px 5px 10px rgba(0,0,0,.2);
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  z-index: 5;
+  background: #fff;
 }
-
-.list-group-item{
-  width: 30vw;
-  padding: 3px 10px;
+.profile-nav-info {
+  float: left;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 60px;
 }
-
-.list-group-item:hover{
-  background: #eeeeee;
+.profile-nav-info h3 {
+  font-variant: small-caps;
+  font-size: 2rem;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.profile-nav-info .address {
+  display: flex;
+  font-weight: bold;
+  color: #777;
+}
+.profile-nav-info .address p {
+  margin-right: 5px;
+}
+.profile-option {
+  width: 40px;
+  height: 40px;
+  background: red;
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  transition: all .5s ease-in-out;
+  outline: none;
 }
+.profile-option .notification i {
+  color: #fff;
+  font-size: 1.2rem;
+  transition: all .5s ease-in-out;
+}
+.profile-option:hover{
+  background: #fff;
+  border: 1px solid red;
+}
+.profile-option:hover .notification i {
+  color: red;
+}
+.profile-option .notification .alert-message{
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #fff;
+  color: red;
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: .8rem;
+  font-weight: bold;
+}
+.main-bd {
+  width: 100%;
+  display: flex;
+  padding-right: 15px;
+}
+.profile-side {
+  width: 300px;
+  background: #fff;
+  box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
+  padding: 90px 30px 20px;
+  margin-left: 10px;
+  z-index: 99;
+}
+.profile-side p{
+  margin-bottom: 7px;
+  color: #333;
+  font-size: 14px;
+}
+.right-side {
+  width: 100%;
+}
+.nav {
+  z-index: -1;
+}
+.nav ul {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  height: 40px;
+  background: #fff;
+  box-shadow: 0px 2px 5px rgba(0,0,0,.3);
+}
+.nav ul li {
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s ease-in-out;
+}
+.nav ul li.active,
+.nav ul li:hover {
+  box-shadow: 0 -3px 0px rgba(288, 0, 70, .9) inset;
+}
+
 </style>

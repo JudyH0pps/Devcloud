@@ -1,71 +1,59 @@
 <template>
-    <div class="container mt-2">
-        <form>
-            <!-- <div style="width:70%; border:1px solid black; text-align:left; margin:auto; padding:20px"> -->
-                <div>
-                    <h5 style="float:left">Account</h5>
-                    <div v-if="validated">
-                        <b-button style="float:right" variant="success" @click="edit">변경하기</b-button>
-                    </div>
-                    <div v-else>
-                        <b-button style="float:right" variant="primary" @click="save">저장하기</b-button>
-                    </div>
-                </div>
-                <br><hr>
-                <div style="width: 50%; text-align: left; margin-left: auto; margin-right: auto">
-                    <!-- 닉네임 -->
-                    <div>
-                        <label>Nick Name</label>
-                        <b-form-input type="text" v-model="user.name" :readonly="validated"></b-form-input>
-                        <!-- user.email.split('@')[0] -->
-                        <p style="margin-top:10px">공식적으로 보여지는 이름입니다.</p>
-                    </div>
-                    <hr>
-                    <!-- ID 또는 Email -->
-                    <div>
-                        <label>User ID</label>
-                        <b-form-input v-model="user.email" readonly></b-form-input>
-                        <p style="margin-top:10px">ID는 변경하실 수 없습니다.</p>
-                    </div>
-                    <hr>
-                    <!-- Github Url -->
-                    <div>
-                        <label>Github</label>
-                        <b-form-input v-model="user.githubUrl" :readonly="validated"></b-form-input>
-                        <p style="margin-top:10px">프로필에 표기할 Github 주소입니다.</p>
-                    </div>
-                    <hr>
-                    <div v-if="!validated">
-                        <label>Technical Skills</label>
-                        <!-- <b-form-input v-model="user.tech" :readonly="validated" ></b-form-input> -->
-                        <tags-input element-id="tags"
-                                    v-model="resultedTags"
-                                    :existing-tags="this.techsIn"
-                                    :typeahead='true'
-                                    placeholder="태그를 추가하세요"
-                                    :typeahead-hide-discard="true"
-                                    :only-existing-tags="true"
-                                    :add-tags-on-blur="true"
-                                    typeahead-style="badges"
-                                    wrapper-class="test"
-                                    >
-                                    
-                        </tags-input>           
-                        <p style="margin-top:10px">주로 사용하는 언어와 기술사항을 표시합니다.</p>
-                    </div>
-                </div>
-                <hr>
-                <a href="#"> 더보기...</a>
-            <!-- </div> -->
-        </form>
-    </div>
+    <section class="account">
+        <button v-if="validated" style="float:right" variant="success" @click="edit">프로필 수정하기</button>
+        <button v-else style="float:right" variant="primary" @click="save">저장하기</button>
 
+        <!-- 닉네임 -->
+
+        <label>Nick Name</label>
+        <input type="text" v-model="user.name" :readonly="validated">
+        <!-- user.email.split('@')[0] -->
+        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">공식적으로 보여지는 이름입니다.</p>
+        <!-- ID 또는 Email -->
+
+        <label>User ID</label>
+        <input v-model="user.email" readonly>
+        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">ID는 변경하실 수 없습니다.</p>
+        
+        <!-- Github Url -->
+        <label>Github</label>
+        <input v-model="user.githubUrl" :readonly="validated">
+        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">프로필에 표기할 Github 주소입니다.</p>
+
+        <label>Introduction</label>
+        <input v-model="user.introduction" :readonly="validated">
+        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">자신을 소개할 문구입니다.</p>
+
+        
+        <div v-if="!validated">
+            <label>Technical Skills</label>
+            <!-- <b-form-input v-model="user.tech" :readonly="validated" ></b-form-input> -->
+            <tags-input element-id="tags"
+                        v-model="resultedTags"
+                        :existing-tags="this.techsIn"
+                        :typeahead='true'
+                        placeholder="태그를 추가하세요"
+                        :typeahead-hide-discard="true"
+                        :only-existing-tags="true"
+                        :add-tags-on-blur="true"
+                        typeahead-max-results=15
+                        limit=4
+                        typeahead-style="dropdown"
+                        wrapper-class="test"
+                        >
+                        
+            </tags-input>           
+            <p style="margin-top:10px">주로 사용하는 언어와 기술사항을 표시합니다.</p>
+        </div>
+    </section>
 </template>
 <script>
 import {mapState,mapMutations,mapActions} from 'vuex';
 import Vue from 'vue'
 import VoerroTagsInput from '@voerro/vue-tagsinput';
 Vue.component('tags-input', VoerroTagsInput);
+
+
 
 export default {
     name: 'ProfileAccount',
@@ -93,17 +81,17 @@ export default {
         ...mapActions('tech',['fetchTechs']),
         ...mapActions('user',['editProfile']),
         ...mapMutations(['settestValid']),
-        edit:function(){
+        edit(){
             this.validated = !this.validated
             this.settestValid(!this.valid)
         },
-        save:function(){
+        save(){
             this.validated = !this.validated
             this.settestValid(!this.valid)
             //console.log(this.techlist)
-            console.log(this.resultedTags)
+            // console.log(this.resultedTags)
             this.outputChange(this.resultedTags)
-            console.log(this.profileData)
+            // console.log(this.profileData)
             this.editProfile(this.profileData)
         },
         //프로필수정요청 
@@ -122,7 +110,23 @@ export default {
     },
 }
 </script>
+
 <style>
+section.account {
+    padding: 40px;
+}
+button {
+    border: 0;
+
+}
+label {
+    width: 100%;
+}
+input {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid black;
+}
 .tags-input {
     /* display: flex;
     flex-wrap: wrap;

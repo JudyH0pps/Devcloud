@@ -15,8 +15,12 @@ export default {
             githubUrl:"https://github.com/",
             userTechs : [],
         },
+        isLoggedIn: false,
     },
 	mutations: {
+        setisLoggedIn(state,payload){
+            state.isLoggedIn = payload
+        },
         setUser(state, payload){
             // state.user= payload;
             state.user.email = payload.email;
@@ -56,7 +60,7 @@ export default {
                     }
                 })
                 .then(({data}) => {
-                    console.log(data)
+                    // console.log(data)
                     context.commit('setProfile',data)
                 })
                 .catch(()=>{
@@ -72,8 +76,21 @@ export default {
                     router.go()
                 })
                 .catch(err => console.log(err.response))
+        },
+              // signInBtn() {
+      //   this.showModal = true;
+      // },
+        // loginNo() {
+        //     this.showModal = false;
+        // },
+        search(){
+            //alert(this.word)
+            // this.setKeyword(this.word)
+            //alert(this.keyword)
+            this.$router.push({
+                name:'Board'
+            })
         }
-        
     },
 	getters: {},
 }

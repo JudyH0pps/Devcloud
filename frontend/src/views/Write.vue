@@ -1,96 +1,349 @@
- <template>
-  <div class="d-flex flex-column align-items-center">
-    <!-- <form class="d-flex flex-column align-items-center"> -->
-      <div class="form-group text-left col-12 col-md-7 px-0 my-4">
-        <label for="title" class="mb-0 d-block"><h3 class="font-weight-bolder">Title</h3></label>
-        <input v-model="questionData.title" type="text" class="form-control" id="title" placeholder="질문의 제목을 입력해주세요" />
-      </div>
-      <div class="form-group text-left col-12 col-md-7 px-0 my-4">
-        <label for="content" class="mb-0 d-block"><h3 class="font-weight-bolder">Body</h3></label>
-        <textarea  v-model="questionData.content" type="text" class="form-control" id="content" placeholder="내용을 입력해주세요" />
-        <!-- <editor
-          v-model="questionData.content"
-          :options="editorOptions"
-          height="350px"
-          initialEditType="wysiwyg"
-          previewStyle="vertical"
-        /> -->
-      </div>
-      <div class="form-group text-left col-12 col-md-7 px-0 my-4">
-        <label for="tag" class="mb-0 d-block"><h4 class="font-weight-bolder">Tags</h4></label>
-        <input type="text" class="form-control" id="tag" placeholder="#태그1, #태그2" />
-      </div>
-      <button @click="writeQuestion(questionData)" class="btn btn-success col-12 col-md-7">작성</button>
-    <!-- </form> -->
-  </div>
+<template>
+  <section class="writeform">
+    <div class="form" v-if="!isAnswer">
+      <input type="text" name="title" autocomplete="off" required v-model="title"/>
+      <label class="label-name" for="title" v-if="isEdit === false">
+        <span class="content-name">Title</span>
+      </label>
+    </div>
+    <!-- <div class="form">
+      <input type="text" name="content" autocomplete="off" required/>
+      <label class="label-name" for="content" v-if="isEdit === false">
+        <span class="content-name">Content</span>
+      </label>
+    </div> -->
+    <vue-editor id="editor"
+        useCustomImageHandler
+        @imageAdded="handleImageAdded"
+        v-model="content" :editor-toolbar="customToolbar">
+    </vue-editor>
+    <div v-if="!isAnswer">
+      <label class="label-name" for="tags">
+        <span class="tag-name">Tags</span>
+      </label>
+    </div>
+    <tags-input element-id="tags"
+                v-model="resultedTags"
+                :existing-tags="this.tagss"
+                :typeahead='true'
+                placeholder="태그를 추가하세요"
+                :typeahead-hide-discard="true"
+                :only-existing-tags="true"
+                :add-tags-on-blur="true"
+                typeahead-max-results=15
+                limit=4
+                typeahead-style="dropdown"
+                wrapper-class="write_tags"
+                v-if="!isAnswer"
+                >
+    </tags-input>  
+    <button @click="postData">Submit</button>
+  </section>
 </template>
 
 <script>
-// import 'codemirror/lib/codemirror.css';
-// import '@toast-ui/editor/dist/toastui-editor.css';
+import { mapState, mapActions,mapGetters } from 'vuex'
+import { VueEditor } from 'vue2-editor'
+import Vue from 'vue'
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+import axios from 'axios'
+Vue.component('tags-input', VoerroTagsInput);
 
-// import { Editor } from '@toast-ui/vue-editor';
 
-import {mapActions} from 'vuex'
 export default {
   name: 'Write',
-  // components: {
-  //   "editor": Editor
-  // },
+  props: {
+    isAnswer: Boolean,
+  },
+  components: {
+    VueEditor
+  },
   data() {
     return {
-      questionData: {
-        "title": '',
-        "content": '',
-        "user_id": this.$cookie.get('user_id')
-      },
-      isEditPage: null,
-      // defaultOptions: {
-      //   minHeight: '200px',
-      //   useCommandShortcut: true,
-      //   useDefaultHTMLSanitizer: true,
-      //   usageStatistics: true,
-      //   hideModeSwitch: false,
-      // }
-    }
-  },
-  methods: {
-    ...mapActions('question',['fetchQuestion','postQuestion', 'editQuestion']),
-    writeQuestion(questionData) {
-      if (this.isEditPage) {
-        questionData.id = this.questionId
-        this.editQuestion(questionData)
-      }
-      else {
-        this.postQuestion(questionData)
-      }
+      title: '',
+      content: '',
+      resultedTags:[],
+      tags: [],
+      isEdit: false,
+      customToolbar: [
+          [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ align: "" }, { align: "center" }, { align: "right" }, { align: "justify" }],
+          ["blockquote", "code-block"],
+          [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+          ["link", "image", "video"],
+          ["clean"]
+      ]
     }
   },
   computed: {
-    questionId() {
-      return parseInt(this.$route.params.question_id)
-    }
+    ...mapState({
+      question: state => state.question.question,
+      answers: state => state.answer.answers,
+      //tagsIn : state => state.tag.tagsIn
+    }),
+    ...mapGetters('tag',['tagss'])
+  },
+  methods: {
+    ...mapActions('answer', ['postAnswer', 'editAnswer']),
+    ...mapActions('question', ['postQuestion', 'editQuestion']),
+    ...mapActions('tag',['fetchTags']),
+    /////
+    handleImageAdded(file, Editor, cursorLocation) {
+      var formData = new FormData();
+      formData.append('file', file)
+
+      axios({
+        // Nginx 안쓸때,
+        //url: 'http://i3c202.p.ssafy.io:8080/api/question/upload',
+        // Nginx 용 
+        url: 'http://i3c202.p.ssafy.io/api/question/upload',
+        method: 'POST',
+        // headers:{'Authorization': 'Bearer ' +  + token},
+        data: formData
+      }).then((result) => {
+        let url = result.data.url;
+        Editor.insertEmbed(cursorLocation, 'image', url);
+        var uploader = document.getElementById("file-upload");
+        uploader.value = "";
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    /////
+    postData() {
+      // 질문 페이지라면
+      // 태그형식 변경 
+      if (this.isAnswer === false) {
+        const questionData = {
+          title: this.title,
+          content: this.content,
+          tagList: this.outputChange(this.resultedTags),
+        }
+        // 수정
+        if (this.isEdit) {
+          questionData.question_id = parseInt(this.$route.params.question_id)
+          questionData.tagList = this.outputChange(this.resultedTags),
+          this.editQuestion(questionData)
+          }
+        // 작성
+        else {
+          questionData.user_id = parseInt(this.$cookie.get('user_id')),
+          this.postQuestion(questionData)
+        }
+      }
+      // 답변 페이지일 때
+      else {
+        const answerData = {
+          content: this.content,
+        }
+          // 수정일 경우
+        if (this.isEdit) {
+          answerData.answer_id = parseInt(this.$route.params.answer_id),
+          this.editAnswer(answerData)
+          }
+        // 작성일 경우
+        else {
+          answerData.question_id = parseInt(this.$route.params.question_id),
+          answerData.user_id = this.$cookie.get('user_id')
+          this.postAnswer(answerData)
+        }
+      }
+    },
+    outputChange(arr){
+        let tagList = [];
+        for(var i = 0; i < arr.length; i++)
+        {
+            let singleTag = {};
+            singleTag.id = arr[i].id;
+            singleTag.name = arr[i].value;
+            tagList.push(singleTag)
+        }
+        return tagList 
+    },
+    inputChange(arr){
+          for(var i = 0; i < arr.length; i++)
+          {
+            let singleTag = {};
+            singleTag.key = arr[i].name;
+            singleTag.value = arr[i].name;
+            singleTag.id = arr[i].id;
+            this.resultedTags.push(singleTag)
+          } 
+    },
   },
   created() {
-    if (window.location.href===`http://localhost:3000/question/${this.questionId}/edit`) {
-      // 수정 페이지로 활용한다면, 기존 질문의 내용을 가져와야 합니다.
-      this.fetchQuestion(this.questionId)
-      // 받아온 질문 정보 중 필요한 정보를 현재 컴포넌트의 data에 할당합니다.
-      const originQuestion = this.$store.state.question.question
-      this.questionData.title = originQuestion.title
-      this.questionData.content = originQuestion.content
-      // 수정 페이지임을 확인하기 위한 변수를 조정합니다.
-      this.isEditPage = true
+    // URL에 있는 question_id, answer_id로 수정페이지인지 아닌지 분별
+    // 답변
+    if (this.isAnswer) {
+      // 수정
+      if (this.$route.params.answer_id) {
+        this.isEdit = true
+        this.content = this.answers.find(answer => answer.id === parseInt(this.$route.params.answer_id)).content
+      }
     }
+    // 질문
     else {
-      this.isEditPage = false
+      // 수정
+      if (this.$route.params.question_id) {
+        this.isEdit = true
+        this.title = this.question.title
+        this.content = this.question.content
+        this.tags = this.question.questionTags.map(data => data.tag)
+        this.inputChange(this.tags)
+      }
     }
+    this.fetchTags();
+    window.scrollTo(0, 0)
   },
+  mounted() {
+    // 링크 버튼
+    const linkBtn = document.querySelector('.ql-link')
+    // const textArea = document.querySelector('.ql-editor')
+    linkBtn.addEventListener('click', function() {
+      // 링크 생성
+      var inputURL = prompt('URL을 입력해주세요.', 'https://')
+      var hyperLink = document.createElement('a')
+      hyperLink.innerText = inputURL
+      hyperLink.href = inputURL
+      
+      var sel = window.getSelection()
+      var range = sel.getRangeAt(0)
+      range.collapse(false)
+      range.insertNode(hyperLink)
+      sel.removeAllRanges()
+      sel.addRange(range)
+    })
+  }
 }
 </script>
 
 <style scoped>
-textarea {
-  min-height: 200px;
+.writeform{
+  font-family: "Poppins", sans-serif;
+  margin: 100px auto 0;
+  /* padding: 10px; */
+  max-width: 900px;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+}
+
+.form {
+  width: 100%;
+  position: relative;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+}
+
+.form input {
+  width: 100%;
+  height: 100%;
+  color: #595f6e;
+  padding-top: 20px;
+  border: none;
+  outline: none;
+}
+
+.form label {
+  position: absolute;
+  bottom: 0px;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-bottom: 1px solid black;
+}
+
+.form label::after {
+  content: '';
+  position: absolute;
+  left: 0px;
+  bottom: -1px;
+  height: 100%;
+  width: 100%;
+  border-bottom: 3px solid #5fa8d3;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.content-name {
+  position: absolute;
+  bottom: 5px;
+  left: 0px;
+  transition: all 0.3s ease;
+}
+.form input:focus + .label-name .content-name,
+.form input:valid + .label-name .content-name {
+  transform: translateY(-150%);
+  font-size: 14px;
+  color: #5fa8d3;
+}
+
+.form input:focus + .label-name::after,
+.form input:valid + .label-name::after {
+  transform: translateX(0%);
+}
+
+button {
+  /* float: right; */
+  position: relative;
+  /* bottom: 0; */
+  transform: translate(-50%, 0);
+  right: -50%;
+  width: 120px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-size: 15px;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: sans-serif;
+  box-sizing: border-box;
+  background: linear-gradient(90deg, #03a9f4,#f441a5,#ffeb3b,#03a9f4);
+  background-size: 400%;
+  border-radius: 30px;
+  border: 0;
+  outline: 0;
+  z-index: 1;
+  margin: 20px 0;
+}
+button:hover{
+  animation: animate 8s linear infinite;
+  cursor: pointer;
+}
+button:hover::before{
+  filter: blur(20px);
+  /* z-index: -1; */
+  opacity: 1;
+  animation: animate 8s linear infinite;
+}
+button::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+  background-size: 400%;
+  border-radius: 40px;
+  opacity: 0;
+  transition: 0.5s;
+}
+.quillWrapper >>> .ql-clean {
+  display: none !important;
+}
+.quillWrapper >>> .ql-editor {
+  min-height: 250px;
+}
+.quillWrapper >>> img {
+  max-width: 300px;
+  max-height: 300px;
 }
 </style>

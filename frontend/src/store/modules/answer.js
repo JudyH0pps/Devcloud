@@ -26,21 +26,22 @@ export default {
 						})
 						.catch(err => console.log(err))
 		},
-		fetchAnswersById(context,payload){
-					http
+		async fetchAnswersById(context,payload){
+					const resp = await http
 						.get('/api/answer',{
 							params:{
 								user_id : payload
 							}
 						})
-						.then(({data}) => {
-							context.commit('setAnswers',data)
-							console.log(data);
-						})
-						.catch((err) => {
-							console.log(err);
-							alert('유저ID로 답변 조회중 오류 발생');
-						})
+						// .then(({data}) => {
+						// 	context.commit('setAnswers',data)
+						// 	// console.log(data);
+						// })
+						// .catch((err) => {
+						// 	console.log(err);
+						// 	alert('유저ID로 답변 조회중 오류 발생');
+						// })
+					context.commit('setAnswers',resp.data)
 		},
 		postAnswer(context, answerData) {
 			http
@@ -52,17 +53,18 @@ export default {
 		},
 		editAnswer(context, answerData) {
 			http
-				.put('/api/answer', {content: answerData.content, answer_id: answerData.id})
+				.put('/api/answer', answerData)
 				.then(() => {
-					// context.dispatch('fetchAnswers', answerData.question_id)
-					router.push({name: 'Detail', params: {"question_id": answerData.question_id}})
+					router.go(-1)
 				})
 				.catch(err => console.log(err))
 		},
 		deleteAnswer(context, answerData) {
 			http
-				.delete('/api/answer', {params: {id: answerData.answer_id}})
-				.then(() => context.dispatch('fetchAnswers', answerData.question_id))
+				.delete('/api/answer', {params: {answer_id: answerData.answer_id}})
+				.then(() => {
+					context.dispatch('fetchAnswers', answerData.question_id)
+				})
 				.catch(err => console.log(err))
 		}
     },

@@ -1,107 +1,102 @@
 <template>
-    <div class="rankingbody container">
-        <h1>Ranking</h1>
-        <div class="topclass w-100 gold">
-
+    <section class="ranking">
+        <div class="leaderboard">
+            <div class="line leaderboardheader">
+                <i class="fas fa-medal"></i>
+                <h3>leaderboard</h3>
+            </div>
         </div>
-        <div class="topclass w-100 silver">
-
-        </div>
-        <div class="topclass w-100 bronze">
-
-        </div>
-        <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">순위</th>
-                <th scope="col">이름</th>
-                <th scope="col">레이팅</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(user, index) in users" :key="user.name">
-                <th scope="row">{{ index + 4 }}</th>
-                <td>{{ user.name }}</td>
-                <td>{{ user.rating }}</td>
-            </tr>
-        </tbody>
-        </table>
-    </div>
+        <RankLine v-for="user in userIdList" :key="user.user_id" :user="user"/>
+        <!-- Add Pagination -->
+    </section>
 </template>
 
 <script>
-export default{
+import http from "@/util/http-common";
+import RankLine from '../components/RankLine.vue';
+
+export default {
     name: 'Ranking',
     data() {
         return {
-            users: [
-                {
-                    name: "김시영",
-                    rating: "1500",
-                },
-                {
-                    name: "김시영",
-                    rating: "1500",
-                },                {
-                    name: "김시영",
-                    rating: "1500",
-                },                {
-                    name: "김시영",
-                    rating: "1500",
-                },                {
-                    name: "김시영",
-                    rating: "1500",
-                },
-            ]
+            userIdList: [],
         }
     },
+    components: {
+        RankLine,
+    },
+    methods: {
+    },
+    created() {
+            http
+                .get('/api/rank')
+                .then(({data}) => {
+                    this.userIdList = data;
+                    // console.log(this.userIdList);       
+                })
+                .catch(()=>{
+                    alert('랭킹 목록 조회중 오류 발생')
+                })
+    },
+    mounted(){
+        document.documentElement.scrollTop = 0;
+        // console.log(this.userIdList)
+    },
 }
+
 </script>
 
 <style scoped>
-.topclass{
-    position: relative;
-    height: 120px;
-    margin-bottom: 15px;
+.ranking {
+  font-family: "Poppins", sans-serif;
+  margin: 80px 50px 0;
+  padding: 10px;
+}
+.fa-medal {
+    /* position: absolute; */
+    color: white;
+    font-size: 50px;
+    padding: 20px 0 0 100px;;
+    height: 100%;
+}
+/* .fa-medal::after {
+    content: '';
+    position: absolute;
+    border: 3px solid rgba(255,255,255,.5);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    transform: translate(-80%, -20%);
+    filter: blur();
+} */
+.leaderboardheader {
+    background-color: skyblue;
+    color: white;
+    justify-content: space-between;
+    box-shadow: 0px 3px 4px rgba(0,0,0,.2);
+}
+.leaderboardheader h3 {
+    text-transform: uppercase;
+    padding-right: 100px;
+}
+.leaderboard {
+    width: 100%;
+}
+.line {
+    line-height: 85px;
+    width: 70%;
+    height: 90px;
+    margin-left: auto;
+    margin-right: auto;
+    /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background: white;
+    flex-direction: row;
 }
-.topclass::before{
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    z-index: -1;
+.line img {
+    height: 70%;
+    border-radius: 50%;
+    margin: 15px 15px 15px 40px;
+    border: 4px solid #fff;
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
 }
-.topclass::after{
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    z-index: -2;
-    filter: blur(4px);
-}
-.topclass::after,
-.topclass::before{
-     background: linear-gradient(235deg,#ddd793,#ffffff,#e0bc5a);
-}
-/* .gold, */
-.gold::after{
-    background: #ffee90;
-}
-/* .silver, */
-.silver::after{
-    background: #eeeeee;
-}
-/* .bronze, */
-.bronze::after{
-    background: #ffd25b
-}
-
 </style>
