@@ -1,60 +1,44 @@
 <template>
-    <div class="card">
-        <!-- <div class="image-data"> -->
-            <!-- <div class="background-image"></div>
-            <div class="publication-details">
-                <p class="author">{{ question.user.name }}</p>
-                <p class="date">{{ question.date }}</p>
-            </div> -->
-        <!-- </div> -->
-        
+    <div class="card" @click="moveTodetail(question.id)">
         <div class="post-data">
-            <div class="title" @click="moveTodetail(question.id)" v-html="$options.filters.highlights1(question.title, keyword)"></div>
-            <div v-if="questionHasSelected">
-                <i class="fas fa-check-circle" style="color: green; font-size: 16px"></i>
-                <span style="font-size:16px; font-weight:bold;"> 채택완료</span>
-            </div>
-            <div style="text-align: right;">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name" @click="searchTag(tag.tag.id)">{{ tag.tag.name }}</span>
-            </div>          
-            <!-- <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
-            </div> -->
-            <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
-                <div style="font-size: 15px; color: Tomato; margin-left: auto; margin-right: 5px; margin-top: 5px;">
-                    <i class="fas fa-heart"></i>
+            <div style="display:flex; flex-direction:row; align-items: center;">
+                <!-- <i class="fab fa-quora" style="font-size: 16px; margin-right: 5px; color: tomato;">uestion</i>  -->
+                <div class="title" v-html="$options.filters.highlights1(question.title, keyword)"></div>
+                <div v-if="questionHasSelected" style="dipslay:flex; align-items: center;">
+                    <i class="fas fa-check-circle" style="color: green; font-size: 16px"></i>
+                    <span style="font-size:12px; font-weight:bold;"> 채택완료</span>
                 </div>
-                <p style="font-size: 15px;">{{question.likeCnt}}</p>
-            </div>
-            <div style="display: flex; flex-direction: row; align-items: center; width: 100%">                   
+                
                 <img 
                     alt="profile picture"
                     class="profile-rounded"
                     :src="question.user.imageUrl"
                     style="margin-left: auto;width: 25px; height: 25px; display: inline; padding: 0px; margin-right: 5px;"
                     align: right>
-                <p style="font-size: 15px; color: black; font-weight: bold">
+                <p style="font-size: 14px; color: black; font-weight: bold">
                     {{question.user.name}}
                 </p>
             </div>
-        </div>
-        
-        <!-- <h2 class="card_title">Q. {{ title }}</h2>
-        <p>{{ content }}</p>
-        <div>
-            <span class="tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
-        </div>
-        <div class="s">
-            <p class="card_date">{{ date }}</p>
-            <div class="icon heart">
-                <svg viewBox="-5 -28 521.00002 512" xmlns="http://www.w3.org/2000/svg">
-                    <path d="m471.382812 44.578125c-26.503906-28.746094-62.871093-44.578125-102.410156-44.578125-29.554687 0-56.621094 9.34375-80.449218 27.769531-12.023438 9.300781-22.917969 20.679688-32.523438 33.960938-9.601562-13.277344-20.5-24.660157-32.527344-33.960938-23.824218-18.425781-50.890625-27.769531-80.445312-27.769531-39.539063 0-75.910156 15.832031-102.414063 44.578125-26.1875 28.410156-40.613281 67.222656-40.613281 109.292969 0 43.300781 16.136719 82.9375 50.78125 124.742187 30.992188 37.394531 75.535156 75.355469 127.117188 119.3125 17.613281 15.011719 37.578124 32.027344 58.308593 50.152344 5.476563 4.796875 12.503907 7.4375 19.792969 7.4375 7.285156 0 14.316406-2.640625 19.785156-7.429687 20.730469-18.128907 40.707032-35.152344 58.328125-50.171876 51.574219-43.949218 96.117188-81.90625 127.109375-119.304687 34.644532-41.800781 50.777344-81.4375 50.777344-124.742187 0-42.066407-14.425781-80.878907-40.617188-109.289063zm0 0"/>
-                </svg>
+            
+            <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; margin: 5px 0;">
+                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name" @click="searchTag(tag.tag.id)">{{ tag.tag.name }}</span>
+                
+                <i style="font-size: 16px; margin-left: auto; margin-right: 5px; color: tomato;" class="fas fa-heart"></i>
+                <p style="font-size: 16px; margin-bottom: 3px;">
+                    {{question.likeCnt}}
+                </p>
             </div>
-            <p class="card_like">{{ like }}</p>
-            <img class="profile_img" src="../assets/damgom.png" alt="">
-            <p class="card_user">{{ user }}</p>
-        </div> -->
-        <!-- <hr/> -->
+
+            <div style="text-align: right;">
+                
+            </div>          
+            <!-- <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
+            </div> -->
+            <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; width: 100%">                   
+            </div>
+        </div>
     </div>
   
 </template>
@@ -142,12 +126,12 @@ export default {
 //title
 Vue.filter("highlights1", function(item, keyword){
     if(keyword == undefined) {
-        return '[ Q ] ' + item;
+        return item;
     }
     // 정규표현식
     var iQuery = new RegExp(keyword, "ig");
     // 해당 키워드 하이라이트
-    return '[ Q ] ' + item.toString().replace(iQuery, matchedTxt => {
+    return item.toString().replace(iQuery, matchedTxt => {
         return "<span class='highlight'>" + matchedTxt + "</span>";
     });
 });
@@ -182,22 +166,19 @@ Vue.filter("highlights2", function(item, keyword){
     display: flex;
     flex-direction: column;
     /* background-color: #fff; */
-    /* box-shadow: 0 3px 2px rgba(0, 0, 0, .5); */
+    
     margin: 10px auto 10px auto;
     /* border-radius: 15px; */
     overflow: hidden;
     flex-direction: row;
     /* height: 200px; */
-    padding-bottom: 25px;
-    padding-top: 25px;
+    /* padding-bottom: 25px;
+    padding-top: 25px; */
     border-bottom: 1px solid #eee;
 }
-.card .title {
-    color: rgb(26, 13, 171);;
-}
-.card .title:hover {
+.card:hover {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
     cursor: pointer;
-    text-decoration: underline;
 }
 /* .image-data {
     height: 250px;
@@ -233,7 +214,7 @@ Vue.filter("highlights2", function(item, keyword){
     height: 100%;
     background: linear-gradient(to right, rgba(79, 172, 254, .5),
                                             rgba(0, 242, 254, .6));
-    font-size: 20px;
+    font-size: 14px;
     font-weight: bold;
     color: #fff;
     top: 0;
@@ -247,11 +228,12 @@ Vue.filter("highlights2", function(item, keyword){
     width: 100%;
 }
 .title {
-    font-size:20px;
+    font-size:16px;
     line-height: 1;
     font-weight: bold;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+    margin-right: 5px;
+    /* padding-bottom: 10px;
+    margin-bottom: 10px; */
 }
 .subtitle {
     font-size: 12px;

@@ -7,19 +7,7 @@
         </div>
         <div class="profile-nav-info">
           <h3 class="user-name">{{user.name }}</h3>
-          <!-- <div class="address">
-            <p class="state">
-              Gwanju,
-            </p>
-            <span class="country">Republic of Korea</span>
-          </div> -->
         </div>
-        <!-- <div class="profile-option">
-          <div class="notification">
-            <i class="fa fa-bell"></i>
-            <span class="alert-message">1</span>
-          </div>
-        </div> -->
       </div>
       <div class="main-bd">
         <div class="left-side">
@@ -198,10 +186,11 @@ export default {
   background: #fff;
 }
 .profile-nav-info {
-  float: left;
-  flex-direction: column;
+  margin-left: 100px;
+  flex-direction: row;
   justify-content: center;
   padding-top: 60px;
+  width: 100%;
 }
 .profile-nav-info h3 {
   font-variant: small-caps;

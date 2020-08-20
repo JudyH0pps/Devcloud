@@ -1,6 +1,6 @@
 <template>
     <div class="line">
-        <!-- <h1>asda</h1> -->
+        <h1 style="margin-left: 30px; font-size: 15px;">{{ index + 1 }}위</h1>
         <img :src="profile.imageUrl">
         <h3>{{ profile.name }}</h3>
         <h4 style="margin-left: auto;">{{ user.rank_point }}</h4>
@@ -20,6 +20,7 @@ export default {
     },
     props: {
         user: Object,
+        index: Number,
     },
     methods: {
         rednerProfile() {
@@ -51,7 +52,7 @@ export default {
 .line {
     line-height: 85px;
     width: 70%;
-    height: 90px;
+    height: 75px;
     margin-left: auto;
     margin-right: auto;
     /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */

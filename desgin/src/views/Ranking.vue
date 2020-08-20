@@ -1,12 +1,12 @@
 <template>
     <section class="ranking">
         <div class="leaderboard">
-            <div class="line leaderboardheader">
+            <div class="line leaderboardheader" style="height: 90px;">
                 <i class="fas fa-medal"></i>
                 <h3>leaderboard</h3>
             </div>
         </div>
-        <RankLine v-for="user in userIdList" :key="user.user_id" :user="user"/>
+        <RankLine v-for="(user, index) in userIdList" :key="user.user_id" :user="user" :index="index"/>
         <!-- Add Pagination -->
     </section>
 </template>
@@ -51,6 +51,7 @@ export default {
   font-family: "Poppins", sans-serif;
   margin: 80px 50px 0;
   padding: 10px;
+  height: 100vh;
 }
 .fa-medal {
     /* position: absolute; */
@@ -85,7 +86,7 @@ export default {
 .line {
     line-height: 85px;
     width: 70%;
-    height: 90px;
+    height: px;
     margin-left: auto;
     margin-right: auto;
     /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
