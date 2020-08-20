@@ -108,12 +108,14 @@ export default {
                     }
                 })
                 .then(({data}) => {
-                    console.log("채택유무 : " + data);
+                    //console.log("채택유무 : " + data);
 
                     // data is not "Resource not bound"
                     if(data != "Resource not bound"){
-                        // 채택이 완료됬다면 채택완료 버튼 보여지기
+                        // 채택이 완료됬다면 채택완료 버튼 보여지기        
                         this.questionHasSelected = true;
+                    } else {
+                        this.questionHasSelected = false;
                     }
                 })
                 .catch(err => {

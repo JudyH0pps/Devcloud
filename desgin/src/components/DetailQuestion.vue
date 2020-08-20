@@ -115,10 +115,6 @@ export default {
                         "user_id": parseInt(this.$cookie.get("user_id")) 
                         
                     })
-                    .then(res => {
-                        console.log("like success")
-                        console.log(res.data)
-                    })
                     .catch(err => {
                         console.log(err);
                     })

@@ -230,10 +230,6 @@ export default {
                         "user_id": parseInt(this.$cookie.get("user_id")),
                         
                     })
-                    .then(res => {
-                        console.log("like success")
-                        console.log(res.data)
-                    })
                     .catch(err => {
                         console.log(err);
                     })
@@ -277,9 +273,6 @@ export default {
                             answer_id: this.answer.id
                         }
                     })
-                    .then(({data}) => {
-                        console.log(data)
-                    })
                     .catch(err => {
                         console.log(err)
                     })
@@ -299,7 +292,7 @@ export default {
                     }
                 })
                 .then(({data}) => {
-                    console.log("채택유무 : " + data);
+                    //console.log("채택유무 : " + data);
 
                     // data is not "Resource not bound"
                     if(data != "Resource not bound"){
