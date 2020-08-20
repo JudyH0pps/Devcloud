@@ -88,8 +88,9 @@ export default {
 <style scoped>
 .detail{
   font-family: "Poppins", sans-serif;
-  margin: 80px auto 0;
+  margin: 80px auto 0px;
   padding: 10px;
+  padding-bottom: 90px;
   max-width: 900px;
   min-height: 100vh;
 }

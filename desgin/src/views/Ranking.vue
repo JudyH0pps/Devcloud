@@ -49,9 +49,9 @@ export default {
 <style scoped>
 .ranking {
   font-family: "Poppins", sans-serif;
-  margin: 80px 50px 0;
+  margin: 80px 50px 60px;
   padding: 10px;
-  height: 100vh;
+  /* height: 100vh; */
 }
 .fa-medal {
     /* position: absolute; */
