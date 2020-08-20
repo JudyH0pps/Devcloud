@@ -29,7 +29,7 @@ build-front:
     script:
         - cd $CI_PROJECT_DIR/desgin
         - npm install
-        - npm build
+        - npm run build
         - rm -rf ~/devCloud/s03p13c202/desgin/dist
         - cp -rf dist ~/devCloud/s03p13c202/desgin
     tags :
