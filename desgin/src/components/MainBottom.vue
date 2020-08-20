@@ -90,6 +90,10 @@ export default {
   height: 30vh;
   /* background-image: url("../assets/dark-sky-background.jpg"); */
   background: rgba(17, 11, 6, 0.822);
+  transition: 0.5s ease;
+}
+.backImg-jay:hover {
+    transform: translateY(-50%);
 }
 .container-jay {
     width: 100%;

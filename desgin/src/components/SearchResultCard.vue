@@ -187,9 +187,11 @@ Vue.filter("highlights2", function(item, keyword){
     border-bottom: 1px solid #eee;
     padding: 15px;
     border-radius: 10px;
+    transition: 0.5s ease;
 }
 .card:hover {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+    box-shadow: 0 5px 1px rgba(0, 0, 0, .5);
+    transform: translateY(-5%);
     /* cursor: pointer; */
 }
 /* .image-data {
