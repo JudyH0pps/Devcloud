@@ -151,7 +151,7 @@ export default {
       }).catch(()=>{
         window.location.href = 'http://i3c202.p.ssafy.io/detail/' + question_id
         this.$router.go();
-      }),
+      })
     },
     async closeNotification(notification_id,index){
       await http.get('/api/notification/read/'+ notification_id);
