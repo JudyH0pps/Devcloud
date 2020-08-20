@@ -4,6 +4,7 @@
       <!-- <div class="title-wrapper">
         <h1 contenteditable data-heading="DevCloud">DevCloud</h1>
       </div> -->
+      <img class="logo" src="../assets/logo.png">
       <SearchBar/>
       <!-- <div class="wave wave1"></div>
       <div class="wave wave2"></div>
@@ -37,6 +38,13 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+.logo {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 300px;
 }
 section {
   position: relative;
