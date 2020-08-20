@@ -153,6 +153,7 @@ public class QuestionController {
         question.setContentText(doc.text());
         //
         question.setViewCnt(question.getViewCnt() + 1);
+        question.setUpdatedAt(new Date());
         question = questionRepository.save(question);
 
         // tag 수정
