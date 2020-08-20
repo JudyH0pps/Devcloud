@@ -30,8 +30,8 @@ build-front:
         - cd $CI_PROJECT_DIR/desgin
         - npm install
         - npm run build
-        - rm -rf ~/devCloud/s03p13c202/desgin/dist
-        - cp -rf dist ~/devCloud/s03p13c202/desgin
+        - rm -rf /home/ubuntu/devCloud/s03p13c202/desgin/dist
+        - cp -rf dist /home/ubuntu/devCloud/s03p13c202/desgin
     tags :
         - i3c202
 
@@ -42,7 +42,7 @@ deploy-back:
         - develop
     script :
         - cd $HOME
-        - ~/restart_backend1.sh
+        - /home/ubuntu/restart_backend1.sh
     tags :
         - i3c202
 
@@ -52,6 +52,6 @@ deploy-front:
         - master
         - develop
     script :
-        - ls -al ~/devCloud/s03p13c202/desgin/dist
+        - ls -al /home/ubuntu/devCloud/s03p13c202/desgin/dist
     tags :
         - i3c202
