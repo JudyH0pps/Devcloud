@@ -9,7 +9,7 @@
         </header>
         <div class="leftline">
             <div class="tags">
-                <span class="tag" v-for="data in question.questionTags" :key="data.id">{{ data.tag.name }}</span>
+                <span class="tag" v-for="data in question.questionTags" :key="data.id" @click="searchByTag(data.tag.id)">{{ data.tag.name }}</span>
             </div>
             <div class="q-info">
                 <div class='profile'>
@@ -55,7 +55,7 @@
 <script>
 import LoginCheckModal from '@/components/LoginCheckModal.vue'
 import LoginModal from '../components/LoginModal.vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import http from "@/util/http-common"
 // Import component
 import Loading from 'vue-loading-overlay';
@@ -90,6 +90,7 @@ export default {
     },
 	methods: {
         ...mapActions('question', ['fetchQuestion', 'goEditQuestion','deleteQuestion']),
+        ...mapMutations('tag',['setTagId']),
         //loading overlay
         doAjax() {
             this.isLoading = true;
@@ -168,12 +169,53 @@ export default {
             this.toggleModal()
         },
         parseDateString(date) {
-            let year = date.slice(0,4);
-            let month = date.slice(5,7);
-            let day = date.slice(8,10);
-            let hour = date.slice(11,13);
-            let minute = date.slice(14,16);
+            let year = parseInt(date.slice(0,4));
+            let month = parseInt(date.slice(5,7));
+            let day = parseInt(date.slice(8,10));
+            let hour = parseInt(date.slice(11,13));
+            let minute = parseInt(date.slice(14,16));
+            let type = 1;
+            if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 ){
+                type = 2;
+            }else if(month == 2){
+                type = 0;
+            }
+            hour += 9;
+            // 24시간이 넘어가면 
+            if(hour >= 24){
+                hour -= 24;
+                // 하루를 추가하고 
+                day += 1;
+                // 추가하는데 31일까지면 
+                if(type == 2){
+                    if(day > 31){
+                        month += 1;
+                        if(month > 12){
+                            year += 1;
+                            month -= 12;
+                        }
+                        day -= 31;
+                    }
+                
+                }else if(type == 0){
+                    if(day > 28){
+                        month +=1;
+                        day -= 28;
+                    }
+                }else{
+                    if(day > 30){
+                        month +=1;
+                        day -= 30;
+                    }
+                }
+            }
             return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
+        },
+        searchByTag(tag_id){
+            this.setTagId(tag_id)
+            this.$router.push({
+                name : 'Search',
+            })
         }
 	},
 	created() {
