@@ -170,7 +170,7 @@ public class AnswerController {
         answer = answerRepository.save(answer);
 
         // rank 반영
-        updateRank(answer.getQuestion().getUser().getId(), 1, 2);
+        updateRank(answer.getUser().getId(), 1, 2);
 
         // 알림 생성
         Question question = answer.getQuestion();
