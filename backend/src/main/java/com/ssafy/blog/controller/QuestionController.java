@@ -78,8 +78,6 @@ public class QuestionController {
         Page<Question> pageList = null;
         if (page == null)
             page = 1;
-        
-        System.out.println(keyword + " " + userId + " " + questionId + " " + page);
 
         if (keyword == null && userId == null && questionId == null) {
             pageList = questionRepository.findAll(PageRequest.of(page - 1, 10, Sort.by("id").descending()));
