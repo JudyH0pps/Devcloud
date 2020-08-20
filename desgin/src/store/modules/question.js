@@ -91,9 +91,6 @@ export default {
                 });
         },
         fetchQuestionsByKeyword(context,keyword){
-            if(keyword != undefined){
-                keyword = encodeURIComponent(keyword)
-            }
             http
                 .get('/api/question',{
                     params:{
