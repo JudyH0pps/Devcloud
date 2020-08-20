@@ -39,7 +39,7 @@ export default {
             .then(({data}) => {
                 this.profile = data;
                 // this.userIdList = data;
-                console.log(this.profile);
+                //console.log(this.profile);
                 
             })
             .catch(()=>{
