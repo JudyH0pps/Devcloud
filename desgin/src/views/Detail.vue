@@ -1,10 +1,11 @@
 <template>
   <section class="detail">
     <DetailQuestion />
-    <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" :questionId="$route.params.question_id"/>
+    <DetailAnswer v-for="answer in answers" :key="answer.id" :answer="answer" :questionId="parseInt($route.params.question_id)"/>
     <button @click="moveToWrite">답변달기</button>
     <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
     <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
+    <BlockModal @toggleBlock="toggleBlock" :blockModal="blockModal"/>
   </section>
 </template>
 
@@ -13,6 +14,7 @@ import DetailQuestion from '@/components/DetailQuestion.vue'
 import DetailAnswer from '@/components/DetailAnswer.vue'
 import LoginCheckModal from '@/components/LoginCheckModal.vue'
 import LoginModal from '@/components/LoginModal.vue'
+import BlockModal from '@/components/BlockModal.vue'
 import { mapState, mapActions } from 'vuex'
 
 export default {
@@ -22,15 +24,18 @@ export default {
     DetailAnswer,
     LoginModal,
     LoginCheckModal,
+    BlockModal,
   },
   data() {
     return {
       loginModalOn: false,
       loginCheck: false,
+      blockModal: false,
     }
   },
 	computed: {
 		...mapState({
+      question: state => state.question.question,
       answers: state => state.answer.answers,
       isLoggedIn: state => state.user.isLoggedIn,
 		}),
@@ -39,12 +44,17 @@ export default {
     ...mapActions('answer',['fetchAnswers']),
     moveToWrite() {
       if (this.isLoggedIn === true) {
-        this.$router.push({
-          name:'WriteAnswer',
-          params:{ 
-            "question_id" : this.$route.params.question_id
-            },
-          });
+        if (parseInt(this.$cookie.get('user_id')) !== this.question.user.id) {
+          this.$router.push({
+            name:'WriteAnswer',
+            params:{ 
+              "question_id" : this.$route.params.question_id
+              },
+            });
+        }
+        else {
+          this.toggleBlock()
+        }
       }
       else {
         this.changeModal()
@@ -63,6 +73,9 @@ export default {
       this.changeModal()
       this.toggleModal()
     },
+    toggleBlock() {
+      this.blockModal = !this.blockModal
+    }
   },
 	created() {
     this.fetchAnswers(this.$route.params.question_id);    
