@@ -5,10 +5,10 @@
         <h1 contenteditable data-heading="DevCloud">DevCloud</h1>
       </div> -->
       <SearchBar/>
-      <div class="wave wave1"></div>
+      <!-- <div class="wave wave1"></div>
       <div class="wave wave2"></div>
       <div class="wave wave3"></div>
-      <div class="wave wave4"></div>
+      <div class="wave wave4"></div> -->
     </section>
     <MainBottom/>
   </div>

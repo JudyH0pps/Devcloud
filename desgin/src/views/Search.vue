@@ -12,13 +12,12 @@
             <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
             <!--<button @click.prevent="doAjax">fetch Data</button>-->
         </div>
-        <hr style="border: 1px solid #D3D3D3; margin-top: 20px;">
         
         <div v-if="this.searchKeyword">
-            <h2 style="margin: 25px 0 25px;">Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
+            <h2 style="margin: 5px 0 25px; font-size: 24px;">Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
         </div>
         <div v-else>
-            <h2 style="margin: 25px 0 25px;">All Questions</h2>
+            <h2 style="margin: 5px 0 25px; font-size: 24px;">All Questions</h2>
         </div>
 
         <SearchResultCard  @searchTag="updateScroll" v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword"/>
@@ -193,14 +192,14 @@ export default{
   font-family: "Poppins", sans-serif;
   margin: 80px auto 0;
   padding: 10px;
-  max-width: 900px;
+  max-width: 1000px;
   min-height: 100vh;
 }
 button {
   /* float: right; */
   position: fixed;
-  right: 150px;
-  bottom: 80px;
+  right: 130px;
+  bottom: 150px;
   /* transform: translate(-50%, 0); */
   /* right: -50%; */
   width: 120px;

@@ -1,14 +1,10 @@
 <template>
     <div class="detailquestion" v-if="this.$store.state.question.question">
-        <header style="display: flex; justify-content: space-between; align-items: center">
+        <header style="display: flex; justify-content: space-between;">
             <h1 class="q-title">Q. {{ question.title }}</h1>
             <div @click="likeClick" class="like-button">
-                <i v-if="chkClicked" class="fas fa-heart"></i>
-                <i v-else stlye="font-size:10px;" class="far fa-heart"></i>
-            </div>
-            <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons">
-                <button class="editBtn" @click="moveToEdit">수정</button>
-                <button class="delBtn" @click="deleteQuestion(parseInt($route.params.question_id))">삭제</button>
+                <i v-if="chkClicked" style="font-size:20px;" class="fas fa-heart"></i>
+                <i v-else stlye="font-size:10px;" style="font-size:20px;" class="far fa-heart"></i>
             </div>
         </header>
         <div class="leftline">
@@ -29,6 +25,10 @@
 
         <p v-html="question.content" class="q-content">{{ question.content }}</p>
 
+        <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons" style="text-align:right;">
+            <button class="editBtn" @click="moveToEdit">수정</button>
+            <button class="delBtn" @click="deleteQuestion(parseInt($route.params.question_id))">삭제</button>
+        </div>
 
 
 
@@ -188,6 +188,12 @@ export default {
 </script>
 
 <style scoped>
+.detailquestion {
+    background:white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 10px;
+}
 .q-title {
   padding: 10px 0;
   /* border-bottom: 1px solid #eeeeee; */
@@ -220,7 +226,7 @@ export default {
 }
 .profile_img {
     border-radius: 50%;
-    height: 30px;
+    height: 40px;
     margin-right: 10px;
 }
 .like-button span {
@@ -230,17 +236,19 @@ export default {
     cursor: pointer;
 }
 .like-button {
-    height: 25px;
-    width: 45px;
-    margin-left: auto;
+    height: 30px;
+    width: 60px;
+    /* margin-left: auto; */
     display: flex;
     flex-direction: row;
     color: Tomato;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 15px;
     text-align: center;
     align-items: center;
     justify-content: center;
+    margin: 0 0 0 auto;
+    margin-top: 0 !important;
 }
 .like-button:hover{
     background: #eee;
@@ -266,6 +274,6 @@ export default {
 }
 .editBtn:hover {
     color: #eee;
-    background: rgb(138, 243, 138);
+    background: #ccc;
 }
 </style>
