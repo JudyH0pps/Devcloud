@@ -35,7 +35,7 @@ export default {
         // 자기 프로필을 조회 (인증필요)
         fetchMyProfile(context,payload){
             http
-                .get('api/user/me',{
+                .get('/api/user/me',{
                     headers:{
                         Authorization: 'Bearer ' + payload
                     }
