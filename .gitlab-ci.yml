@@ -7,6 +7,11 @@ build-back:
     only : 
         - master 
         - develop
+    script:
+        - cd $CI_PROJECT_DIR/backend
+        - chmod +x mvnw
+        - ./mvnw package
+        - cp target/*.jar ~/app1.jar
     tags :
         # !! tag 값이 동일하게 설정된 Runner만 파이프라인을 동작시킴
         # 여러 서버에 배포할때 서버별 runner 태그로도 활용(dev, stg, prd)
@@ -21,6 +26,12 @@ build-front:
     only : 
         - master 
         - develop
+    script:
+        - cd $CI_PROJECT_DIR/desgin
+        - npm install
+        - npm build
+        - rm -rf ~/devCloud/s03p13c202/desgin/dist
+        - cp -rf dist ~/devCloud/s03p13c202/desgin
     tags :
         - i3c202
 
