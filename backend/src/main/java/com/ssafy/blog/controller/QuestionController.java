@@ -214,6 +214,10 @@ public class QuestionController {
         calendar.add(Calendar.DATE, 1);
         Date end = calendar.getTime();
 
+        System.out.println("######################################");
+        System.out.println(start + "\n" + end);
+        System.out.println("######################################");
+
         Long count = questionRepository.countByUpdatedAtBetween(start, end);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
