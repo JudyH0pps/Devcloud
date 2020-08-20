@@ -54,7 +54,7 @@
 
         <!-- 댓글 작성란 -->
         <div class="commentInputSection" style="margin-top: 10px;">
-            <input style="padding-left: 5px; height: 40px; border: 1px solid #ccc; outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="해당 답변에 대한 댓글을 작성해주세요">
+            <input style="padding-left: 5px; height: 40px; border: 1px solid #ccc; outline: none; width: 100%;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="해당 답변에 대한 댓글을 작성해주세요">
             <button class="writeBtn" style="cursor: pointer; margin-left:auto;" @click="postComment">댓글작성</button>
 		</div>
 
