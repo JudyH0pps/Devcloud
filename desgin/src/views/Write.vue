@@ -35,8 +35,8 @@
                 :typeahead-hide-discard="true"
                 :only-existing-tags="true"
                 :add-tags-on-blur="true"
-                typeahead-max-results=15
-                limit=4
+                :typeahead-max-results="tagListMax"
+                :limit="posTagCnt"
                 typeahead-style="dropdown"
                 wrapper-class="write_tags"
                 v-if="!isAnswer"
@@ -65,6 +65,8 @@ export default {
   },
   data() {
     return {
+      tagListMax : 10,
+      posTagCnt : 4,
       title: '',
       content: '',
       resultedTags:[],
@@ -358,4 +360,5 @@ button::before {
   max-width: 300px;
   max-height: 300px;
 }
+
 </style>
