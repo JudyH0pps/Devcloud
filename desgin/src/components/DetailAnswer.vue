@@ -1,24 +1,14 @@
 <template>
     <div class="detailanswer">
-        <div style="display:flex; flex-direction:row;">
+        <div style="display:flex; flex-direction:row; align-items:center;">
             <h1 class="q-title">A.</h1>
-            <div @click="likeClick" class="like-button">
-                <i v-if="chkClicked" class="fas fa-heart"></i>
-                <i v-else class="far fa-heart"></i>
-            </div>
-        </div>
-        <div class="leftline">
-            <div class="q-info">
-                <div class="profile">
-                    <img :src="answer.user.imageUrl" class="profile_img">
-                    <p>{{ answer.user.name }}</p>
-                    <!-- current user is writer -->
                     <template v-if="writerChk">
                         <!-- 해당 포스트에 채택된 답변이 있을 때 -->
                         <template v-if="selectedAnswer">
                             <!-- 채택된 컴포넌트에는 채택완료 표시-->
                             <template v-if="isSelectedAnswer">
-                                <button class="answer_selected" style="margin-left: 30px">채택완료</button>
+                                <i class="fas fa-check-circle" style="margin-left: 5px; color: green; font-size: 22px"></i>
+                                <span style="font-size:14px;"> 채택완료</span>
                             </template>
                             <!-- 채택되지 않은 컴포넌트는 아무 표시도 하지 않는다.-->
 
@@ -32,10 +22,21 @@
                     <template v-else>
                         <!-- if this answer is selected from writer -->
                         <template v-if="selectedAnswer">
-                            <i class="fas fa-check-circle" style="margin-left: 5px; color: green; font-size: 16px"></i>
-                            <span style="font-size:12px; font-weight:bold;"> 채택완료</span>
+                                <i class="fas fa-check-circle" style="margin-left: 5px; color: green; font-size: 16px"></i>
+                                <span style="font-size:12px; font-weight:bold;"> 채택완료</span>
                         </template>
                     </template>
+            <div @click="likeClick" class="like-button">
+                <i v-if="chkClicked" style="font-size:20px;" class="fas fa-heart"></i>
+                <i style="font-size:20px;" v-else class="far fa-heart"></i>
+            </div>
+        </div>
+        <div class="leftline">
+            <div class="q-info">
+                <div class="profile">
+                    <img :src="answer.user.imageUrl" class="profile_img">
+                    <p>{{ answer.user.name }}</p>
+                    <!-- current user is writer -->
                 </div>
                 <p>{{ parseDateString(answer.updated_at) }}</p>
             </div>
@@ -349,6 +350,12 @@ export default {
 </script>
 
 <style scoped>
+.detailanswer {
+    background:white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 10px;
+}
 .q-title {
   padding: 10px 0;
   /* border-bottom: 1px solid #eeeeee; */
@@ -394,15 +401,14 @@ export default {
     justify-content: space-between;
 }
 .like-button {
-    height: 25px;
-    width: 45px;
+    height: 30px;
+    width: 60px;
     margin-left: auto;
-    margin-top: 30px;
     display: flex;
     flex-direction: row;
     color: Tomato;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 15px;
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -465,7 +471,7 @@ export default {
 }
 .editBtn:hover {
     color: #eee;
-    background: rgb(138, 243, 138);
+    background: #ccc;
 }
 .commentInputSection {
     width: 98%;

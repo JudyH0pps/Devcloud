@@ -1,50 +1,59 @@
 <template>
     <section class="account">
-        <button v-if="validated" style="float:right" variant="success" @click="edit">프로필 수정하기</button>
-        <button v-else style="float:right" variant="primary" @click="save">저장하기</button>
+        <button v-if="validated" variant="success" @click="edit"><i class="fas fa-cog"></i>프로필 수정하기</button>
+        <button v-else variant="primary" @click="save"><i class="far fa-clipboard"></i>저장하기</button>
 
         <!-- 닉네임 -->
 
-        <label>Nick Name</label>
-        <input type="text" v-model="user.name" :readonly="validated">
-        <!-- user.email.split('@')[0] -->
-        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">공식적으로 보여지는 이름입니다.</p>
-        <!-- ID 또는 Email -->
-
-        <label>User ID</label>
-        <input v-model="user.email" readonly>
-        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">ID는 변경하실 수 없습니다.</p>
-        
-        <!-- Github Url -->
-        <label>Github</label>
-        <input v-model="user.githubUrl" :readonly="validated">
-        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">프로필에 표기할 Github 주소입니다.</p>
-
-        <label>Introduction</label>
-        <input v-model="user.introduction" :readonly="validated">
-        <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">자신을 소개할 문구입니다.</p>
-
-        
-        <div v-if="!validated">
-            <label>Technical Skills</label>
-            <!-- <b-form-input v-model="user.tech" :readonly="validated" ></b-form-input> -->
-            <tags-input element-id="tags"
-                        v-model="resultedTags"
-                        :existing-tags="this.techsIn"
-                        :typeahead='true'
-                        placeholder="태그를 추가하세요"
-                        :typeahead-hide-discard="true"
-                        :only-existing-tags="true"
-                        :add-tags-on-blur="true"
-                        typeahead-max-results=15
-                        limit=4
-                        typeahead-style="dropdown"
-                        wrapper-class="test"
-                        >
-                        
-            </tags-input>           
-            <p style="margin-top:10px">주로 사용하는 언어와 기술사항을 표시합니다.</p>
+        <div class="formdiv">
+            <label>Nick Name</label>
+            <input type="text" v-model="user.name" :readonly="validated">
+            <!-- user.email.split('@')[0] -->
+            <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">공식적으로 보여지는 이름입니다.</p>
         </div>
+        <!-- ID 또는 Email -->
+        <div class="formdiv">
+            <label>User ID</label>
+            <input v-model="user.email" readonly>
+            <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">ID는 변경하실 수 없습니다.</p>
+        </div>
+    
+        <!-- Github Url -->
+        <div class="formdiv">
+            <label>Github</label>
+            <input v-model="user.githubUrl" :readonly="validated">
+            <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">프로필에 표기할 Github 주소입니다.</p>
+        </div>
+
+        <div class="formdiv">
+            <label>Introduction</label>
+            <input v-model="user.introduction" :readonly="validated">
+            <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">자신을 소개할 문구입니다.</p>
+        </div>
+        
+        <div class="formdiv" v-if="!validated">
+            <div >
+                <label>Technical Skills</label>
+                <!-- <b-form-input v-model="user.tech" :readonly="validated" ></b-form-input> -->
+                <tags-input element-id="tags"
+                            v-model="resultedTags"
+                            :existing-tags="this.techsIn"
+                            :typeahead='true'
+                            placeholder="태그를 추가하세요"
+                            :typeahead-hide-discard="true"
+                            :only-existing-tags="true"
+                            :add-tags-on-blur="true"
+                            :typeahead-max-results="tagListMax"
+                            :limit="posTagCnt"
+                            typeahead-style="dropdown"
+                            wrapper-class="test"
+                            >
+                            
+                </tags-input>           
+                <p style="font-size: 12px; margin-top:10px; margin-bottom: 10px;">주로 사용하는 언어와 기술사항을 표시합니다.</p>
+            </div>
+        </div>
+        <button style="margin-left:auto;" v-if="!validated" variant="primary" @click="save"><i class="far fa-clipboard"></i>저장하기</button>
     </section>
 </template>
 <script>
@@ -59,6 +68,8 @@ export default {
     name: 'ProfileAccount',
     data: function() {
         return {
+            tagListMax : 10,
+            posTagCnt : 4,
             validated : true,
             selectedTags:[],
             resultedTags:[],
@@ -116,8 +127,19 @@ section.account {
     padding: 40px;
 }
 button {
-    border: 0;
-
+    border: 1px solid #eee;
+    background: white;
+    margin-left: auto;
+    outline: none;
+    height: 25px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    padding: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+}
+button:hover {
+    cursor: pointer;
+    background: #eee;
 }
 label {
     width: 100%;
@@ -276,5 +298,12 @@ input {
 .tags-input-typeahead-item-highlighted-default {
     color: #fff;
     background-color: #007bff;
+}
+.formdiv {
+    background: white;
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 5px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
 }
 </style>

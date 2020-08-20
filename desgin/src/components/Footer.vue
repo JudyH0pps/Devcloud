@@ -1,6 +1,6 @@
 <template>
     <footer class="fixed-footer">
-        <h4>Devcloud</h4>
+        <p>Devcloud</p>
         <ul>
             <li>김시영</li>
             <li>김기영</li>
@@ -23,27 +23,32 @@ export default{
 </script>
 <style scoped>
 footer {
-    /* position: fixed; */
+    position: fixed;
     bottom: 0;
     width: 100%;
-    height: 100px;
+    height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 25px;
     text-transform: uppercase;
-    z-index: -1;
+    z-index: 100000;
     color: gray;
+    background: white;
 }
 ul {
     display: flex;
     flex-direction: row;
 }
 ul li {
-    font-size: 14px;
+    font-size: 12px;
     list-style: none;
     margin: 5px;
-    font-weight: 800;
+    /* font-weight: 800; */
+}
+p {
+    font-size: 14px;
+    font-weight: bold;
 }
 </style>

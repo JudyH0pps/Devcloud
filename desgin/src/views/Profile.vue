@@ -152,6 +152,7 @@ export default {
   margin: 0;
   box-sizing: border-box;
 }
+
 .profile {
   /* background: #e9e9e9; */
   /* overflow: hidden; */
@@ -271,6 +272,7 @@ export default {
 }
 .right-side {
   width: 100%;
+  margin-bottom: 100px;
 }
 .nav {
   z-index: -1;

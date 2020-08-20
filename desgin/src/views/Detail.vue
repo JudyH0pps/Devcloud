@@ -97,7 +97,7 @@ button {
   /* float: right; */
   position: fixed;
   right: 150px;
-  bottom: 80px;
+  bottom: 150px;
   /* transform: translate(-50%, 0); */
   /* right: -50%; */
   width: 120px;

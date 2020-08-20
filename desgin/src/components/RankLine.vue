@@ -58,6 +58,11 @@ export default {
     /* box-shadow: 0px 3px 4px rgba(0,0,0,.2); */
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-radius: 10px;
+    margin: 9px 0;
 }
 .line img {
     height: 70%;

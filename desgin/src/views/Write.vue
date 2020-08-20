@@ -1,9 +1,9 @@
 <template>
   <section class="writeform">
-    <div class="form" v-if="!isAnswer">
+    <div class="form" style="margin-top: 40px; border: 1px solid #ccc; border-radius: 4px 4px 0 0" v-if="!isAnswer">
       <input type="text" name="title" autocomplete="off" required v-model="title"/>
       <label class="label-name" for="title" v-if="isEdit === false">
-        <span class="content-name">Title</span>
+        <span style="margin-left:5px;" class="content-name">Title</span>
       </label>
     </div>
     <!-- <div class="form">
@@ -12,14 +12,19 @@
         <span class="content-name">Content</span>
       </label>
     </div> -->
+    <div style="margin-top: 20px; margin-bottom: 15px;">
+      <label class="label-name" for="tags">
+        <span style="margin-left:5px;" class="tag-name">Content</span>
+      </label>
+    </div>
     <vue-editor id="editor"
         useCustomImageHandler
         @imageAdded="handleImageAdded"
         v-model="content" :editor-toolbar="customToolbar">
     </vue-editor>
-    <div v-if="!isAnswer">
+    <div v-if="!isAnswer" style="margin-top: 20px; margin-bottom: 15px;">
       <label class="label-name" for="tags">
-        <span class="tag-name">Tags</span>
+        <span style="margin-left:5px;" class="tag-name">Tags</span>
       </label>
     </div>
     <tags-input element-id="tags"
@@ -221,7 +226,7 @@ export default {
 <style scoped>
 .writeform{
   font-family: "Poppins", sans-serif;
-  margin: 100px auto 0;
+  margin: 60px auto 0;
   /* padding: 10px; */
   max-width: 900px;
   width: 100%;
@@ -229,6 +234,7 @@ export default {
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
+  /* background: white; */
 }
 
 .form {
@@ -238,6 +244,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
+  /* margin-bottom: 20px; */
 }
 
 .form input {
@@ -245,8 +252,10 @@ export default {
   height: 100%;
   color: #595f6e;
   padding-top: 20px;
+  margin-bottom: 20px;
   border: none;
   outline: none;
+
 }
 
 .form label {
@@ -335,6 +344,9 @@ button::before {
   border-radius: 40px;
   opacity: 0;
   transition: 0.5s;
+}
+.quillWrapper{
+  background: white;
 }
 .quillWrapper >>> .ql-clean {
   display: none !important;

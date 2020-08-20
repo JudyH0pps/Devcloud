@@ -8,8 +8,10 @@
       <router-link to="/about">About</router-link>
     </div> -->
     <router-view class="botmargin400px"/>
-
- 
+    <div class="wave wave1"></div>
+    <div class="wave wave2"></div>
+    <div class="wave wave3"></div>
+    <div class="wave wave4"></div>
     <Footer/>
   </div>
 </template>
@@ -101,6 +103,7 @@ export default{
   /* text-align: center; */
   color: #2c3e50;
   min-width: 1024px;
+  background: rgb(202, 237, 248);
 }
 
 #nav {
@@ -144,19 +147,72 @@ body {
 } */
 
 .tag {
-    font-size: 12px;
+    font-size: 14px;
     margin: 1px;
     padding: 3px 5px;
-    border-radius: 2px;
+    border-radius: 12px;
     border: 1px solid #e1ecf4;
     background: #e1ecf4;
     color:#60829b;
     font-weight: 400;
     text-transform: uppercase;
-    margin: 10px 5 15px 0;
+    margin: 10px 6px 0px 0;
 }
 .tag:hover {
     background: #d0eafd;
     cursor: pointer;
+}
+.wave {
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: url('./assets/wave.png');
+  background-size: 1000px 100px;
+}
+.wave.wave1 {
+  animation: animate 10s linear infinite;
+  /* z-index: 100; */
+  opacity: 1;
+  animation-delay: 0s;
+  bottom: 0;
+}
+.wave.wave2 {
+  animation: animate2 15s linear infinite;
+  z-index: 99;
+  opacity: 0.5;
+  animation-delay: -5s;
+  bottom: 10px;
+}
+.wave.wave3 {
+  animation: animate 15s linear infinite;
+  z-index: 98;
+  opacity: 0.2;
+  animation-delay: -2s;
+  bottom: 15px;
+}
+.wave.wave4 {
+  animation: animate2 10s linear infinite;
+  z-index: 97;
+  opacity: 0.7;
+  animation-delay: 0s;
+  bottom: 20px;
+}
+@keyframes animate {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: 1000px;
+  }
+}
+@keyframes animate2 {
+  0% {
+    background-position-x: 0;
+  }
+  100% {
+    background-position-x: -1000px;
+  }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
-    <div class="card" @click="moveTodetail(question.id)">
+    <div class="card">
         <div class="post-data">
-            <div style="display:flex; flex-direction:row; align-items: center;">
+            <div style="display:flex; flex-direction:row; align-items: center; height: 35px;">
                 <!-- <i class="fab fa-quora" style="font-size: 16px; margin-right: 5px; color: tomato;">uestion</i>  -->
-                <div class="title" v-html="$options.filters.highlights1(question.title, keyword)"></div>
+                <div @click="moveTodetail(question.id)" class="title" v-html="$options.filters.highlights1(question.title, keyword)"></div>
                 <div v-if="questionHasSelected" style="dipslay:flex; align-items: center;">
                     <i class="fas fa-check-circle" style="color: green; font-size: 16px"></i>
                     <span style="font-size:12px; font-weight:bold;"> 채택완료</span>
@@ -13,25 +13,28 @@
                     alt="profile picture"
                     class="profile-rounded"
                     :src="question.user.imageUrl"
-                    style="margin-left: auto;width: 25px; height: 25px; display: inline; padding: 0px; margin-right: 5px;"
+                    style="margin-left: auto;width: 30px; height: 30px; display: inline; padding: 0px; margin-right: 5px;"
                     align: right>
-                <p style="font-size: 14px; color: black; font-weight: bold">
+                <p style="font-size: 14px; color: black; font-weight: bold; color: #233453;">
                     {{question.user.name}}
                 </p>
             </div>
             
             <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; margin: 5px 0;">
-                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name" @click="searchTag(tag.tag.id)">{{ tag.tag.name }}</span>
                 
-                <i style="font-size: 16px; margin-left: auto; margin-right: 5px; color: tomato;" class="fas fa-heart"></i>
-                <p style="font-size: 16px; margin-bottom: 3px;">
+
+                <i style="font-size: 25px; margin-left: auto; margin-right: 5px; color: tomato;" class="fas fa-heart"></i>
+                <p style="font-size: 16px; margin-bottom: 3px; color: #233453;">
                     {{question.likeCnt}}
                 </p>
             </div>
 
-            <div style="text-align: right;">
-                
-            </div>          
+            <div style="display:flex; flex-direction:row; align-items:center;">
+                <span class="tag" v-for="tag in question.questionTags" :key="tag.tag.name" @click="searchTag(tag.tag.id)">{{ tag.tag.name }}</span>
+                <div style="text-align: right; font-size: 13px; color: #233453; margin-left:auto;">
+                    {{ parseDateString(question.updatedAt) }}
+                </div>          
+            </div>
             <!-- <div class="description" v-html="$options.filters.highlights2(question.content, keyword)">
             </div> -->
             <div style="display: flex; flex-direction: row; margin-left: auto; align-items: center;">
@@ -115,6 +118,14 @@ export default {
                     console.log(err);
                 })
         },
+        parseDateString(date) {
+            let year = date.slice(0,4);
+            let month = date.slice(5,7);
+            let day = date.slice(8,10);
+            let hour = date.slice(11,13);
+            let minute = date.slice(14,16);
+            return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
+        }
     },
     created() {
         //this.questionCreate();
@@ -165,8 +176,7 @@ Vue.filter("highlights2", function(item, keyword){
 .card {
     display: flex;
     flex-direction: column;
-    /* background-color: #fff; */
-    
+    background-color: #fff;
     margin: 10px auto 10px auto;
     /* border-radius: 15px; */
     overflow: hidden;
@@ -175,10 +185,12 @@ Vue.filter("highlights2", function(item, keyword){
     /* padding-bottom: 25px;
     padding-top: 25px; */
     border-bottom: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
 }
 .card:hover {
     box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 /* .image-data {
     height: 250px;
@@ -228,12 +240,17 @@ Vue.filter("highlights2", function(item, keyword){
     width: 100%;
 }
 .title {
-    font-size:16px;
+    font-size: 21px;
     line-height: 1;
-    font-weight: bold;
+    /* font-weight: bold; */
     margin-right: 5px;
+    color: #225686;
     /* padding-bottom: 10px;
     margin-bottom: 10px; */
+}
+.title:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 .subtitle {
     font-size: 12px;

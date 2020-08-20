@@ -3,7 +3,7 @@
     <div class="cardlist">
       <ProfileAnswerCard v-for="answer in answers" :key="answer.id" :item="answer"/>
     </div>
-    <button class="moreBtn">more</button>
+    <!-- <button class="moreBtn">more</button> -->
   </section>
   
 </template>
@@ -35,14 +35,14 @@ export default {
 .answers{
   /* position: absolute; */
   /* grid-template-rows: repeat(2, 150px); */
-  margin: 0 10px;
+  margin: 5px 10px 0;
   padding: 0;
   width: 100%;
 }
 .cardlist{
   /* position: absolute; */
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 button {
   /* float: right; */
