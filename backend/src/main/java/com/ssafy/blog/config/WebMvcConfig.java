@@ -21,9 +21,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         .maxAge(MAX_AGE_SECS);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("api/images/**")
-            .addResourceLocations(PATH);
-    }
+    // @Override
+    // public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    //     registry.addResourceHandler("api/images/**")
+    //         .addResourceLocations(PATH);
+    // }
 }
