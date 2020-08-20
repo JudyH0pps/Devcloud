@@ -117,6 +117,7 @@ export default {
                     } else {
                         this.questionHasSelected = false;
                     }
+
                 })
                 .catch(err => {
                     console.log(err);

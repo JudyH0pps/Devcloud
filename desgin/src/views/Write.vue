@@ -237,6 +237,7 @@ export default {
   /* justify-content: center; */
   flex-direction: column;
   /* background: white; */
+  padding-bottom: 100px;
 }
 
 .form {
