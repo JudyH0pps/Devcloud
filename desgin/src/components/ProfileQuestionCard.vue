@@ -5,7 +5,7 @@
         </div> -->
         <div class="blog-post__info" style="width:100%;">
             <div style="display:flex; flex-direction:row; align-items:center; justify-content: space-between; width: 100%;">
-                <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ item.title }}</h1>
+                <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ addDot(item.title) }}</h1>
                 <!-- <p class="blog-post__text">
                     {{ item.content }}
                 </p> -->
@@ -41,6 +41,14 @@ export default {
             let hour = date.slice(11,13);
             let minute = date.slice(14,16);
             return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
+        },
+        addDot(title) {
+            if (title.length >= 14) {
+                return title.slice(0, 14) + '...';
+            }
+            else {
+                return title;
+            }
         }
     },
     // created() {
