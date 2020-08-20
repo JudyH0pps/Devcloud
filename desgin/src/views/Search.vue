@@ -5,22 +5,20 @@
             :can-cancel="true" 
             :is-full-page="fullPage"
             color=#5ABEFF
-            :width="128"
-            :height="128"
+            :width="64"
+            :height="64"
             >
             </loading>
-            
-
             <!--<label><input type="checkbox" v-model="fullPage">Full page?</label>-->
             <!--<button @click.prevent="doAjax">fetch Data</button>-->
         </div>
         <hr style="border: 1px solid #D3D3D3; margin-top: 20px;">
         
         <div v-if="this.searchKeyword">
-            <h2 style="margin: 30px 0 50px;">Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
+            <h2 style="margin: 25px 0 25px;">Search Result: <span style="text-decoration: underline; color: gray; font-weight: none">{{this.searchKeyword}}</span></h2>
         </div>
         <div v-else>
-            <h2 style="margin: 30px 0 50px;">All Questions</h2>
+            <h2 style="margin: 25px 0 25px;">All Questions</h2>
         </div>
 
         <SearchResultCard  @searchTag="updateScroll" v-for="(question, index) in questions" :question="question" :key="index" :keyword="searchKeyword"/>

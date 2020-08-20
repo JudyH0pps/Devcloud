@@ -2,6 +2,10 @@
     <div class="detailquestion" v-if="this.$store.state.question.question">
         <header style="display: flex; justify-content: space-between; align-items: center">
             <h1 class="q-title">Q. {{ question.title }}</h1>
+            <div @click="likeClick" class="like-button">
+                <i v-if="chkClicked" class="fas fa-heart"></i>
+                <i v-else stlye="font-size:10px;" class="far fa-heart"></i>
+            </div>
             <div v-if="question.user.id === parseInt($cookie.get('user_id')) && answers.length < 1" class="buttons">
                 <button class="editBtn" @click="moveToEdit">수정</button>
                 <button class="delBtn" @click="deleteQuestion(parseInt($route.params.question_id))">삭제</button>
@@ -18,23 +22,15 @@
                         <p>{{ question.user.name }}</p>
                     </router-link>
                 </div>
-                <p>{{ question.updatedAt }}</p>
+                <p>{{ parseDateString(question.updatedAt) }}</p>
             </div>
         </div>
+                <!-- current user가 like button clicked 상태면 x -->
+
         <p v-html="question.content" class="q-content">{{ question.content }}</p>
 
 
-        <!-- current user가 like button clicked 상태면 x -->
-        <div @click="likeClick" class="like-button">
-            <div v-if="chkClicked">
-                <i class="fas fa-heart"></i>
-                <span>좋아요 취소</span>
-            </div>
-            <div v-else>
-                <i class="far fa-heart"></i>
-                <span>좋아요</span>
-            </div>
-        </div>
+
 
 
         <div class="vld-parent">
@@ -171,6 +167,14 @@ export default {
             this.changeModal()
             this.toggleModal()
         },
+        parseDateString(date) {
+            let year = date.slice(0,4);
+            let month = date.slice(5,7);
+            let day = date.slice(8,10);
+            let hour = date.slice(11,13);
+            let minute = date.slice(14,16);
+            return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
+        }
 	},
 	created() {
         // alert(this.$route.params.question_id)
@@ -186,11 +190,11 @@ export default {
 <style scoped>
 .q-title {
   padding: 10px 0;
-  border-bottom: 1px solid #eeeeee;
+  /* border-bottom: 1px solid #eeeeee; */
   margin-bottom: 10px;
 }
 .tags {
-    text-align: right;
+    text-align: left;
 }
 .leftline{
     border-left: 4px solid #eeeeee;
@@ -216,24 +220,24 @@ export default {
 }
 .profile_img {
     border-radius: 50%;
-    height: 40px;
+    height: 30px;
     margin-right: 10px;
 }
 .like-button span {
-    font-size: 1em;
+    font-size: 14px;
     color: Tomato;
     margin-left: 4px;
     cursor: pointer;
 }
 .like-button {
-    height: 50px;
-    width: 150px;
+    height: 25px;
+    width: 45px;
     margin-left: auto;
     display: flex;
     flex-direction: row;
     color: Tomato;
     border: 1px solid #ccc;
-    border-radius: 35px;
+    border-radius: 5px;
     text-align: center;
     align-items: center;
     justify-content: center;

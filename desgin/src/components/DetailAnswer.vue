@@ -1,6 +1,12 @@
 <template>
     <div class="detailanswer">
-        <h1 class="q-title">A.</h1>
+        <div style="display:flex; flex-direction:row;">
+            <h1 class="q-title">A.</h1>
+            <div @click="likeClick" class="like-button">
+                <i v-if="chkClicked" class="fas fa-heart"></i>
+                <i v-else class="far fa-heart"></i>
+            </div>
+        </div>
         <div class="leftline">
             <div class="q-info">
                 <div class="profile">
@@ -26,13 +32,15 @@
                     <template v-else>
                         <!-- if this answer is selected from writer -->
                         <template v-if="selectedAnswer">
-                            <button class="answer_selected" style="margin-left: 30px">채택완료</button>
+                            <i class="fas fa-check-circle" style="margin-left: 5px; color: green; font-size: 16px"></i>
+                            <span style="font-size:12px; font-weight:bold;"> 채택완료</span>
                         </template>
                     </template>
                 </div>
-                <p>{{ answer.updated_at }}</p>
+                <p>{{ parseDateString(answer.updated_at) }}</p>
             </div>
         </div>
+
         <!-- <p class="q-content">{{ answer.content }}</p> -->
         <div v-html="answer.content" class="q-content"></div>
         <div class="q-footer">
@@ -42,8 +50,8 @@
         </div>
 
         <!-- 댓글 작성란 -->
-        <div class="commentSection" style="margin-top: 10px;">
-            <input style="outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="해당 답변에 대한 댓글을 작성해주세요">
+        <div class="commentInputSection" style="margin-top: 10px;">
+            <input style="padding-left: 5px; height: 40px; border: 1px solid #ccc; outline: none;" @keyup.enter="postComment" v-model="postContent" type="text" placeholder="해당 답변에 대한 댓글을 작성해주세요">
             <button class="writeBtn" style="cursor: pointer; margin-left:auto;" @click="postComment">댓글작성</button>
 		</div>
 
@@ -52,7 +60,7 @@
 			<li style="list-style: none; width: 100%; display: flex; flex-direction: column; margin-top: 15px;" v-for="(comment, index) in comments" :key="comment.id">
                 <div style="display: flex; justify-content: space-between;">
                     <h5 style="font-size: 12px;">{{ comment.user.name }}</h5>
-                    <span style="font-size: 12px;">{{ comment.updatedAt }}</span>
+                    <span style="font-size: 12px;">{{ parseDateString(comment.updatedAt) }}</span>
                 </div>
                     
                 <div style="display: flex; justify-content: space-between;">
@@ -68,16 +76,7 @@
                 </div>
 			</li>
 		</ul>
-        <div @click="likeClick" class="like-button">
-            <div v-if="chkClicked">
-                <i class="fas fa-heart"></i>
-                <span>좋아요 취소</span>
-            </div>
-            <div v-else>
-                <i class="far fa-heart"></i>
-                <span>좋아요</span>
-            </div>
-        </div>
+
         <LoginCheckModal :loginCheck="loginCheck" @closeModal="changeModal" @switchModal="switchModal"/>
         <LoginModal @googleLogin="googleLogin" :loginModalOn="loginModalOn" @toggleModal="toggleModal"/>
     </div>
@@ -327,6 +326,14 @@ export default {
             this.toggleModal()
 
         },
+        parseDateString(date) {
+            let year = date.slice(0,4);
+            let month = date.slice(5,7);
+            let day = date.slice(8,10);
+            let hour = date.slice(11,13);
+            let minute = date.slice(14,16);
+            return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
+        }
     },
     created() {
         // alert(this.isLoggedIn)
@@ -344,7 +351,7 @@ export default {
 <style scoped>
 .q-title {
   padding: 10px 0;
-  border-bottom: 1px solid #eeeeee;
+  /* border-bottom: 1px solid #eeeeee; */
 }
 .tags {
     text-align: right;
@@ -387,15 +394,15 @@ export default {
     justify-content: space-between;
 }
 .like-button {
-    height: 50px;
-    width: 150px;
+    height: 25px;
+    width: 45px;
     margin-left: auto;
     margin-top: 30px;
     display: flex;
     flex-direction: row;
     color: Tomato;
     border: 1px solid #ccc;
-    border-radius: 35px;
+    border-radius: 5px;
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -460,6 +467,12 @@ export default {
     color: #eee;
     background: rgb(138, 243, 138);
 }
+.commentInputSection {
+    width: 98%;
+    margin: 0 auto 0;
+    display: flex;
+    flex-direction: row;
+}
 .commentSection {
     width: 98%;
     margin: 0 auto 0;
@@ -471,11 +484,11 @@ export default {
 }
 .writeBtn {
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 0px 2px 2px 0px;
     width: 70px;
     align-items: center;
     justify-content: center;
-    height: 25px;
-
+    height: 40px;
+    border-left: 0;
 }
 </style>
