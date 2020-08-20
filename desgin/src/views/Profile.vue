@@ -160,6 +160,7 @@ export default {
   font-family: "Poppins", sans-serif;
   margin: 80px 50px 0;
   padding: 10px;
+  height : 100vh;
 }
 .profile-header {
   background: #fff;

@@ -303,7 +303,7 @@ input {
     background: white;
     border-radius: 10px;
     padding: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
 }
 </style>
