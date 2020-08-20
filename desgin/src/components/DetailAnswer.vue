@@ -36,7 +36,9 @@
             <div class="q-info">
                 <div class="profile">
                     <img :src="answer.user.imageUrl" class="profile_img">
-                    <p>{{ answer.user.name }}</p>
+                    <router-link :to="{name: 'Profile', params :{ user_id : answer.user.id }}">
+                        <p>{{ answer.user.name }}</p>
+                    </router-link>
                     <!-- current user is writer -->
                 </div>
                 <p>{{ parseDateString(answer.updated_at) }}</p>

@@ -15,9 +15,11 @@
                     :src="question.user.imageUrl"
                     style="margin-left: auto;width: 30px; height: 30px; display: inline; padding: 0px; margin-right: 5px;"
                     align: right>
-                <p style="font-size: 14px; color: black; font-weight: bold; color: #233453;">
-                    {{question.user.name}}
-                </p>
+                <router-link :to="{name: 'Profile', params :{ user_id : question.user.id }}">
+                    <p style="font-size: 14px; color: black; font-weight: bold; color: #233453;">
+                        {{question.user.name}}
+                    </p>
+                </router-link>
             </div>
             
             <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; margin: 5px 0;">
