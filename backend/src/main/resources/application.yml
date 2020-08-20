@@ -1,4 +1,10 @@
 spring:
+    # servlet config
+    servlet:
+      multipart:
+        max-file-size: 100MB
+        max-request-size: 100MB
+
     # database config
     datasource:
         url: jdbc:mysql://i3c202.p.ssafy.io:3306/ssafydb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&characterEncoding=UTF-8
