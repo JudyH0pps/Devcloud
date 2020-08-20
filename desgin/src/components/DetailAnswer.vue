@@ -40,6 +40,7 @@
                     <!-- current user is writer -->
                 </div>
                 <p>{{ parseDateString(answer.updated_at) }}</p>
+                <p>{{ answer.updated_at }}</p>
             </div>
         </div>
 
