@@ -63,6 +63,10 @@ export default{
     /* border: 1px solid #ccc; */
     /* padding: 10px; */
 }
+button {
+    margin-left: auto;
+    margin-right: auto;
+}
 button.social {
     /* margin-bottom: 20px; */
     width: 180px;
