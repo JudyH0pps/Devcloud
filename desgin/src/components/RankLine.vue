@@ -1,6 +1,6 @@
 <template>
     <div class="line">
-        <h1 style="margin-left: 30px; font-size: 15px;">{{ index + 1 }}위</h1>
+        <h1 style="margin-left: 30px; font-size: 15px; width: 100px;">{{ index + 1 }}위</h1>
         <img :src="profile.imageUrl">
         <h3>{{ profile.name }}</h3>
         <h4 style="margin-left: auto;">{{ user.rank_point }}</h4>

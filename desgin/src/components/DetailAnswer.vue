@@ -2,6 +2,7 @@
     <div class="detailanswer">
         <div style="display:flex; flex-direction:row; align-items:center;">
             <h1 class="q-title">A.</h1>
+                    <!-- 작성자 일때 -->
                     <template v-if="writerChk">
                         <!-- 해당 포스트에 채택된 답변이 있을 때 -->
                         <template v-if="selectedAnswer">
@@ -21,7 +22,7 @@
                     <!-- current user is not writer-->
                     <template v-else>
                         <!-- if this answer is selected from writer -->
-                        <template v-if="selectedAnswer">
+                        <template v-if="isSelectedAnswer">
                                 <i class="fas fa-check-circle" style="margin-left: 5px; color: green; font-size: 16px"></i>
                                 <span style="font-size:12px; font-weight:bold;"> 채택완료</span>
                         </template>

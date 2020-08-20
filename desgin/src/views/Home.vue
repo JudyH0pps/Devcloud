@@ -41,7 +41,7 @@ export default {
 }
 .logo {
   position: absolute;
-  top: 100px;
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
   height: 300px;
