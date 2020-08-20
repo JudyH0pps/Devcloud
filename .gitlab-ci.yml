@@ -1,0 +1,46 @@
+stages:
+    -build
+    -deploy
+
+build-back:
+    stage: build
+    only:
+        - master
+        - develop
+    tags:
+        # !! tag 값이 동일하게 설정된 Runner만 파이프라인을 동작시킴
+        # 여러 서버에 배포할때 서버별 runner 태그로도 활용(dev, stg, prd)
+        - i3c202
+
+build-front:
+    stage: build
+    cache:
+        key: ${CI_COMMIT_REF_SLUG}
+        paths:
+            - frontend/node_modules
+    only:
+        - master
+        - develop
+    tags:
+        -i3c202
+
+deploy-back:
+    stage: deploy
+    only:
+        - master
+        - develop
+    script:
+        cd $HOME
+        ~/restart_backend1.sh
+    tags:
+        -i3c202
+
+deploy-front:
+    stage: deploy
+    only:
+        - master
+        - develop
+    script:
+        - ls -al ~/devCloud/s03p13c202/desgin/dist
+    tags:
+        - i3c202
