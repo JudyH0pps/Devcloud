@@ -43,8 +43,8 @@
                             :typeahead-hide-discard="true"
                             :only-existing-tags="true"
                             :add-tags-on-blur="true"
-                            typeahead-max-results=15
-                            limit=4
+                            :typeahead-max-results="tagListMax"
+                            :limit="posTagCnt"
                             typeahead-style="dropdown"
                             wrapper-class="test"
                             >
@@ -68,6 +68,8 @@ export default {
     name: 'ProfileAccount',
     data: function() {
         return {
+            tagListMax : 10,
+            posTagCnt : 4,
             validated : true,
             selectedTags:[],
             resultedTags:[],
