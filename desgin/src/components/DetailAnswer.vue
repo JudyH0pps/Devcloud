@@ -392,12 +392,6 @@ export default {
     height: 40px;
     margin-right: 10px;
 }
-.content-reader >>> .ql-syntax {
-    background-color: black;
-    color: white;
-    padding: 3px 5px;
-    border-radius: 3px;
-}
 .q-footer {
     display: flex; 
     justify-content: space-between;
@@ -498,5 +492,11 @@ export default {
     justify-content: center;
     height: 40px;
     border-left: 0;
+}
+.q-content >>> .ql-syntax {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
 }
 </style>
