@@ -202,9 +202,9 @@ header {
   position: absolute;
   top: 70px;
   right: 0px;
-  width: 400px;
+  width: 500px;
   /* margin-left: 10px; */
-  padding: 0 10px 0;
+  padding: 0 0;
   background: white;
   border: 2px solid #eeeeee;
   border-radius: 15px;
@@ -216,6 +216,9 @@ header {
   padding: 0 20px;
   justify-content: space-between;
   border-bottom: 1px solid #eee;
+}
+.alarm-list p {
+  font-size: 12px;
 }
 .dropdown {
   position: absolute;

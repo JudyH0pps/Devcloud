@@ -3,16 +3,18 @@
         <!-- <div class="blog-post__img">
             <img src="../assets/cloud.png" alt="">
         </div> -->
-        <div class="blog-post__info">
-            <div class="blog-post__date">
-                <span>{{ item.updatedAt }}</span>
+        <div class="blog-post__info" style="width:100%;">
+            <div style="display:flex; flex-direction:row; align-items:center; justify-content: space-between; width: 100%;">
+                <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ item.title }}</h1>
+                <!-- <p class="blog-post__text">
+                    {{ item.content }}
+                </p> -->
+                <div>
+                    <i class="fas fa-heart" style="margin-left:auto;color:red;"><span style="color:black;">{{ item.likeCnt }}</span></i>
+                </div>
             </div>
-            <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ item.title }}</h1>
-            <!-- <p class="blog-post__text">
-                {{ item.content }}
-            </p> -->
-            <div>
-                <i class="fas fa-heart" style="margin-left:auto;color:red;"></i>{{ item.likeCnt }}
+            <div class="blog-post__date">
+                <span>{{ parseDateString(item.updatedAt) }}</span>
             </div>
         </div>
     </div>
@@ -32,6 +34,14 @@ export default {
                 params:{ "question_id" : question_id},
             });
         },
+        parseDateString(date) {
+            let year = date.slice(0,4);
+            let month = date.slice(5,7);
+            let day = date.slice(8,10);
+            let hour = date.slice(11,13);
+            let minute = date.slice(14,16);
+            return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
+        }
     },
     // created() {
     //     console.log(this.item)
@@ -57,12 +67,12 @@ img {
     width: 93%;
     height: 100px;
     padding: 50px;
-    margin: 15px 10px;
+    margin: 5px 10px;
     background-color: #fff;
     box-shadow: 0px 3px 4px rgba(0,0,0,.2);
     display: flex;
     align-items: center;
-    border-radius: 0px;
+    border-radius: 10px;
  }
 .blog-post__img{
     width: 150px;
@@ -92,13 +102,17 @@ img {
     color: rgba(0,0,0,.5);
     font-size: 12px;
     font-weight: 600;
-    margin: 0;
+    margin-left: auto;
+    margin-bottom: 10px !important;
+    text-align: right;
+
 }
 .blog-post__title{
     font-size: 25px;
     margin: 1rem 0 1rem;
     text-transform: uppercase;
     color: #4facfe;
+    width: 100%;
 }
 .blog-post__title:hover {
     cursor: pointer;
