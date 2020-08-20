@@ -36,7 +36,9 @@
             <div class="q-info">
                 <div class="profile">
                     <img :src="answer.user.imageUrl" class="profile_img">
-                    <p>{{ answer.user.name }}</p>
+                    <router-link :to="{name: 'Profile', params :{ user_id : answer.user.id }}">
+                        <p>{{ answer.user.name }}</p>
+                    </router-link>
                     <!-- current user is writer -->
                 </div>
                 <p>{{ parseDateString(answer.updated_at) }}</p>
@@ -316,7 +318,7 @@ export default {
                 })
         },
         googleLogin() {
-            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+            window.location.href = 'https://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="https://i3c202.p.ssafy.io/"'
         },
         toggleModal() {
             this.loginModalOn = !this.loginModalOn;
@@ -391,12 +393,6 @@ export default {
     border-radius: 50%;
     height: 40px;
     margin-right: 10px;
-}
-.content-reader >>> .ql-syntax {
-    background-color: black;
-    color: white;
-    padding: 3px 5px;
-    border-radius: 3px;
 }
 .q-footer {
     display: flex; 
@@ -498,5 +494,11 @@ export default {
     justify-content: center;
     height: 40px;
     border-left: 0;
+}
+.q-content >>> .ql-syntax {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
 }
 </style>

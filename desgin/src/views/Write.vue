@@ -102,7 +102,7 @@ export default {
         // Nginx 안쓸때,
         //url: 'http://i3c202.p.ssafy.io:8080/api/question/upload',
         // Nginx 용 
-        url: 'http://i3c202.p.ssafy.io/api/question/upload',
+        url: 'https://i3c202.p.ssafy.io/api/question/upload',
         method: 'POST',
         // headers:{'Authorization': 'Bearer ' +  + token},
         data: formData
