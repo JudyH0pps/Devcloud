@@ -41,10 +41,11 @@ export default {
 }
 .logo {
   position: absolute;
-  top: 5%;
+  top: 7%;
   left: 50%;
   transform: translateX(-50%);
   height: 300px;
+  z-index: 99;
 }
 section {
   position: relative;

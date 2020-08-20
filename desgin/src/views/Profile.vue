@@ -1,6 +1,6 @@
 <template>
   <section class="profile">
-    <div class="container">
+    <!-- <div class="container"> -->
       <div class="profile-header">
         <div class="profile-img">
           <img :src="user.imageUrl" width="200" alt="profile">
@@ -32,7 +32,7 @@
           <ProfileAccount v-if="myProfile && selectedMenu == 3"/>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
   </section>
 </template>
 
@@ -160,7 +160,7 @@ export default {
   font-family: "Poppins", sans-serif;
   margin: 80px 50px 0;
   padding: 10px;
-  height : 100vh;
+  min-height : 100vh;
 }
 .profile-header {
   background: #fff;

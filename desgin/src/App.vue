@@ -103,6 +103,7 @@ export default{
   /* text-align: center; */
   color: #2c3e50;
   min-width: 1024px;
+  min-height: 100vh;
   background: rgb(202, 237, 248);
 }
 

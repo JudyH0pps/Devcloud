@@ -51,7 +51,7 @@ export default {
   font-family: "Poppins", sans-serif;
   margin: 80px 50px 60px;
   padding: 10px;
-  /* height: 100vh; */
+  min-height: 100vh;
 }
 .fa-medal {
     /* position: absolute; */

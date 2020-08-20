@@ -122,20 +122,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 section.account {
     padding: 40px;
 }
 button {
     border: 1px solid #eee;
     background: white;
-    margin-left: auto;
+    /* margin-left: auto; */
     outline: none;
     height: 25px;
     border-radius: 5px;
     margin-bottom: 5px;
     padding: 2px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+    /* box-shadow: 0 1px 1px rgba(0, 0, 0, .5); */
 }
 button:hover {
     cursor: pointer;

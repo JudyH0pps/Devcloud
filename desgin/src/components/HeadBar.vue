@@ -262,6 +262,7 @@ header.sticky {
   box-shadow: 0px 3px 5px rgba(0,0,0,.5);
   /* box-shadow: 0px 5px 10px rgba(0,0,0,.2); */
   /* background: rgb(202, 237, 248); */
+  /* z-index: 503; */
 }
 header .logo {
   position: relative; 
