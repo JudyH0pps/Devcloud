@@ -5,7 +5,7 @@
         </div> -->
         <div class="blog-post__info" style="width:100%;">
             <div style="display:flex; flex-direction:row; align-items:center; justify-content: space-between; width: 100%;">
-                <h1 class="blog-post__title" @click="moveTodetail(item.id)">{{ addDot(item.question_title) }}<span style="color:black;">에 대한 답변</span></h1>
+                <h1 class="blog-post__title" @click="moveTodetail(item.question_id)">{{ addDot(item.question_title) }}<span style="color:black;">에 대한 답변</span></h1>
                 <!-- <p class="blog-post__text">
                     {{ item.content }}
                 </p> -->
