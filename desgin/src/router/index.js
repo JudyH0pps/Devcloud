@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Profile from '../views/Profile.vue'
 import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
-
   const routes = [
   {
     path: '*',
@@ -19,15 +19,51 @@ Vue.use(VueRouter)
     component: Home
   },
   {
-    path: '/board',
-    name: 'Board',
-    component: () => import('../views/Board.vue')
+    path: '/write',
+    name: 'Write',
+    component: () => import('../views/Write.vue')
   },
   {
-    path: '/profile',
+    path: '/detail/:question_id/write',
+    name: 'WriteAnswer',
+    component: () => import('../views/WriteAnswer.vue')
+  },
+  {
+    path: '/profile/:user_id',
     name: 'Profile',
-    component: () => import('../views/Profile.vue')
-  }
+    component: Profile
+    //component: () => import('../views/Profile.vue')
+  },
+  {
+    path: '/search/:search_keyword?',
+    name: 'Search',
+    component: () => import('../views/Search.vue'),
+    props: { isTagSearch : false}
+  },
+  {
+    path: '/ranking',
+    name: 'Ranking',
+    component: () => import('../views/Ranking.vue')
+  },
+  {
+    path: '/oauth2/redirect',
+    redirect: { name: 'Home' }
+  },
+  {
+    path: '/detail/:question_id',
+    name: 'Detail',
+    component: () => import('../views/Detail.vue')
+  },
+  {
+    path: '/detail/:question_id/edit/:answer_id',
+    name: 'EditAnswer',
+    component: () => import('../views/WriteAnswer.vue')
+  },
+  {
+    path: '/edit/:question_id',
+    name: 'Edit',
+    component: () => import('../views/Write.vue')
+  },
 ]
 
 const router = new VueRouter({

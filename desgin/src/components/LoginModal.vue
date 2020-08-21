@@ -1,8 +1,15 @@
 <template>
     <div class="modal-bg" v-if="loginModalOn">
         <div id="login-box" class="modal" >
-            <img class="social google g-logo" src="../assets/btn_google_signin_dark_normal_web@2x.png" alt="g-logo">
-            <button class="social close" @click="closeModal">Close</button>
+            <div style="width:100%; height:20%; background:skyblue; border-radius:4px 4px 0 0;display:flex; align-items:center; justify-content: center;">
+                <p style="text-align:center; color:white; font-weight:bold;">LOGIN</p>
+            </div>
+            <img @click="googleLogin" class="social google g-logo" src="../assets/btn_google_signin_dark_normal_web@2x.png" alt="g-logo">
+            <p style="font-size:14px;">Devcloud의 서비스는 구글 계정으로 편리하게 이용하실 수 있습니다.</p>
+            <div style="width:100%; height:25%; background:skyblue; border-radius: 0 0 4px 4px;display:flex; align-items:center; justify-content: center;">
+                <button class="social close" @click="closeModal">Close</button>
+            </div>
+            
         </div>
     </div>
 </template>
@@ -20,7 +27,10 @@ export default{
     },
     methods: {
         closeModal() {
-            this.$emit('toggleModal')
+            this.$emit('toggleModal');
+        },
+        googleLogin() {
+            this.$emit('googleLogin');
         }
     },
 }
@@ -40,17 +50,25 @@ export default{
     z-index: 999;
 }
 .modal {
+    /* box-shadow: 0px 3px 5px rgba(0,0,0,.5); */
     background: white;
-    width: 50%;
-    height: 50%;
+    width: 550px;
+    height: 300px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
     z-index: 1000;
+    border-radius: 4px;
+    /* border: 1px solid #ccc; */
+    /* padding: 10px; */
+}
+button {
+    margin-left: auto;
+    margin-right: auto;
 }
 button.social {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     width: 180px;
     height: 36px;
     border: none;

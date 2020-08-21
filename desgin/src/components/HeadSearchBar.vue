@@ -1,11 +1,59 @@
 <template>
     <!-- <div class="wrapper"> -->
     <div class="search_box">
-        <input type="text" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
+        <input type="text" v-model="keyword"  @keypress.enter="searchItem" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
         <i class="fas fa-search"></i>
     </div>
     <!-- </div> -->
 </template>
+
+<script>
+export default {
+  name: 'HeadSearchBar',
+  data() {
+    return {
+      setKeyword: '',
+    }
+  },
+  computed:{
+        keyword:{
+            get(){
+                if(this.$route.name == 'Search')
+                    return this.$route.params.search_keyword
+                else
+                    return null
+            },
+            set(val){
+                return this.setKeyword = val
+            }
+        },
+  },
+  methods: {
+    searchItem() {
+      if(this.setKeyword != ""){
+                this.$router.push({
+                    name:'Search',
+                    params:{
+                        search_keyword : this.setKeyword
+                    }
+                }).catch(()=>{
+                    if(this.setKeyword != ""){
+                        this.$router.go()
+                    }
+                });
+      }else{ 
+        // 검색어가 같아서 새로고침 되는 경우 this.setKeyword 가 ""인경우
+          if(this.keyword == this.setKeyword)
+              this.$router.go()
+      }
+    },
+  },
+  created(){
+    const len = window.location.href.split('/').length
+    this.setKeyword = window.location.href.split('/')[len-1]
+  }
+}
+</script>
 
 <style scoped>
 *{
@@ -13,17 +61,8 @@
   padding: 0;
 }
 
-.wrapper{
-  width: 100%;
-  height: 100vh;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .search_box{
-  width: 50%;
+  width: 45%;
   position: relative;
   -moz-box-shadow:    3px 3px 3px 3px #ccc;
   -webkit-box-shadow: 3px 3px 3px 3px #ccc;

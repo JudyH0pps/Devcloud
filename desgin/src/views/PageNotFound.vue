@@ -25,16 +25,17 @@ export default{
         }
     },
     mounted(){
+        document.documentElement.scrollTop = 0;
         this.movingBackground();
     }
 }
 </script>
 
 <style scoped>
-body{
+/* body{
     background: linear-gradient(45deg, #8500ff, #5acaff);
     height: 100vh;
-}
+} */
 #con{
     position: absolute;
     /* top: 5%;

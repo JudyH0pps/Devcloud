@@ -1,5 +1,9 @@
 package com.ssafy.blog.model;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,17 +11,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "questions", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "id")
-})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,15 +28,34 @@ public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
-    private String title;
-    
-    @Column(nullable = false)
-    private String content;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false, length = 8191)
+    private String content;
+
+    @Column(nullable = false, length = 2048)
+    @JsonIgnore
+    private String contentText;
+
+    @Column(nullable = false)
+    private int likeCnt;
+
+    @Column(nullable = false)
+    private int viewCnt;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date updatedAt;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    List<Answer> answers;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    List<QuestionTag> questionTags;
 }

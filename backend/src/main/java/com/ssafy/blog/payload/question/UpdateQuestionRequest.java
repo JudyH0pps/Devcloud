@@ -1,7 +1,9 @@
 package com.ssafy.blog.payload.question;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.blog.model.User;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.blog.model.Tag;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,16 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateQuestionRequest {
-    
-    private Long id;
-    private Long user_id;
+
+    @JsonProperty("question_id")
+    private Long questionId;
     private String title;
     private String content;
-
-    @JsonIgnore
-    public User getUser() {
-        User user = new User();
-        user.setId(user_id);
-        return user;
-    }
+    private List<Tag> tagList;
 }

@@ -1,11 +1,41 @@
 <template>
     <div class="wrapper">
     <div class="search_box">
-        <input type="text" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
+        <input type="text" v-model="keyword"  @keypress.enter="searchItem" placeholder="what are you looking for?" onfocus="this.placeholder=''" onblur="this.placeholder='what are you looking for?'">
         <i class="fas fa-search"></i>
     </div>
     </div>
 </template>
+
+<script>
+// import {mapActions} from 'vuex'
+
+export default {
+  name: 'SearchBar',
+  data() {
+    return {
+      keyword : '',
+    }
+  },
+  computed:{
+  },  
+  methods: {
+    searchItem() {
+      if(this.keyword != "")
+      {
+        this.$router.push({
+          name:'Search',
+          params:{
+              search_keyword : this.keyword
+          }
+        }) 
+        //this.keyword = '';         
+      }
+    }
+  }
+}
+
+</script>
 
 <style scoped>
 *{
@@ -30,6 +60,7 @@
   box-shadow:         3px 3px 2px 1px #ccc;
   border: 2px solid #fff;
   border-radius: 40px;
+  /* animation: rotate 1s linear infinite; */
 }
 
 .search_box input[type="text"]{
@@ -73,4 +104,9 @@
   }
 }
 
+@keyframes rotate {
+    to {
+       transform: rotate( 360deg );
+    }
+}
 </style>

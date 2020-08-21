@@ -1,75 +1,147 @@
 <template>
   <section class="profile">
-    <div class="container">
+    <!-- <div class="container"> -->
       <div class="profile-header">
         <div class="profile-img">
-          <img src="../assets/logo.png" width="200" alt="profile">
+          <img :src="user.imageUrl" width="200" alt="profile">
         </div>
         <div class="profile-nav-info">
-          <h3 class="user-name">Kong</h3>
-          <div class="address">
-            <p class="state">
-              Gwanju,
-            </p>
-            <span class="country">Republic of Korea</span>
-          </div>
-        </div>
-        <div class="profile-option">
-          <div class="notification">
-            <i class="fa fa-bell"></i>
-            <span class="alert-message">1</span>
-          </div>
+          <h3 class="user-name">{{user.name }}</h3>
         </div>
       </div>
       <div class="main-bd">
         <div class="left-side">
           <div class="profile-side">
             <div class="user-bio">
-              <p class="bio">
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-                안녕하세요 자기소개입니다.안녕하세요 자기소개입니다.안녕하세요 자기소개입니다
-              </p>
+              <i class="fab fa-github"></i><a :href="user.githubUrl"> {{user.githubUrl}}</a><br>
+              <i class="fas fa-layer-group"></i><span v-if="user.userTechs.length != 0">{{user.userTechs[0].tech.name}}</span>
+              <p class="bio">{{ user.introduction }}</p>
             </div>
           </div>
         </div>
         <div class="right-side">
           <div class="nav">
             <ul>
-              <li class="user-post tab" :class="{ 'active': selectedMenu===1 }" @click="selectedMenu=1">Questions</li>
-              <li class="user-post tab" :class="{ 'active': selectedMenu===2 }" @click="selectedMenu=2">Answers</li>
-              <li class="user-post tab" :class="{ 'active': selectedMenu===3 }" @click="selectedMenu=3">Profile</li>
+              <li class="user-post tab" :class="{ 'active': selectedMenu===1 }" @click="selectedMenu=1">Questions({{this.questions.length}})</li>
+              <li class="user-post tab" :class="{ 'active': selectedMenu===2 }" @click="selectedMenu=2">Answers({{this.answers.length}})</li>
+              <li v-if="myProfile" class="user-post tab" :class="{ 'active': selectedMenu===3 }" @click="selectedMenu=3">Profile</li>
             </ul>
           </div>
           <ProfileQuestions v-show="selectedMenu == 1"/>
           <ProfileAnswers v-show="selectedMenu == 2"/>
+          <ProfileAccount v-if="myProfile && selectedMenu == 3"/>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
   </section>
 </template>
 
 <script>
 import ProfileAnswers from '@/components/ProfileAnswers.vue'
 import ProfileQuestions from '@/components/ProfileQuestions.vue'
+import ProfileAccount from '@/components/ProfileAccount.vue'
+
+import { mapState, mapActions ,mapMutations} from 'vuex';
 
 export default {
   name: 'Profile',
   data() {
     return {
+      myProfile : false,
       selectedMenu: 2,
+      // 선택된 기술스택들
+      selectedTags:[],
     }
-  },
-  computed: {
   },
   components: {
     ProfileAnswers,
-    ProfileQuestions
-  }
+    ProfileQuestions,
+    ProfileAccount
+  },
+  computed: {
+    ...mapState({
+      techs : state => state.tech.techs,
+      isTechs : state => state.tech.isTechs,
+      user : state => state.user.user,
+      questions : state => state.question.questions,
+      answers : state => state.answer.answers,
+      valid : state => state.testValid
+    }),
+    changeUser(){
+      return this.$route.params.user_id
+    },
+  },
+  watch :{
+    changeUser: function(){
+      this.$router.go()
+    },
+    isTechs : function(){
+      if(this.isTechs){
+        // alert(this.techs.length)
+        this.inputChange(this.techs)
+        // console.log(this.selectedTags)
+        this.setTechsIn(this.selectedTags)
+      }
+    }
+  },
+  methods: {
+    ...mapActions('user',['fetchMyProfile','fetchUserProfile']),
+    ...mapActions('answer',['fetchAnswersById']),
+    ...mapActions('question',['fetchUserQuestions']),
+    ...mapActions('tech',['fetchTechs']),
+    ...mapMutations('tech',['setTechsIn']),
+    ...mapMutations(['settestValid']),
+    checkAuth(){
+      if(this.$cookie.get('user_id') == this.$route.params.user_id){
+        this.myProfile = true;
+        // alert(this.myProfile);
+        this.fetchTechs();
+        // alert(this.techs.length)
+        //this.inputChange(this.techs)
+        // console.log(this.selectedTags)
+        //this.setTechsIn(this.selectedTags)
+      }else{
+        this.myProfile = false;
+        // alert(this.myProfile)
+      }
+    },
+    // 불러온 태그리스트를 자동완성 리스트 형식으로 변경
+    inputChange(arr){
+          for(var i = 0; i < arr.length; i++)
+          {
+            let singleTag = {};
+            singleTag.key = arr[i].name;
+            singleTag.value = arr[i].name;
+            singleTag.id = arr[i].id;
+            this.selectedTags.push(singleTag)
+          } 
+    }
+  },
+  mounted (){
+    this.checkAuth()
+    // 주석처리부분 본인일때와 타인일때 다르게처리하려면 ...
+    // if(this.myProfile){ //본인
+    //   this.fetchMyProfile(this.$cookie.get('logintoken'));
+    //   //작성한 답변 조회 
+    //   this.fetchAnswersById(this.$cookie.get('user_id'));
+    //   //작성한 질문 조회
+    //   this.fetchUserQuestions(this.$cookie.get('user_id'));
+    //   //console.log(this.user);
+    // }
+    // else{ // 다른사람
+    //   alert("다른사람의 프로필로 접근")
+    // }
+    // 프로필페이지에서 정보변경을 제외하고는 조회방식이 동일함
+    document.documentElement.scrollTop = 0;
+    this.fetchUserProfile(this.$route.params.user_id)
+    //작성한 답변 조회 
+    this.fetchAnswersById(this.$route.params.user_id);
+    //작성한 질문 조회
+    this.fetchUserQuestions(this.$route.params.user_id);
+    this.settestValid(true);
+    //
+    
+  },
 }
 </script>
 
@@ -80,13 +152,15 @@ export default {
   margin: 0;
   box-sizing: border-box;
 }
+
 .profile {
-  background: #e9e9e9;
-  overflow: hidden;
+  /* background: #e9e9e9; */
+  /* overflow: hidden; */
   /* padding-top: 20vh; */
   font-family: "Poppins", sans-serif;
-  margin: 115px 50px 0;
+  margin: 80px 50px 0;
   padding: 10px;
+  min-height : 100vh;
 }
 .profile-header {
   background: #fff;
@@ -114,10 +188,11 @@ export default {
   background: #fff;
 }
 .profile-nav-info {
-  float: left;
-  flex-direction: column;
+  margin-left: 100px;
+  flex-direction: row;
   justify-content: center;
   padding-top: 60px;
+  width: 100%;
 }
 .profile-nav-info h3 {
   font-variant: small-caps;
@@ -198,6 +273,7 @@ export default {
 }
 .right-side {
   width: 100%;
+  margin-bottom: 100px;
 }
 .nav {
   z-index: -1;

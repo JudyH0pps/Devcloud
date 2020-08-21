@@ -1,25 +1,29 @@
 <template>
   <section class="questions">
     <div class="cardlist">
-      <CardPost v-for="a in as" :key="a"/>
+      <ProfileQuestionCard v-for="question in questions" :key="question.id" :item="question"/>
     </div>
-  <button class="moreBtn">more</button>
+  <!-- <button class="moreBtn">more</button> -->
   </section>
 </template>
 
 <script>
-import CardPost from './CardPost.vue'
+import ProfileQuestionCard from './ProfileQuestionCard.vue'
+import {mapState} from 'vuex';
 
 export default {
   name: 'ProfileQuestions',
   data() {
     return {
-      as: [1,2,3,4,5,6,7,8]
-      // as: [1]
     }
   },
+  computed:{
+      ...mapState({
+            questions : state=> state.question.questions
+      })
+  },
   components: {
-    CardPost,
+    ProfileQuestionCard,
   }
 }
 </script>
@@ -28,14 +32,14 @@ export default {
 .questions{
   /* position: absolute; */
   /* grid-template-rows: repeat(2, 150px); */
-  margin: 0 10px;
+  margin: 5px 10px 0;
   padding: 0;
   width: 100%;
 }
 .cardlist{
   /* position: absolute; */
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 button {
   /* float: right; */
@@ -58,6 +62,7 @@ button {
   border-radius: 30px;
   border: 0;
   outline: 0;
+  margin-top: 20px;
 }
 button:hover{
   animation: animate 8s linear infinite;
