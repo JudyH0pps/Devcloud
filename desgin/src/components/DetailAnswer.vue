@@ -239,6 +239,8 @@ export default {
                 } else {
                     this.chkClicked = false;
                 }
+
+                this.$router.go();
             }
             else {
                 this.changeModal()

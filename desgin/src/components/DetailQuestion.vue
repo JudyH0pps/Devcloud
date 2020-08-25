@@ -96,7 +96,7 @@ export default {
             // simulate AJAX
             setTimeout(() => {
                 this.isLoading = false
-            },800)
+            },450)
         },
         moveToEdit() {
             this.$router.push({
@@ -124,6 +124,8 @@ export default {
                     } else {
                         this.chkClicked = false;
                     }
+
+                    this.$router.go();
             }
             else {
                 this.changeModal()
