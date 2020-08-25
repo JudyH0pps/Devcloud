@@ -118,7 +118,7 @@ export default {
                         this.questionHasSelected = false;
                     }
 
-                    this.$router.go();
+                    // this.$router.go();
                 })
                 .catch(err => {
                     console.log(err);
