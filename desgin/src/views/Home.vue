@@ -5,7 +5,7 @@
         <h1 contenteditable data-heading="DevCloud">DevCloud</h1>
       </div> -->
       <img class="logo" src="../assets/logo.png">
-      <SearchBar/>
+      <SearchBar style="margin-top: 40px;"/>
       <!-- <div class="wave wave1"></div>
       <div class="wave wave2"></div>
       <div class="wave wave3"></div>
@@ -41,7 +41,7 @@ export default {
 }
 .logo {
   position: absolute;
-  top: 7%;
+  top: 15%;
   left: 50%;
   transform: translateX(-50%);
   height: 300px;

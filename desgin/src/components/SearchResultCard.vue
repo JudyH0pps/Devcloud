@@ -15,9 +15,11 @@
                     :src="question.user.imageUrl"
                     style="margin-left: auto;width: 30px; height: 30px; display: inline; padding: 0px; margin-right: 5px;"
                     align: right>
-                <p style="font-size: 14px; color: black; font-weight: bold; color: #233453;">
-                    {{question.user.name}}
-                </p>
+                <router-link :to="{name: 'Profile', params :{ user_id : question.user.id }}">
+                    <p style="font-size: 14px; color: black; font-weight: bold; color: #233453;">
+                        {{question.user.name}}
+                    </p>
+                </router-link>
             </div>
             
             <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; margin: 5px 0;">
@@ -106,12 +108,14 @@ export default {
                     }
                 })
                 .then(({data}) => {
-                    console.log("채택유무 : " + data);
+                    //console.log("채택유무 : " + data);
 
                     // data is not "Resource not bound"
                     if(data != "Resource not bound"){
-                        // 채택이 완료됬다면 채택완료 버튼 보여지기
+                        // 채택이 완료됬다면 채택완료 버튼 보여지기        
                         this.questionHasSelected = true;
+                    } else {
+                        this.questionHasSelected = false;
                     }
 
                     this.$router.go();
@@ -121,13 +125,48 @@ export default {
                 })
         },
         parseDateString(date) {
-            let year = date.slice(0,4);
-            let month = date.slice(5,7);
-            let day = date.slice(8,10);
-            let hour = date.slice(11,13);
-            let minute = date.slice(14,16);
+            let year = parseInt(date.slice(0,4));
+            let month = parseInt(date.slice(5,7));
+            let day = parseInt(date.slice(8,10));
+            let hour = parseInt(date.slice(11,13));
+            let minute = parseInt(date.slice(14,16));
+            let type = 1;
+            if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 ){
+                type = 2;
+            }else if(month == 2){
+                type = 0;
+            }
+            hour += 9;
+            // 24시간이 넘어가면 
+            if(hour >= 24){
+                hour -= 24;
+                // 하루를 추가하고 
+                day += 1;
+                // 추가하는데 31일까지면 
+                if(type == 2){
+                    if(day > 31){
+                        month += 1;
+                        if(month > 12){
+                            year += 1;
+                            month -= 12;
+                        }
+                        day -= 31;
+                    }
+                
+                }else if(type == 0){
+                    if(day > 28){
+                        month +=1;
+                        day -= 28;
+                    }
+                }else{
+                    if(day > 30){
+                        month +=1;
+                        day -= 30;
+                    }
+                }
+            }
             return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
-        }
+        },
     },
     created() {
         //this.questionCreate();

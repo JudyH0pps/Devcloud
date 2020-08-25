@@ -121,7 +121,7 @@ export default{
             },800)
         },
         googleLogin() {
-            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+            window.location.href = 'https://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="https://i3c202.p.ssafy.io/"'
         },
         toggleModal() {
             this.loginModalOn = !this.loginModalOn;

@@ -78,6 +78,7 @@ public class QuestionController {
         Page<Question> pageList = null;
         if (page == null)
             page = 1;
+
         if (keyword == null && userId == null && questionId == null) {
             pageList = questionRepository.findAll(PageRequest.of(page - 1, 10, Sort.by("id").descending()));
 
@@ -153,6 +154,7 @@ public class QuestionController {
         question.setContentText(doc.text());
         //
         question.setViewCnt(question.getViewCnt() + 1);
+        question.setUpdatedAt(new Date());
         question = questionRepository.save(question);
 
         // tag 수정

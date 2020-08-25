@@ -42,7 +42,7 @@ export default {
             //         alert("질문태그목록조회중 에러");
             //     });
             const resp = await http.get('api/tag');
-            console.log(resp);
+            //console.log(resp);
             context.commit('setTags',resp.data)
         },
     },

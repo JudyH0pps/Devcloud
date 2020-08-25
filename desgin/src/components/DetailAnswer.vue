@@ -36,7 +36,9 @@
             <div class="q-info">
                 <div class="profile">
                     <img :src="answer.user.imageUrl" class="profile_img">
-                    <p>{{ answer.user.name }}</p>
+                    <router-link :to="{name: 'Profile', params :{ user_id : answer.user.id }}">
+                        <p>{{ answer.user.name }}</p>
+                    </router-link>
                     <!-- current user is writer -->
                 </div>
                 <p>{{ parseDateString(answer.updated_at) }}</p>
@@ -228,10 +230,6 @@ export default {
                         "user_id": parseInt(this.$cookie.get("user_id")),
                         
                     })
-                    .then(res => {
-                        console.log("like success")
-                        console.log(res.data)
-                    })
                     .catch(err => {
                         console.log(err);
                     })
@@ -275,9 +273,6 @@ export default {
                             answer_id: this.answer.id
                         }
                     })
-                    .then(({data}) => {
-                        console.log(data)
-                    })
                     .catch(err => {
                         console.log(err)
                     })
@@ -297,7 +292,7 @@ export default {
                     }
                 })
                 .then(({data}) => {
-                    console.log("채택유무 : " + data);
+                    //console.log("채택유무 : " + data);
 
                     // data is not "Resource not bound"
                     if(data != "Resource not bound"){
@@ -316,7 +311,7 @@ export default {
                 })
         },
         googleLogin() {
-            window.location.href = 'http://i3c202.p.ssafy.io:8080/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+            window.location.href = 'https://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="https://i3c202.p.ssafy.io/"'
         },
         toggleModal() {
             this.loginModalOn = !this.loginModalOn;
@@ -330,13 +325,48 @@ export default {
 
         },
         parseDateString(date) {
-            let year = date.slice(0,4);
-            let month = date.slice(5,7);
-            let day = date.slice(8,10);
-            let hour = date.slice(11,13);
-            let minute = date.slice(14,16);
+            let year = parseInt(date.slice(0,4));
+            let month = parseInt(date.slice(5,7));
+            let day = parseInt(date.slice(8,10));
+            let hour = parseInt(date.slice(11,13));
+            let minute = parseInt(date.slice(14,16));
+            let type = 1;
+            if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 ){
+                type = 2;
+            }else if(month == 2){
+                type = 0;
+            }
+            hour += 9;
+            // 24시간이 넘어가면 
+            if(hour >= 24){
+                hour -= 24;
+                // 하루를 추가하고 
+                day += 1;
+                // 추가하는데 31일까지면 
+                if(type == 2){
+                    if(day > 31){
+                        month += 1;
+                        if(month > 12){
+                            year += 1;
+                            month -= 12;
+                        }
+                        day -= 31;
+                    }
+                
+                }else if(type == 0){
+                    if(day > 28){
+                        month +=1;
+                        day -= 28;
+                    }
+                }else{
+                    if(day > 30){
+                        month +=1;
+                        day -= 30;
+                    }
+                }
+            }
             return year + '년 ' + month + '월 ' + day + '일 ' + hour + '시 ' + minute + '분';
-        }
+        },
     },
     created() {
         // alert(this.isLoggedIn)
@@ -391,12 +421,6 @@ export default {
     border-radius: 50%;
     height: 40px;
     margin-right: 10px;
-}
-.content-reader >>> .ql-syntax {
-    background-color: black;
-    color: white;
-    padding: 3px 5px;
-    border-radius: 3px;
 }
 .q-footer {
     display: flex; 
@@ -498,5 +522,11 @@ export default {
     justify-content: center;
     height: 40px;
     border-left: 0;
+}
+.q-content >>> .ql-syntax {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
 }
 </style>

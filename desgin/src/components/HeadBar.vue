@@ -100,9 +100,9 @@ export default {
     },
     googleLogin() {
         // 서버용 리다이렉트 주소
-        window.location.href = 'http://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="http://i3c202.p.ssafy.io/"'
+        window.location.href = 'https://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="https://i3c202.p.ssafy.io/"'
         // local용 리다이렉트 주소
-        //window.location.href = 'http://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
+        // window.location.href = 'https://i3c202.p.ssafy.io/oauth2/authorize/google?redirect_uri="http://localhost:3000/"'
         // alert("구글로그인 창으로 이동합니다.");
     },
     navbarSpan() {
@@ -148,7 +148,10 @@ export default {
       this.$router.push({
               'name':'Detail',
               params:{ "question_id" : question_id},
-      });
+      }).catch(()=>{
+        window.location.href = 'http://i3c202.p.ssafy.io/detail/' + question_id
+        this.$router.go();
+      })
     },
     async closeNotification(notification_id,index){
       await http.get('/api/notification/read/'+ notification_id);

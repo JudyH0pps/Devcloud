@@ -35,8 +35,8 @@
                 :typeahead-hide-discard="true"
                 :only-existing-tags="true"
                 :add-tags-on-blur="true"
-                typeahead-max-results=15
-                limit=4
+                :typeahead-max-results="tagListMax"
+                :limit="posTagCnt"
                 typeahead-style="dropdown"
                 wrapper-class="write_tags"
                 v-if="!isAnswer"
@@ -65,6 +65,8 @@ export default {
   },
   data() {
     return {
+      tagListMax : 10,
+      posTagCnt : 4,
       title: '',
       content: '',
       resultedTags:[],
@@ -102,7 +104,7 @@ export default {
         // Nginx 안쓸때,
         //url: 'http://i3c202.p.ssafy.io:8080/api/question/upload',
         // Nginx 용 
-        url: 'http://i3c202.p.ssafy.io/api/question/upload',
+        url: 'https://i3c202.p.ssafy.io/api/question/upload',
         method: 'POST',
         // headers:{'Authorization': 'Bearer ' +  + token},
         data: formData
@@ -235,6 +237,7 @@ export default {
   /* justify-content: center; */
   flex-direction: column;
   /* background: white; */
+  padding-bottom: 100px;
 }
 
 .form {
@@ -358,4 +361,5 @@ button::before {
   max-width: 300px;
   max-height: 300px;
 }
+
 </style>
