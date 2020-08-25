@@ -153,6 +153,12 @@ export default {
   box-sizing: border-box;
 }
 
+a,
+a:visited
+a:active {
+    color: rgb(0, 0, 0);
+}
+
 .profile {
   /* background: #e9e9e9; */
   /* overflow: hidden; */
