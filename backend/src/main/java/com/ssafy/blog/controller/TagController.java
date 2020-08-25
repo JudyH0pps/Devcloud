@@ -57,4 +57,11 @@ public class TagController {
 
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
+
+    @GetMapping("/api/tag/cnt")
+    @ApiOperation(value = "태그 사용 갯수 리턴")
+    public ResponseEntity<Object> countTag() {
+        
+        return null;
+    }
 }
