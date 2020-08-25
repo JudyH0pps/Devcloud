@@ -1,10 +1,12 @@
 package com.ssafy.blog.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.blog.model.Tag;
 import com.ssafy.blog.payload.tag.AddTagRequest;
+import com.ssafy.blog.payload.tag.TagCntResponse;
 import com.ssafy.blog.repository.TagRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +58,22 @@ public class TagController {
         tagRepository.delete(optionalTag.get());
 
         return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    @GetMapping("/api/tag/cnt")
+    @ApiOperation(value = "태그 사용 갯수 리턴")
+    public ResponseEntity<Object> countTag() {
+        List<TagCntResponse> list = new ArrayList<>();
+        for(Tag tag : tagRepository.findTop10ByOrderByCntDesc()) {
+            list.add(makeResponse(tag));
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    private TagCntResponse makeResponse(Tag tag) {
+        TagCntResponse response = new TagCntResponse();
+        response.setName(tag.getName());
+        response.setCnt(tag.getCnt());
+        return response;
     }
 }
