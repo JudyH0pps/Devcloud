@@ -24,6 +24,7 @@ import com.ssafy.blog.repository.AnswerRepository;
 import com.ssafy.blog.repository.QuestionRepository;
 import com.ssafy.blog.repository.QuestionTagRepository;
 import com.ssafy.blog.repository.RankRepository;
+import com.ssafy.blog.repository.TagRepository;
 import com.ssafy.blog.repository.UserRepository;
 
 import org.jsoup.Jsoup;
@@ -59,6 +60,9 @@ public class QuestionController {
 
     @Autowired
     private QuestionTagRepository questionTagRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @Autowired
     private AnswerRepository answerRepository;
@@ -131,6 +135,9 @@ public class QuestionController {
                 questionTag.setQuestion(question);
                 questionTag.setTag(tag);
                 questionTagRepository.save(questionTag);
+
+                // tag에 갯수 1개씩 늘림
+                updateTagCnt(tag.getId(), 1);
             }
         }
 
@@ -157,6 +164,12 @@ public class QuestionController {
         question.setUpdatedAt(new Date());
         question = questionRepository.save(question);
 
+        // tag cnt 감소
+        List<QuestionTag> qtList = question.getQuestionTags();
+        for(QuestionTag qt : qtList) {
+            updateTagCnt(qt.getTag().getId(), -1);
+        }
+
         // tag 수정
         questionTagRepository.deleteAllByQuestionId(request.getQuestionId());
         List<Tag> tagList = request.getTagList();
@@ -165,6 +178,9 @@ public class QuestionController {
             questionTag.setQuestion(question);
             questionTag.setTag(tag);
             questionTagRepository.save(questionTag);
+
+            // tag에 갯수 1개씩 늘림
+            updateTagCnt(tag.getId(), 1);
         }
 
         return new ResponseEntity<>(question, HttpStatus.OK);
@@ -182,6 +198,12 @@ public class QuestionController {
             return new ResponseEntity<>("already answer is exist", HttpStatus.OK);
 
         Long userId = optionalQuestion.get().getUser().getId();
+
+        List<QuestionTag> qtList = optionalQuestion.get().getQuestionTags();
+        for(QuestionTag qt : qtList) {
+            updateTagCnt(qt.getTag().getId(), -1);
+        }
+
         questionRepository.deleteById(questionId);
 
         updateRank(userId, -1);
@@ -250,6 +272,16 @@ public class QuestionController {
             Rank rank = optionalRank.get();
             rank.setQuestionCnt(rank.getQuestionCnt() + step);
             rankRepository.save(rank);
+        }
+    }
+
+    private void updateTagCnt(Long tag_id, int step) {
+        Optional<Tag> optionalTag = tagRepository.findById(tag_id);
+        if(optionalTag.isPresent()) {
+            Tag tag = optionalTag.get();
+            tag.setCnt(tag.getCnt() + step);
+            if(tag.getCnt() < 0) tag.setCnt(0);
+            tagRepository.save(tag);
         }
     }
 }

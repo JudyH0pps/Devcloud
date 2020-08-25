@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -18,4 +20,7 @@ public class Tag {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @JsonIgnore
+    private Integer cnt;
 }
