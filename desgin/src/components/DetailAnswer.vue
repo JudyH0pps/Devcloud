@@ -1,7 +1,7 @@
 <template>
     <div class="detailanswer">
         <div style="display:flex; flex-direction:row; align-items:center;">
-            <h1 class="q-title">A.</h1>
+            <h1 class="q-title">A. </h1>
                     <!-- 작성자 일때 -->
                     <template v-if="writerChk">
                         <!-- 해당 포스트에 채택된 답변이 있을 때 -->
@@ -28,8 +28,8 @@
                         </template>
                     </template>
             <div @click="likeClick" class="like-button">
-                <i v-if="chkClicked" style="font-size:20px;" class="fas fa-heart"></i>
-                <i style="font-size:20px;" v-else class="far fa-heart"></i>
+                <i v-if="chkClicked" style="font-size:20px;" class="fas fa-heart"><span style="font-size: 18px;line-height: 2px;margin-left: 4px;">{{ answer.like_cnt }}</span></i>
+                <i style="font-size:20px;" v-else class="far fa-heart"><span style="font-size: 18px;line-height: 2px;margin-left: 4px;">{{ answer.like_cnt }}</span></i>
             </div>
         </div>
         <div class="leftline">

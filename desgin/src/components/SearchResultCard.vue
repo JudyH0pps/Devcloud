@@ -113,6 +113,8 @@ export default {
                         // 채택이 완료됬다면 채택완료 버튼 보여지기
                         this.questionHasSelected = true;
                     }
+
+                    this.$router.go();
                 })
                 .catch(err => {
                     console.log(err);

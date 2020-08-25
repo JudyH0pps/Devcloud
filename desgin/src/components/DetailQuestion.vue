@@ -1,10 +1,10 @@
 <template>
     <div class="detailquestion" v-if="this.$store.state.question.question">
         <header style="display: flex; justify-content: space-between;">
-            <h1 class="q-title">Q. {{ question.title }}</h1>
+            <h1 style="width:100%;" class="q-title">Q. {{ question.title }}</h1>
             <div @click="likeClick" class="like-button">
-                <i v-if="chkClicked" style="font-size:20px;" class="fas fa-heart"></i>
-                <i v-else stlye="font-size:10px;" style="font-size:20px;" class="far fa-heart"></i>
+                <i v-if="chkClicked" style="font-size:20px;" class="fas fa-heart"><span style="font-size: 18px;line-height: 2px;">{{ question.likeCnt }}</span></i>
+                <i v-else stlye="font-size:10px;" style="font-size:20px;" class="far fa-heart"><span style="font-size: 18px;line-height: 2px;">{{ question.likeCnt }}</span></i>
             </div>
         </header>
         <div class="leftline">
@@ -237,7 +237,7 @@ export default {
 }
 .like-button {
     height: 30px;
-    width: 60px;
+    width: 61px;
     /* margin-left: auto; */
     display: flex;
     flex-direction: row;
