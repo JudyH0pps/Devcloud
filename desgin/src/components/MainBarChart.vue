@@ -74,7 +74,6 @@ export default {
     mounted() {
         //this.loaded = false
         this.getTagCnt();
-        this.renderChart(this.chartData, this.options);
     },
     methods: {
         getTagCnt() {
@@ -86,6 +85,7 @@ export default {
                     for(tag = 0; tag <= 9; tag++){
                         this.chartData.labels.push(data[tag].name)
                         this.chartData.datasets[0].data.push(data[tag].cnt)
+                        this.renderChart(this.chartData, this.options);
                     }
                 })
                 .catch(err => {
