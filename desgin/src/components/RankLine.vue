@@ -51,6 +51,9 @@ export default {
 </script>
 
 <style scoped>
+a {
+    color: rgb(0, 0, 0);
+}
 .line {
     line-height: 85px;
     width: 70%;

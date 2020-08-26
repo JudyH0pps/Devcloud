@@ -11,6 +11,9 @@
       <div class="wave wave3"></div>
       <div class="wave wave4"></div> -->
     </section>
+    <h2 style="color: #4682B4; text-align: center; margin: 15px;">Tag Top10</h2>
+    <MainBarChart style="width: 80%; margin-left: auto; margin-right: auto; background-color: #FFFAFA; padding: 30px; border-radius: 30px;"/>
+    <div style="padding-top: 30px; padding-bottom: 30px;"></div>
     <MainBottom/>
   </div>
 </template>
@@ -18,11 +21,14 @@
 <script>
 import SearchBar from '@/components/SearchBar.vue'
 import MainBottom from '@/components/MainBottom.vue'
+import MainBarChart from '@/components/MainBarChart.vue'
+
 export default {
   name: 'Home',
   components: {
     SearchBar,
     MainBottom,
+    MainBarChart,
   },
   created() {
     this.$store.state.searchBarinHeadbar = false;

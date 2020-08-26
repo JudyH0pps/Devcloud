@@ -55,7 +55,7 @@ export default{
     data() {
         return {
             // searchresults: [1,2,3,4,5,6,7,8,9],
-            page: 2,
+            page: 1,
             isLoading: false,
             fullPage: true,
             infiniteId: +new Date(),
@@ -138,6 +138,12 @@ export default{
             this.infiniteId += 1;
             this.resetQuestions();
             this.page = 1;
+        },
+        chnageType(){
+            this.page = 1;
+            this.resetQuestions();
+            this.infiniteId += 1;
+            this.tag_id = -1;
         }
     },
     computed:{
@@ -155,7 +161,8 @@ export default{
         // },
     },
     created() {
-        this.fetchQuestionsByKeyword(this.searchKeyword),
+        this.resetQuestions();
+        // this.fetchQuestionsByKeyword(this.searchKeyword),
         this.doAjax()
         document.documentElement.scrollTop = 0;
         // console.log(this.questions)
@@ -163,22 +170,10 @@ export default{
     watch:{
         searchKeyword : function(){
             //this.$router.go()
-            this.fetchQuestionsByKeyword(this.searchKeyword)
-            this.page = 2;
-            this.infiniteId += 1;
+            //this.fetchQuestionsByKeyword(this.searchKeyword)
+            this.chnageType();
             document.documentElement.scrollTop = 0;
         },
-        // searchTag : function(){
-        //     if(this.searchTag != undefined){
-        //         this.fetchQuestionsByTag(this.searchTag)
-        //         this.page = 2;
-        //         this.infiniteId += 1;
-        //         document.documentElement.scrollTop = 0;
-        //     }else{
-        //         // 태그검색상태에서 모든질문으로갈경우
-        //         this.$router.go()
-        //     }
-        // }
     }
 }
 
