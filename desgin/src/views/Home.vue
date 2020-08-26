@@ -11,8 +11,9 @@
       <div class="wave wave3"></div>
       <div class="wave wave4"></div> -->
     </section>
-    <MainBarChart/>
-    <div style="height: 40px;"></div>
+    <h2 style="color: #4682B4; text-align: center; margin: 15px;">Tag Top10</h2>
+    <MainBarChart style="width: 80%; margin-left: auto; margin-right: auto; background-color: #FFFAFA; padding: 30px; border-radius: 30px;"/>
+    <div style="padding-top: 30px; padding-bottom: 30px;"></div>
     <MainBottom/>
   </div>
 </template>

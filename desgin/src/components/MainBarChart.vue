@@ -10,7 +10,7 @@ export default {
             chartData: {
                 labels: [],
                 datasets: [{
-                    label: 'Tag about Questions',
+                    label: 'Tag',
                     borderWidth: 1,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -80,7 +80,7 @@ export default {
             http
                 .get('/api/tag/cnt')
                 .then(({data}) => {
-                    console.log(data);
+                    //console.log(data);
                     var tag
                     for(tag = 0; tag <= 9; tag++){
                         this.chartData.labels.push(data[tag].name)
