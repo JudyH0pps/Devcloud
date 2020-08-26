@@ -85,21 +85,7 @@ export default {
             this.setTagId(tag_id)
             this.$emit('searchTag')
         },
-        // questionCreate(){
-        //     var createDate = this.$moment(this.question.createdAt, 'MM-DD-YYYY');
-        //     var now = this.$moment('MM-DD-YYYY');
-
-        //     //console.log(this.question.createdAt);
-
-        //     var diffDate = now.diff(createDate, 'days');
-        //     if(diffDate <= 3){
-        //         this.question_create = diffDate + "day ago";
-        //     } else {
-        //        this.question_create = createDate;
-        //     }
-        // }
         getSelectedAnswer() {
-            //console.log("현재 질문아이디는 : " + this.questionId)
             http
                 // [1] 먼저 해당 포스트에 채택된 답변이 있는지 조회
                 .get('/api/answer/selected', {
@@ -109,7 +95,6 @@ export default {
                 })
                 .then(({data}) => {
                     //console.log("채택유무 : " + data);
-
                     // data is not "Resource not bound"
                     if(data != "Resource not bound"){
                         // 채택이 완료됬다면 채택완료 버튼 보여지기        
@@ -169,7 +154,7 @@ export default {
         },
     },
     created() {
-        //this.questionCreate();
+        
         this.getSelectedAnswer()
     },
 }

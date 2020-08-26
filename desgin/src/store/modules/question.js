@@ -90,20 +90,21 @@ export default {
                     console.log(err);
                 });
         },
-        fetchQuestionsByKeyword(context,keyword){
-            http
+        async fetchQuestionsByKeyword(context,keyword){
+            const resp = await http
                 .get('/api/question',{
                     params:{
                         keyword : keyword
                     } 
                 })
-                .then(({data}) =>{
-                    context.commit('setQuestions',data.content)
-                })
-                .catch((err) =>{
-                    console.log(err);
-                    alert("검색중 오류발생")
-                });
+                context.commit('setQuestions',resp.data.content)
+                // .then(({data}) =>{
+                //     context.commit('setQuestions',data.content)
+                // })
+                // .catch((err) =>{
+                //     console.log(err);
+                //     alert("검색중 오류발생")
+                // });
         },
         fetchQuestionsByTag(context,tag_id){
             http.get('/api/question/tag',{
